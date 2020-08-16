@@ -71,7 +71,7 @@ export default function SectionPools() {
                 <h5>未知</h5>
                 <h6>Pending { pool.earnedToken }</h6>
               </div>
-              <div><Button onClick={openCard.bind(this, pool.id)}></Button></div>
+              <div><Button color="primary" onClick={openCard.bind(this, pool.id)}>展开/关闭</Button></div>
             </CardBody>
           </Card>
         </div>

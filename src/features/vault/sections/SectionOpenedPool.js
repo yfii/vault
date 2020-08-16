@@ -22,6 +22,24 @@ export default function SectionOpenedPool(props) {
 
   const { account, provider, tokens } = useFetchBalances();
 
+  const [depositedBalance, setDepositedBalance] = useState();
+  const handleDepositedBalance = event => {
+    console.log(depositedBalance)
+    setDepositedBalance(event.target.value);
+  };
+
+  const onDeposit = () => {
+    alert(`onDeposit: ${depositedBalance}`)
+  }
+
+  const onClaim = () => {
+    alert('onClaim')
+  }
+
+  const onWithdraw = () => {
+    alert('Withdraw')
+  }
+
   return (
     <div style={{width: '100%'}}>
       <Card raised>
@@ -51,19 +69,25 @@ export default function SectionOpenedPool(props) {
               <CustomInput
                 id="password"
                 inputProps={{
-                  placeholder: "Company password",
-                  type: "password",
+                  placeholder: `Input numbers of ${pool.token} you want to deposit`,
+                  type: "number",
                   autoComplete: "off"
                 }}
                 formControlProps={{
                   fullWidth: true,
-                  className: classes.formControl
-                }}
-                style={{
-                  maxWith: '80px',
+                  className: classes.formControl,
+                  onChange: handleDepositedBalance,
                 }}
               />
-              <Button onClick={closeCard}></Button>
+              <Button 
+                color="primary" 
+                onClick={onDeposit}
+                disabled={
+                  !Boolean(depositedBalance) || (depositedBalance==0)
+                }
+              >
+                Deposit
+              </Button>
             </div>
           </div>
           <div
@@ -78,14 +102,14 @@ export default function SectionOpenedPool(props) {
               <CardBody>
                 <h4 className={classes.cardTitle}>Deposited</h4>
                 <h5 className={classes.textCenter}>{pool.stakedBalance}{pool.token}</h5>
-                <Button color="primary" round block>Withdraw</Button>
+                <Button color="primary" round block onClick={onWithdraw}>Withdraw</Button>
               </CardBody>
             </Card>
             <Card style={{ width: "20rem" }}>
               <CardBody>
                 <h4 className={classes.cardTitle}>Earned</h4>
                 <h5 className={classes.textCenter}>{pool.claimAbleBalance}{pool.earnedToken}</h5>
-                <Button color="primary" round block>claim</Button>
+                <Button color="primary" round block onClick={onClaim}>claim</Button>
               </CardBody>
             </Card>
             <Card style={{ width: "20rem" }}>
@@ -98,10 +122,11 @@ export default function SectionOpenedPool(props) {
           </div>
         </CardBody>
       </Card>
+      <Button color="primary" onClick={closeCard}>展开/关闭</Button>
       <div style={{display: 'flex', justifyContent : "space-around", alignItems : "center", alignContent: "space-around"}}>
         <h4>Community contribution</h4>
-        <Button disabled>Just Mining</Button>
-        <Button disabled>Claim bonus into the Pool</Button>
+        <Button color="primary" disabled>Just Mining</Button>
+        <Button color="primary" disabled>Claim bonus into the Pool</Button>
         <h4>More functions is coming...</h4>
       </div>
     </div>
