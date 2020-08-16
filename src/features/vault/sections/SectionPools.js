@@ -6,6 +6,8 @@ import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import Button from "components/CustomButtons/Button.js";
+// sections for this section
+import SectionOpenedPool from "./SectionOpenedPool";
 
 import { useFetchBalances, useFetchPoolBalances } from '../redux/hooks';
 
@@ -41,36 +43,39 @@ export default function SectionPools() {
 
   return pools.map((pool) => {
     return (
-      <div style={{width: '100%'}} key={pool.id}>
-        <Card key={pool.id}>
-          <CardBody style={{ 
-            display: "flex",
-            justifyContent : "space-around",
-            alignItems : "center",
-            alignContent: "space-around"
-          }}>
-            <div>logo</div>
-            <div>{tokens[pool.token].tokenBalance}</div>
-            <div>
-              <h5>{pool.token}</h5>
-              <h6>Balance</h6>
-            </div>
-            <div>
-              <h5>{pool.stakedBalance}</h5>
-              <h6>Deposited { pool.token }</h6>
-            </div>
-            <div>
-              <h5>{pool.claimAbleBalance}</h5>
-              <h6>Earned { pool.earnedToken }</h6>
-            </div>
-            <div>
-              <h5>未知</h5>
-              <h6>Pending { pool.earnedToken }</h6>
-            </div>
-            <div><Button onClick={openCard.bind(this, pool.id)}></Button></div>
-          </CardBody>
-        </Card>
-      </div>
+      openedCardList.includes(pool.id) ?
+        <SectionOpenedPool closeCard={openCard.bind(this, pool.id)} pool={pool} key={pool.id}/> :
+        <div style={{width: '100%'}} key={pool.id}>
+          <Card key={pool.id}>
+            <CardBody style={{ 
+              display: "flex",
+              justifyContent : "space-around",
+              alignItems : "center",
+              alignContent: "space-around"
+            }}>
+              <div>logo</div>
+              <div>{tokens[pool.token].tokenBalance}</div>
+              <div>
+                <h5>{pool.token}</h5>
+                <h6>Balance</h6>
+              </div>
+              <div>
+                <h5>{pool.stakedBalance}</h5>
+                <h6>Deposited { pool.token }</h6>
+              </div>
+              <div>
+                <h5>{pool.claimAbleBalance}</h5>
+                <h6>Earned { pool.earnedToken }</h6>
+              </div>
+              <div>
+                <h5>未知</h5>
+                <h6>Pending { pool.earnedToken }</h6>
+              </div>
+              <div><Button onClick={openCard.bind(this, pool.id)}></Button></div>
+            </CardBody>
+          </Card>
+        </div>
+      
     )
   })
 }
