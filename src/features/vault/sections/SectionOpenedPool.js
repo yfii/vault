@@ -20,7 +20,7 @@ export default function SectionOpenedPool(props) {
   const classes = useStyles();
   const { pool, closeCard } = props;
 
-  const { account, provider, tokens } = useFetchBalances();
+  const { tokens } = useFetchBalances();
 
   const [depositedBalance, setDepositedBalance] = useState();
   const handleDepositedBalance = event => {

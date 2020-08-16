@@ -1,10 +1,12 @@
 import initialState from './initialState';
 import { reducer as fetchBalancesReducer } from './fetchBalances';
 import { reducer as fetchPoolBalancesReducer } from './fetchPoolBalances';
+import { reducer as fetchDepositReducer } from './fetchDeposit';
 
 const reducers = [
   fetchBalancesReducer,
-  fetchPoolBalancesReducer
+  fetchPoolBalancesReducer,
+  fetchDepositReducer
 ];
 
 

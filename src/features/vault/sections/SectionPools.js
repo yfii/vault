@@ -8,7 +8,8 @@ import CardBody from "components/Card/CardBody.js";
 import Button from "components/CustomButtons/Button.js";
 // sections for this section
 import SectionOpenedPool from "./SectionOpenedPool";
-
+//  hooks
+import { useAccount } from '../../common/redux/hooks';
 import { useFetchBalances, useFetchPoolBalances } from '../redux/hooks';
 
 import sectionPoolsStyle from "../jss/sections/sectionPoolsStyle";
@@ -16,8 +17,9 @@ import sectionPoolsStyle from "../jss/sections/sectionPoolsStyle";
 const useStyles = makeStyles(sectionPoolsStyle);
 
 export default function SectionPools() {
+  const { account, provider } = useAccount();
   const { pools, fetchPoolBalances } = useFetchPoolBalances();
-  const { account, provider, tokens, fetchBalances } = useFetchBalances();
+  const { tokens, fetchBalances } = useFetchBalances();
   const [ openedCardList, setOpenCardList ] = useState([]);
   const classes = useStyles();
 

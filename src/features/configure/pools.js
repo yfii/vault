@@ -4,7 +4,7 @@ import { earnContractABI } from "./abi";
 // token: '池子代币',
 // tokenDescription: '代币描述',
 // tokenDecimals: '代币精度' 类型number,
-// tokenAddress: '代币ERC20地址'或 Ethereum
+// tokenAddress: '代币ERC20地址',
 // earnedToken: '奖励代币',
 // earnedTokenDecimals: '奖励代币精度',
 // earnedTokenAddress: '奖励代币ERC20地址',

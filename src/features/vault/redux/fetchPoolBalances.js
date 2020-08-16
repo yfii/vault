@@ -33,7 +33,6 @@ export function fetchPoolBalances(data) {
           (callbackInner) => { 
             fetchDepositedBalance({
               web3,
-              contractABI: pool.earnContractABI,
               contractAddress:pool.earnContractAddress,
               tokenDecimals: pool.tokenDecimals,
               account,
@@ -43,7 +42,6 @@ export function fetchPoolBalances(data) {
           (callbackInner) => {
             fetchEarnedBalance({
               web3,
-              contractABI: pool.earnContractABI,
               contractAddress: pool.earnContractAddress,
               tokenDecimals: pool.earnedTokenDecimals,
               account,
@@ -88,11 +86,9 @@ export function useFetchPoolBalances() {
   // if array, means args passed to the action creator
   const dispatch = useDispatch();
 
-  const { pools, account, provider, fetchPoolBalancesPending, fetchPoolBalancesError } = useSelector(
+  const { pools, fetchPoolBalancesPending, fetchPoolBalancesError } = useSelector(
     state => ({
       pools: state.vault.pools,
-      account: state.common.account,
-      provider: state.common.provider,
       fetchPoolBalancesPending: state.vault.fetchPoolBalancesPending,
       fetchPoolBalancesError: state.vault.fetchPoolBalancesError,
     }),
@@ -112,8 +108,6 @@ export function useFetchPoolBalances() {
 
   return {
     pools,
-    account,
-    provider,
     fetchPoolBalances: boundAction,
     fetchPoolBalancesPending,
     fetchPoolBalancesError,

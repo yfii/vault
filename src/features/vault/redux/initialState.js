@@ -24,6 +24,8 @@ const initialState = {
   tokens,
   fetchBalancesPending: false,
   fetchBalancesError: null,
+  fetchDepositPending:false,
+  fetchDepositError: null
 };
 
 export default initialState;
