@@ -89,7 +89,7 @@ export default function SectionOpenedPool(props) {
     fetchHarvest({
       account,
       provider,
-      contractAddress: pool.earnContractAddress,
+      contractAddress: pool.strategyContractAddress,
     })
   }
 
