@@ -68,9 +68,9 @@ export function fetchPoolBalances(data) {
           },
         ], (error, data) => {
           console.log(error.message || error)
-          pool.stakedBalance = data[0]
-          pool.claimAbleBalance = data[1]
-          pool.allowance = data[2]
+          pool.stakedBalance = data[0] || 0
+          pool.claimAbleBalance = data[1] || 0
+          pool.allowance = data[2] || 0
           callback(null, pool)
         })
       }, (error, pools) => {

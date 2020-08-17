@@ -102,7 +102,7 @@ export function reducer(state, action) {
 
     case VAULT_FETCH_APPROVAL_SUCCESS:
       // The request is success
-      let pools = { state };
+      const { pools } = state;
       pools[action.data.index].allowance = action.data.allowance;
       return {
         ...state,

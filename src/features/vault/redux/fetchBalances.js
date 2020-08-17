@@ -28,7 +28,7 @@ export function fetchBalances(data) {
       const { account, provider, tokens } = data;
       const web3 = new Web3(provider);
 
-      let newTokens = [];
+      const newTokens = [];
       for (let key in tokens) {
         newTokens.push({
           token: key,
@@ -52,7 +52,7 @@ export function fetchBalances(data) {
             )
           }
         ], (error, data) => {
-          token.tokenBalance = data[0]
+          token.tokenBalance = data[0] || 0
           callback(null, token)
         })
       }, (error, tokens) => {
@@ -64,7 +64,7 @@ export function fetchBalances(data) {
           })
           return reject()
         }
-        let newTokens = {};
+        const newTokens = {};
         for(let i = 0; i < tokens.length; i++) {
           newTokens[tokens[i].token] = {
             tokenDecimals: tokens[i].tokenDecimals,
