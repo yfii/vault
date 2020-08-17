@@ -6,7 +6,7 @@ import {
   VAULT_FETCH_DEPOSIT_FAILURE,
   VAULT_FETCH_DEPOSIT_DISMISS_ERROR,
 } from './constants';
-// import { checkApproval } from "../../web3";
+import { deposit } from "../../web3";
 import Web3 from 'web3';
 
 export function fetchDeposit(data) {
@@ -24,26 +24,31 @@ export function fetchDeposit(data) {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/home/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
-      const { account, provider, pools } = data;
+      const { account, provider, amount, tokenDecimals, contractAddress } = data;
       const web3 = new Web3(provider);
-
-      // checkApproval({web3, account}).then(
-      //   data => {
-      //     dispatch({
-      //       type: VAULT_FETCH_DEPOSIT_SUCCESS,
-      //       data,
-      //     });
-      //     resolve(data);
-      //   },
-      //   // Use rejectHandler as the second argument so that render errors won't be caught.
-      //   error => {
-      //     dispatch({
-      //       type: VAULT_FETCH_DEPOSIT_FAILURE,
-      //       data: { error },
-      //     });
-      //     reject(error);
-      //   }
-      // )
+      deposit({
+        web3,
+        account,
+        amount, tokenDecimals, contractAddress
+      }).then(
+          data => {
+            dispatch({
+              type: VAULT_FETCH_DEPOSIT_SUCCESS,
+              data,
+            });
+            console.log(data)
+            resolve(data);
+          },
+        ).catch(
+          // Use rejectHandler as the second argument so that render errors won't be caught.
+          error => {
+            dispatch({
+              type: VAULT_FETCH_DEPOSIT_FAILURE,
+              data: { error: error.message || error },
+            });
+            reject(error);
+          }
+        )
     });
     return promise;
   };
@@ -103,7 +108,6 @@ export function reducer(state, action) {
       // The request is success
       return {
         ...state,
-        deposit: action.data,
         fetchDepositPending: false,
         fetchDepositError: null,
       };

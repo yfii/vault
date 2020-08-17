@@ -11,7 +11,7 @@ import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 //  hooks
 import { useAccount } from '../../common/redux/hooks';
-import { useFetchBalances, useFetchApproval } from '../redux/hooks';
+import { useFetchBalances, useFetchApproval, useFetchDeposit, useFetchClaim, useFetchWithdraw } from '../redux/hooks';
 
 import sectionPoolsStyle from "../jss/sections/sectionPoolsStyle";
 
@@ -24,6 +24,9 @@ export default function SectionOpenedPool(props) {
   const { account, provider } = useAccount();
   const { tokens } = useFetchBalances();
   const { fetchApproval } = useFetchApproval();
+  const { fetchDeposit } = useFetchDeposit();
+  const { fetchClaim } = useFetchClaim();
+  const { fetchWithdraw } = useFetchWithdraw();
 
   const [depositedBalance, setDepositedBalance] = useState();
   const handleDepositedBalance = event => {
@@ -42,15 +45,34 @@ export default function SectionOpenedPool(props) {
   }
 
   const onDeposit = () => {
-    alert(`onDeposit: ${depositedBalance}`)
+    // alert(`onDeposit: ${depositedBalance}`)
+    fetchDeposit({
+      account,
+      provider,
+      amount: depositedBalance,
+      tokenDecimals: pool.tokenDecimals,
+      contractAddress: pool.earnContractAddress,
+    })
   }
 
   const onClaim = () => {
-    alert('onClaim')
+    // alert('onClaim')
+    fetchClaim({
+      account,
+      provider,
+      contractAddress: pool.earnContractAddress,
+    })
   }
 
   const onWithdraw = () => {
-    alert('Withdraw')
+    // alert('Withdraw')
+    fetchWithdraw({
+      account,
+      provider,
+      amount: pool.stakedBalance,
+      tokenDecimals: pool.tokenDecimals,
+      contractAddress: pool.earnContractAddress,
+    })
   }
 
   return (

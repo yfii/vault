@@ -24,10 +24,14 @@ const initialState = {
   tokens,
   fetchBalancesPending: false,
   fetchBalancesError: null,
+  fetchApprovalPending:false,
+  fetchApprovalError: null,
   fetchDepositPending:false,
   fetchDepositError: null,
-  fetchApprovalPending:false,
-  fetchApprovalError: null
+  fetchClaimPending:false,
+  fetchClaimError: null,
+  fetchWithdrawPending:false,
+  fetchWithdrawError: null
 };
 
 export default initialState;
