@@ -7,3 +7,6 @@ export { fetchAllowance } from './fetchAllowance';
 export { deposit } from './deposit';
 export { claim } from './claim';
 export { withdraw } from './withdraw';
+export { fetchEarningsPerShare } from './fetchEarningsPerShare';
+export { farm } from './farm';
+export { harvest } from './harvest';

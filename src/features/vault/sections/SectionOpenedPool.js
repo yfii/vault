@@ -11,7 +11,7 @@ import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 //  hooks
 import { useAccount } from '../../common/redux/hooks';
-import { useFetchBalances, useFetchApproval, useFetchDeposit, useFetchClaim, useFetchWithdraw } from '../redux/hooks';
+import { useFetchBalances, useFetchApproval, useFetchDeposit, useFetchClaim, useFetchWithdraw, useFetchFarm, useFetchHarvest } from '../redux/hooks';
 
 import sectionPoolsStyle from "../jss/sections/sectionPoolsStyle";
 
@@ -27,6 +27,8 @@ export default function SectionOpenedPool(props) {
   const { fetchDeposit } = useFetchDeposit();
   const { fetchClaim } = useFetchClaim();
   const { fetchWithdraw } = useFetchWithdraw();
+  const { fetchFarm } = useFetchFarm();
+  const { fetchHarvest } = useFetchHarvest();
 
   const [depositedBalance, setDepositedBalance] = useState();
   const handleDepositedBalance = event => {
@@ -69,8 +71,24 @@ export default function SectionOpenedPool(props) {
     fetchWithdraw({
       account,
       provider,
-      amount: pool.stakedBalance,
+      amount: pool.depositedBalance,
       tokenDecimals: pool.tokenDecimals,
+      contractAddress: pool.earnContractAddress,
+    })
+  }
+
+  const onFarm = () => {
+    fetchFarm({
+      account,
+      provider,
+      contractAddress: pool.earnContractAddress,
+    })
+  }
+
+  const onHarvest = () => {
+    fetchHarvest({
+      account,
+      provider,
       contractAddress: pool.earnContractAddress,
     })
   }
@@ -136,7 +154,7 @@ export default function SectionOpenedPool(props) {
             <Card style={{ width: "20rem" }}>
               <CardBody>
                 <h4 className={classes.cardTitle}>Deposited</h4>
-                <h5 className={classes.textCenter}>{pool.stakedBalance}{pool.token}</h5>
+                <h5 className={classes.textCenter}>{pool.depositedBalance}{pool.token}</h5>
                 <Button color="primary" round block onClick={onWithdraw}>Withdraw</Button>
               </CardBody>
             </Card>
@@ -150,7 +168,7 @@ export default function SectionOpenedPool(props) {
             <Card style={{ width: "20rem" }}>
               <CardBody>
                 <h4 className={classes.cardTitle}>Pending</h4>
-                <h5>未知{pool.earnedToken}</h5>
+                <h5>{pool.claimPendingBalance}{pool.earnedToken}</h5>
                 <p>Something descriptions<br/>contents for pending</p>
               </CardBody>
             </Card>
@@ -158,6 +176,8 @@ export default function SectionOpenedPool(props) {
         </CardBody>
       </Card>
       <Button color="primary" onClick={closeCard}>展开/关闭</Button>
+      <Button color="primary" onClick={onFarm}>Farm</Button>
+      <Button color="primary" onClick={onHarvest}>Harvest</Button>
       <div style={{display: 'flex', justifyContent : "space-around", alignItems : "center", alignContent: "space-around"}}>
         <h4>Community contribution</h4>
         <Button color="primary" disabled>Just Mining</Button>

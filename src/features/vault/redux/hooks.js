@@ -4,3 +4,5 @@ export { useFetchApproval } from './fetchApproval';
 export { useFetchDeposit } from './fetchDeposit';
 export { useFetchClaim } from './fetchClaim';
 export { useFetchWithdraw } from './fetchWithdraw';
+export { useFetchFarm } from './fetchFarm';
+export { useFetchHarvest } from './fetchHarvest';

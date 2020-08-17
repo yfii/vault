@@ -1,4 +1,3 @@
-import { earnContractABI } from "./abi";
 // id: '池子id',
 // name: '池子名字',  
 // token: '池子代币',
@@ -9,7 +8,6 @@ import { earnContractABI } from "./abi";
 // earnedTokenDecimals: '奖励代币精度',
 // earnedTokenAddress: '奖励代币ERC20地址',
 // earnContractAddress: '池子合约地址',
-// earnContractABI : '池子合约ABI',
 export const pools = [
   {
     id: 'weth',
@@ -22,9 +20,9 @@ export const pools = [
     earnedTokenDecimals: 18,
     earnedTokenAddress: '0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83',
     earnContractAddress: '0xA9C7216650dA5A9bbC049ffa56008029344DB010',
-    earnContractABI,
-    stakedBalance: 0,
+    depositedBalance: 0,
     claimAbleBalance: 0,
+    claimPendingBalance: 0,
     allowance: 0
   },
   {
@@ -38,9 +36,26 @@ export const pools = [
     earnedTokenDecimals: 18,
     earnedTokenAddress: '0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83',
     earnContractAddress: '0x956da37db508901294f62488e030ce0871293270',
-    earnContractABI,
-    stakedBalance: 0,
+    depositedBalance: 0,
     claimAbleBalance: 0,
+    claimPendingBalance: 0,
+    allowance: 0
+  },
+  {
+    id: 'ycrv',
+    name: 'YCRV',  
+    token: 'YCRV',
+    tokenDescription: 'YCRV',
+    tokenDecimals: 18,
+    tokenAddress: '0xdF5e0e81Dff6FAF3A7e52BA697820c5e32D806A8',
+    earnedToken: 'YFII',
+    earnedTokenDecimals: 18,
+    earnedTokenAddress: '0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83',
+    earnContractAddress: '0xD2db1EF55549eCdacb4e7da081216AE96f0Eedcb',
+    strategyContractAddress: '0xfd4c75184bed2013fdb621f54885b2d2ed7c3894',
+    depositedBalance: 0,
+    claimAbleBalance: 0,
+    claimPendingBalance: 0,
     allowance: 0
   }
 ]

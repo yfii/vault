@@ -31,7 +31,11 @@ const initialState = {
   fetchClaimPending:false,
   fetchClaimError: null,
   fetchWithdrawPending:false,
-  fetchWithdrawError: null
+  fetchWithdrawError: null,
+  fetchFarmPending:false,
+  fetchFarmError: null,
+  fetchHarvestPending:false,
+  fetchHarvestError: null
 };
 
 export default initialState;

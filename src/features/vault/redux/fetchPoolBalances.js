@@ -7,7 +7,7 @@ import {
   VAULT_FETCH_POOL_BALANCES_FAILURE,
   VAULT_FETCH_POOL_BALANCES_DISMISS_ERROR,
 } from './constants';
-import { fetchDepositedBalance, fetchEarnedBalance, fetchAllowance } from "../../web3";
+import { fetchDepositedBalance, fetchEarnedBalance, fetchAllowance, fetchEarningsPerShare } from "../../web3";
 import Web3 from 'web3';
 import async from 'async';
 
@@ -39,7 +39,7 @@ export function fetchPoolBalances(data) {
             }).then(
               data => callbackInner(null, data)
             ).catch(
-              error => callbackInner(error.message || error)
+              error => callbackInner(error, {depositedBalance: 0, payout: 0})
             ) 
           },
           (callbackInner) => {
@@ -51,7 +51,7 @@ export function fetchPoolBalances(data) {
             }).then(
               data => callbackInner(null, data)
             ).catch(
-              error => callbackInner(error.message || error)
+              error => callbackInner(error, 0)
             )
           },
           (callbackInner) => {
@@ -61,16 +61,36 @@ export function fetchPoolBalances(data) {
               tokenAddress: pool.tokenAddress,
               account,
             }).then(
-              data => callbackInner(null, data)
+              data => {
+                console.log('data:' + data);
+                return callbackInner(null, data)
+              }
             ).catch(
-              error => callbackInner(error.message || error)
+              error => {
+                console.log(error)
+                callbackInner(error, 0)
+              }
             )
           },
+          (callbackInner) => { 
+            fetchEarningsPerShare({
+              web3,
+              contractAddress:pool.earnContractAddress,
+              account,
+            }).then(
+              data => callbackInner(null, data)
+            ).catch(
+              error => callbackInner(error, 0)
+            ) 
+          },
         ], (error, data) => {
-          console.log(error.message || error)
-          pool.stakedBalance = data[0] || 0
+          const magnitude = 10**40;
+          const payout = data[0].payout || 0;
+          const earningsPerShare = data[3] || 0;
+          pool.depositedBalance = data[0].depositedBalance || 0
           pool.claimAbleBalance = data[1] || 0
           pool.allowance = data[2] || 0
+          pool.claimPendingBalance = earningsPerShare*pool.depositedBalance/magnitude - payout;
           callback(null, pool)
         })
       }, (error, pools) => {

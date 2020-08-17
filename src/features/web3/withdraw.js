@@ -1,5 +1,6 @@
 import { earnContractABI } from "../configure";
 import { fetchGasPrice } from '.';
+import BigNumber from "bignumber.js";
 
 export const withdraw = async ({web3, account, amount, tokenDecimals, contractAddress}) => {
   console.log('withdraw begin=================================================')
@@ -8,11 +9,12 @@ export const withdraw = async ({web3, account, amount, tokenDecimals, contractAd
   const gasPrice = await fetchGasPrice();
   console.log('gasPrice: ' + gasPrice);
   const contract = new web3.eth.Contract(earnContractABI, contractAddress);
+  console.log('amount: ' + amount);
   let amountToSend
   if (tokenDecimals !== 18) {
     amountToSend = amount*10**tokenDecimals;
   } else {
-    amountToSend = web3.utils.toWei(amount, "ether");
+    amountToSend = web3.utils.toWei(new BigNumber(amount).toString(), "ether");
   }
   const data = await _withdraw({web3, contract, amountToSend,  account, gasPrice});
   

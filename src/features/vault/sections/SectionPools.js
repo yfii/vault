@@ -62,7 +62,7 @@ export default function SectionPools() {
                 <h6>Balance</h6>
               </div>
               <div>
-                <h5>{pool.stakedBalance}</h5>
+                <h5>{pool.depositedBalance}</h5>
                 <h6>Deposited { pool.token }</h6>
               </div>
               <div>
@@ -70,7 +70,7 @@ export default function SectionPools() {
                 <h6>Earned { pool.earnedToken }</h6>
               </div>
               <div>
-                <h5>未知</h5>
+                <h5>{pool.claimPendingBalance}</h5>
                 <h6>Pending { pool.earnedToken }</h6>
               </div>
               <div><Button color="primary" onClick={openCard.bind(this, index)}>展开/关闭</Button></div>
