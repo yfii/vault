@@ -44,20 +44,23 @@ export function fetchBalances(data) {
               web3,
               tokenAddress: token.tokenAddress,
               tokenDecimals: token.tokenDecimals,
-              account,
-              callback: callbackInner
-            }) 
+              account
+            }).then(
+              data => callbackInner(null, data)
+            ).catch(
+              error => callbackInner(error.message || error)
+            )
           }
-        ], (err, data) => {
+        ], (error, data) => {
           token.tokenBalance = data[0]
           callback(null, token)
         })
-      }, (err, tokens) => {
-        if(err) {
-          console.log(err)
+      }, (error, tokens) => {
+        if(error) {
+          console.log(error)
           dispatch({
             type: VAULT_FETCH_BALANCES_FAILURE,
-            data: err,
+            data: error.message || error,
           })
           return reject()
         }
@@ -94,11 +97,9 @@ export function useFetchBalances() {
   // if array, means args passed to the action creator
   const dispatch = useDispatch();
 
-  const { tokens, account, provider, fetchBalancesPending, fetchBalancesError } = useSelector(
+  const { tokens, fetchBalancesPending, fetchBalancesError } = useSelector(
     state => ({
       tokens: state.vault.tokens,
-      account: state.common.account,
-      provider: state.common.provider,
       fetchBalancesPending: state.vault.fetchBalancesPending,
       fetchBalancesError: state.vault.fetchBalancesError,
     }),
@@ -118,8 +119,6 @@ export function useFetchBalances() {
 
   return {
     tokens,
-    account,
-    provider,
     fetchBalances: boundAction,
     fetchBalancesPending,
     fetchBalancesError,
@@ -151,7 +150,7 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchBalancesPending: false,
-        fetchBalancesError: action.data,
+        fetchBalancesError: action.data.error,
       };
 
     case VAULT_FETCH_BALANCES_DISMISS_ERROR:

@@ -25,7 +25,9 @@ const initialState = {
   fetchBalancesPending: false,
   fetchBalancesError: null,
   fetchDepositPending:false,
-  fetchDepositError: null
+  fetchDepositError: null,
+  fetchApprovalPending:false,
+  fetchApprovalError: null
 };
 
 export default initialState;

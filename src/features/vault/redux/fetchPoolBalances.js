@@ -7,7 +7,7 @@ import {
   VAULT_FETCH_POOL_BALANCES_FAILURE,
   VAULT_FETCH_POOL_BALANCES_DISMISS_ERROR,
 } from './constants';
-import { fetchDepositedBalance, fetchEarnedBalance } from "../../web3";
+import { fetchDepositedBalance, fetchEarnedBalance, fetchAllowance } from "../../web3";
 import Web3 from 'web3';
 import async from 'async';
 
@@ -36,8 +36,11 @@ export function fetchPoolBalances(data) {
               contractAddress:pool.earnContractAddress,
               tokenDecimals: pool.tokenDecimals,
               account,
-              callback: callbackInner
-            }) 
+            }).then(
+              data => callbackInner(null, data)
+            ).catch(
+              error => callbackInner(error.message || error)
+            ) 
           },
           (callbackInner) => {
             fetchEarnedBalance({
@@ -45,19 +48,37 @@ export function fetchPoolBalances(data) {
               contractAddress: pool.earnContractAddress,
               tokenDecimals: pool.earnedTokenDecimals,
               account,
-              callback: callbackInner
-            })},
-        ], (err, data) => {
+            }).then(
+              data => callbackInner(null, data)
+            ).catch(
+              error => callbackInner(error.message || error)
+            )
+          },
+          (callbackInner) => {
+            fetchAllowance({
+              web3,
+              contractAddress: pool.earnContractAddress,
+              tokenAddress: pool.tokenAddress,
+              account,
+            }).then(
+              data => callbackInner(null, data)
+            ).catch(
+              error => callbackInner(error.message || error)
+            )
+          },
+        ], (error, data) => {
+          console.log(error.message || error)
           pool.stakedBalance = data[0]
           pool.claimAbleBalance = data[1]
+          pool.allowance = data[2]
           callback(null, pool)
         })
-      }, (err, pools) => {
-        if(err) {
-          console.log(err)
+      }, (error, pools) => {
+        if(error) {
+          console.log(error.message || error)
           dispatch({
             type: VAULT_FETCH_POOL_BALANCES_FAILURE,
-            data: err,
+            data: error.message || error,
           })
           return reject()
         }
@@ -139,7 +160,7 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchPoolBalancesPending: false,
-        fetchPoolBalancesError: action.data,
+        fetchPoolBalancesError: action.data.error,
       };
 
     case VAULT_FETCH_POOL_BALANCES_DISMISS_ERROR:

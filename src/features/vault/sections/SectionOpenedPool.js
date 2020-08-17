@@ -9,8 +9,9 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-
-import { useFetchBalances } from '../redux/hooks';
+//  hooks
+import { useAccount } from '../../common/redux/hooks';
+import { useFetchBalances, useFetchApproval } from '../redux/hooks';
 
 import sectionPoolsStyle from "../jss/sections/sectionPoolsStyle";
 
@@ -18,15 +19,27 @@ const useStyles = makeStyles(sectionPoolsStyle);
 
 export default function SectionOpenedPool(props) {
   const classes = useStyles();
-  const { pool, closeCard } = props;
+  const { pool, closeCard, index } = props;
 
+  const { account, provider } = useAccount();
   const { tokens } = useFetchBalances();
+  const { fetchApproval } = useFetchApproval();
 
   const [depositedBalance, setDepositedBalance] = useState();
   const handleDepositedBalance = event => {
-    console.log(depositedBalance)
     setDepositedBalance(event.target.value);
   };
+
+  const onApproval = () => {
+    // alert(`onApproval: ${depositedBalance}`)
+    fetchApproval({
+      account,
+      provider,
+      tokenAddress: pool.tokenAddress,
+      contractAddress: pool.earnContractAddress,
+      index
+    })
+  }
 
   const onDeposit = () => {
     alert(`onDeposit: ${depositedBalance}`)
@@ -81,12 +94,12 @@ export default function SectionOpenedPool(props) {
               />
               <Button 
                 color="primary" 
-                onClick={onDeposit}
+                onClick={depositedBalance>pool.allowance?onApproval:onDeposit}
                 disabled={
                   !Boolean(depositedBalance) || (depositedBalance==0)
                 }
               >
-                Deposit
+                {depositedBalance>pool.allowance?"Approval":"Deposit"}
               </Button>
             </div>
           </div>

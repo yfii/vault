@@ -43,12 +43,12 @@ export default function SectionPools() {
     fetchPoolBalances({account, provider, pools});
   }, [account, provider,fetchPoolBalances]);
 
-  return pools.map((pool) => {
+  return pools.map((pool, index) => {
     return (
-      openedCardList.includes(pool.id) ?
-        <SectionOpenedPool closeCard={openCard.bind(this, pool.id)} pool={pool} key={pool.id}/> :
-        <div style={{width: '100%'}} key={pool.id}>
-          <Card key={pool.id}>
+      openedCardList.includes(index) ?
+        <SectionOpenedPool closeCard={openCard.bind(this, index)} pool={pool} index={index} key={index}/> :
+        <div style={{width: '100%'}} key={index}>
+          <Card>
             <CardBody style={{ 
               display: "flex",
               justifyContent : "space-around",
@@ -73,7 +73,7 @@ export default function SectionPools() {
                 <h5>未知</h5>
                 <h6>Pending { pool.earnedToken }</h6>
               </div>
-              <div><Button color="primary" onClick={openCard.bind(this, pool.id)}>展开/关闭</Button></div>
+              <div><Button color="primary" onClick={openCard.bind(this, index)}>展开/关闭</Button></div>
             </CardBody>
           </Card>
         </div>

@@ -24,7 +24,8 @@ export const pools = [
     earnContractAddress: '0xA9C7216650dA5A9bbC049ffa56008029344DB010',
     earnContractABI,
     stakedBalance: 0,
-    claimAbleBalance: 0
+    claimAbleBalance: 0,
+    allowance: 0
   },
   {
     id: 'snx',
@@ -39,6 +40,7 @@ export const pools = [
     earnContractAddress: '0x956da37db508901294f62488e030ce0871293270',
     earnContractABI,
     stakedBalance: 0,
-    claimAbleBalance: 0
+    claimAbleBalance: 0,
+    allowance: 0
   }
 ]
