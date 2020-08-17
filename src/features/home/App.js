@@ -23,6 +23,8 @@ export default function App({ children }) {
           .catch((e) => {
             console.log(e)
           })
+        } else {
+          initialApp({ account: null, provider: null});
         }
       });
   }, [initialApp])
