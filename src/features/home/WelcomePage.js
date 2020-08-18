@@ -21,10 +21,6 @@ import image from "images/background.png";
 // hooks
 import { useOpenModal } from 'features/common/redux/hooks';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="down" ref={ref} {...props} />;
-});
-
 const useStyles = makeStyles(welcomePageStyle);
 
 export default function WelcomePage() {
@@ -46,36 +42,29 @@ export default function WelcomePage() {
         color="transparent"
         links={<HeaderLinks/>}
       />
-        <GridContainer spacing={3} className={classes.gridContainer}>
-          <GridItem xs={4} >
+      <GridContainer>
+        <GridItem xs={12} style={{display: 'flex', alignItems: "center", justifyContent: "space-around",height: "300px"}}>
+          <div>
             <div className={classes.yfiiSize}>
               YFII
             </div>
-            <br/>
-            <h6 className={classes.text}>
+            <h6 className={classes.leftText}>
               A Better Way For Everyone To Get Rich.
             </h6>
-          </GridItem>
-          <GridItem xs>
-
-          </GridItem>
-          <GridItem xs={4}>
-            <div>
-              <h6 className={classes.text}>
-                This porject is in beta, Use at your own risk.
-                <br />
-                Connect your wallet to continue.
-              </h6>
-              <Button color="rose" round onClick={openModal}>
-                Connect
-              </Button>
-            </div>
-          </GridItem>
-        </GridContainer>
-      <div className={classes.main, classes.mainRaised}>
-
-      </div>
-      <SectionModal />
+          </div>
+          <div>
+            <h6 className={classes.text}>
+              This porject is in beta, Use at your own risk.
+              <br />
+              Connect your wallet to continue.
+            </h6>
+            <Button color="rose" round onClick={openModal}>
+              Connect
+            </Button>
+          </div>
+          <SectionModal />
+        </GridItem>
+      </GridContainer>
     </div>
   );
 }

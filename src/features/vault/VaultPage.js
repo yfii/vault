@@ -35,11 +35,11 @@ export default function VaultPage() {
         links={<HeaderLinks/>}
         color="primary"
       />
-      <Container>
+      <div className={classes.container}>
         <SectionTitle />
         <SectionWallet />
         <SectionPools />
-      </Container>
+      </div>
     </div>
   );
 }

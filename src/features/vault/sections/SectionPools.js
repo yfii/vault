@@ -45,7 +45,7 @@ export default function SectionPools() {
   }, [account, provider,fetchPoolBalances]);
 
   return (
-    <Grid container item className={classes.root} justify="center">
+    <Grid container item>
       {pools.map((pool, index) => {
         return openedCardList.includes(index) ? (
           <SectionOpenedPool closeCard={openCard.bind(this, index)} pool={pool} index={index} key={index}/>

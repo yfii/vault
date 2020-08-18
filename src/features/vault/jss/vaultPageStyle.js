@@ -13,10 +13,10 @@ const vaultPageStyle = theme => ({
   //   ...main,
   //   /*overflow: "hidden"*/
   // },
-  // container: {
-  //   ...container,
-  //   zIndex: 1
-  // },
+  container: {
+    ...container,
+    zIndex: 1
+  },
 });
 
 export default vaultPageStyle;

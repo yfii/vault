@@ -56,19 +56,26 @@ const welcomePageStyle = theme => ({
     marginLeft: "5px"
   },
   text: {
-      minHeight: "32px",
-      textDecoration: "none",
-      textTransform:"none",
-      color: whiteColor
+    minHeight: "32px",
+    textDecoration: "none",
+    textTransform:"none",
+    color: whiteColor
   },
   gridContainer: {
-      textAlign: "center",
-      justifyContent: "space-around",
+    textAlign: "center",
+    justifyContent: "space-around",
   },
   yfiiSize:{
-      fontSize: "120px",
-      color: whiteColor,
-      fontWeight: "600",
+    fontSize: "120px",
+    lineHeight: 1,
+    height: '120px',
+    color: whiteColor,
+    fontWeight: 600,
+  },
+  leftText: {
+    color: whiteColor,
+    marginTop: 0,
+    marginBottom: 0
   }
 });
 

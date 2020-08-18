@@ -22,7 +22,7 @@ export default function SectionWallet() {
   const address = account.substring(0,6)+'...'+account.substring(account.length-4,account.length)
   return (
     <Grid container className={classes.root} justify="center">
-      <Grid item xs={12} sm={2}>
+      <Grid item xs={12} sm={3}>
         <Card className={classes.walletCard}>
           <CardBody style={{ display: "flex", alignItems: "center" }}>
             <Typography
