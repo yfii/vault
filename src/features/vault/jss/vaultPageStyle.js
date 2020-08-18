@@ -9,14 +9,14 @@ const vaultPageStyle = theme => ({
     backgroundColor: whiteColor,
     minHeight: "100vh"
   },
-  main: {
-    ...main,
-    /*overflow: "hidden"*/
-  },
-  container: {
-    ...container,
-    zIndex: 1
-  },
+  // main: {
+  //   ...main,
+  //   /*overflow: "hidden"*/
+  // },
+  // container: {
+  //   ...container,
+  //   zIndex: 1
+  // },
 });
 
 export default vaultPageStyle;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+import Container from '@material-ui/core/Container';
 import Slide from "@material-ui/core/Slide";
 // @material-ui/icons
 // import Close from "@material-ui/icons/Close";
@@ -34,13 +35,11 @@ export default function VaultPage() {
         links={<HeaderLinks/>}
         color="primary"
       />
-      <div className={classes.main}>
-        <div className={classes.container}>
-          <SectionTitle />
-          <SectionWallet />
-          <SectionPools />
-        </div>
-      </div>
+      <Container>
+        <SectionTitle />
+        <SectionWallet />
+        <SectionPools />
+      </Container>
     </div>
   );
 }

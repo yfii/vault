@@ -17,6 +17,13 @@ const sectionWalletStyle = theme => ({
     }
   },
   mlAuto,
+  root: {
+    flexGrow: 1,
+  },
+  walletCard: {
+    borderRadius: "50rem",
+    marginTop: 0,
+  },
   walletAddress: {
     // display: "flex"
   }
