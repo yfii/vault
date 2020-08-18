@@ -25,7 +25,7 @@ const welcomePageStyle = theme => ({
     }
   },
   navigation: {
-    backgroundPosition: "50%",
+    // backgroundPosition: "50%",
     backgroundSize: "cover",
     marginTop: "0",
     minHeight: "500px",
