@@ -1,12 +1,10 @@
 import { earnContractABI } from "../configure";
 import BigNumber from "bignumber.js";
 
-export const fetchDepositedBalance = async ({web3, contractAddress, tokenDecimals, account}) => {
+export const fetchDepositedBalance = async ({web3, account, contractAddress}) => {
   const contract = new web3.eth.Contract(earnContractABI, contractAddress)
   const data = await contract.methods.plyr_(account).call({ from: account });
-  const depositedBalance = BigNumber((data.stake)/10**tokenDecimals).toNumber();
-  const payout = BigNumber((data.payout)/10**tokenDecimals).toNumber();
-  console.log(parseFloat(data.stake)/10**tokenDecimals);
-  console.log(depositedBalance)
+  const depositedBalance = new BigNumber(data.stake).toNumber();
+  const payout = new BigNumber(data.payout).toNumber();
   return { depositedBalance, payout };
 }

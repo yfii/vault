@@ -12,13 +12,13 @@ import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Button from "components/CustomButtons/Button.js";
 // sections for this page
-import SectionModal from "../common/sections/SectionModal.js";
+import SectionModal from "features/common/sections/SectionModal.js";
 // style for this page
 import welcomePageStyle from "./jss/welcomePageStyle.js";
 // resource file
-import image from "assets/img/bg4.jpg";
+import image from "images/background.png";
 // hooks
-import { useOpenModal } from '../common/redux/hooks';
+import { useOpenModal } from 'features/common/redux/hooks';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;

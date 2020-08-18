@@ -34,7 +34,6 @@ export function fetchPoolBalances(data) {
             fetchDepositedBalance({
               web3,
               contractAddress:pool.earnContractAddress,
-              tokenDecimals: pool.tokenDecimals,
               account,
             }).then(
               data => callbackInner(null, data)
@@ -46,7 +45,6 @@ export function fetchPoolBalances(data) {
             fetchEarnedBalance({
               web3,
               contractAddress: pool.earnContractAddress,
-              tokenDecimals: pool.earnedTokenDecimals,
               account,
             }).then(
               data => callbackInner(null, data)
@@ -85,9 +83,9 @@ export function fetchPoolBalances(data) {
           },
         ], (error, data) => {
           const magnitude = 10**40;
-          const payout = data[0].payout || 0;
+          const payout = data[0] && data[0].payout || 0;
           const earningsPerShare = data[3] || 0;
-          pool.depositedBalance = data[0].depositedBalance || 0
+          pool.depositedBalance = data[0] && data[0].depositedBalance || 0
           pool.claimAbleBalance = data[1] || 0
           pool.allowance = data[2] || 0
           pool.claimPendingBalance = earningsPerShare*pool.depositedBalance/magnitude - payout;

@@ -4,7 +4,6 @@ import {
   VAULT_FETCH_APPROVAL_BEGIN,
   VAULT_FETCH_APPROVAL_SUCCESS,
   VAULT_FETCH_APPROVAL_FAILURE,
-  VAULT_FETCH_APPROVAL_DISMISS_ERROR,
 } from './constants';
 import { approval } from "../../web3";
 import Web3 from 'web3';
@@ -44,22 +43,13 @@ export function fetchApproval(data) {
         error => {
           dispatch({
             type: VAULT_FETCH_APPROVAL_FAILURE,
-            data: { error: error.message || error },
           })
-          // reject(error);
+          reject(error.message || error);
         }
       )
     });
 
     return promise;
-  };
-}
-
-// Async action saves request error by default, this method is used to dismiss the error info.
-// If you don't want errors to be saved in Redux store, just ignore this method.
-export function dismissFetchApprovalError() {
-  return {
-    type: VAULT_FETCH_APPROVAL_DISMISS_ERROR,
   };
 }
 
@@ -78,15 +68,10 @@ export function useFetchApproval() {
 
   const boundAction = useCallback(data => dispatch(fetchApproval(data)), [dispatch]);
 
-  const boundDismissFetchApprovalError = useCallback(() => {
-    dispatch(dismissFetchApprovalError());
-  }, [dispatch]);
-
   return {
     fetchApproval: boundAction,
     fetchApprovalPending,
     fetchApprovalError,
-    dismissFetchApprovalError: boundDismissFetchApprovalError,
   };
 }
 
@@ -97,7 +82,6 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchApprovalPending: true,
-        fetchApprovalError: null,
       };
 
     case VAULT_FETCH_APPROVAL_SUCCESS:
@@ -108,7 +92,6 @@ export function reducer(state, action) {
         ...state,
         pools,
         fetchApprovalPending: false,
-        fetchApprovalError: null,
       };
 
     case VAULT_FETCH_APPROVAL_FAILURE:
@@ -116,14 +99,6 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchApprovalPending: false,
-        fetchApprovalError: action.data.error,
-      };
-
-    case VAULT_FETCH_APPROVAL_DISMISS_ERROR:
-      // Dismiss the request failure error
-      return {
-        ...state,
-        fetchApprovalError: null,
       };
 
     default:

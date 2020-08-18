@@ -2,14 +2,12 @@ import { pools } from "../../configure";
 
 let tokens = {};
 
-pools.map(({token, tokenDecimals, tokenAddress, earnedToken, earnedTokenDecimals, earnedTokenAddress})=> {
+pools.map(({token, tokenAddress, earnedToken, earnedTokenAddress})=> {
   tokens[token] = {
-    tokenDecimals: tokenDecimals,
     tokenAddress: tokenAddress,
     tokenBalance: 0
   }
   tokens[earnedToken] = {
-    tokenDecimals: earnedTokenDecimals,
     tokenAddress: earnedTokenAddress,
     tokenBalance: 0
   }

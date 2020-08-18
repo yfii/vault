@@ -24,18 +24,14 @@ export function fetchWithdraw(data) {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/home/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
-      const { account, provider, amount, tokenDecimals, contractAddress } = data;
+      const { account, provider, amount, contractAddress } = data;
       const web3 = new Web3(provider);
-      withdraw({
-        web3,
-        account,
-        amount, tokenDecimals, contractAddress
-      }).then(
-          data => {
-            dispatch({
-              type: VAULT_FETCH_WITHDRAW_SUCCESS,
-              data,
-            });
+      withdraw({ web3, account, amount, contractAddress }).then(
+        data => {
+          dispatch({
+            type: VAULT_FETCH_WITHDRAW_SUCCESS,
+            data,
+          });
             console.log(data)
             resolve(data);
           },

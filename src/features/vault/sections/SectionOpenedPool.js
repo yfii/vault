@@ -9,9 +9,12 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
+import { useSnackbar } from 'notistack';
 //  hooks
 import { useAccount } from '../../common/redux/hooks';
 import { useFetchBalances, useFetchApproval, useFetchDeposit, useFetchClaim, useFetchWithdraw, useFetchFarm, useFetchHarvest } from '../redux/hooks';
+
+
 
 import sectionPoolsStyle from "../jss/sections/sectionPoolsStyle";
 
@@ -23,27 +26,37 @@ export default function SectionOpenedPool(props) {
 
   const { account, provider } = useAccount();
   const { tokens } = useFetchBalances();
-  const { fetchApproval } = useFetchApproval();
-  const { fetchDeposit } = useFetchDeposit();
-  const { fetchClaim } = useFetchClaim();
-  const { fetchWithdraw } = useFetchWithdraw();
-  const { fetchFarm } = useFetchFarm();
-  const { fetchHarvest } = useFetchHarvest();
+  const { fetchApproval, fetchApprovalPending } = useFetchApproval();
+  const { fetchDeposit, fetchDepositPending } = useFetchDeposit();
+  const { fetchClaim, fetchClaimPending } = useFetchClaim();
+  const { fetchWithdraw, fetchWithdrawPending } = useFetchWithdraw();
+  const { fetchFarm, fetchFarmPending } = useFetchFarm();
+  const { fetchHarvest, fetchHarvestPending } = useFetchHarvest();
 
   const [depositedBalance, setDepositedBalance] = useState();
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  // const handleClickVariant = (variant) => () => {
+  //   // variant could be success, error, warning, info, or default
+  //   enqueueSnackbar('This is a success message!', { variant });
+  // };
   const handleDepositedBalance = event => {
     setDepositedBalance(event.target.value);
   };
 
   const onApproval = () => {
-    // alert(`onApproval: ${depositedBalance}`)
     fetchApproval({
       account,
       provider,
       tokenAddress: pool.tokenAddress,
       contractAddress: pool.earnContractAddress,
       index
-    })
+    }).then(
+      () => enqueueSnackbar(`Approval success`, {variant: 'success'})
+    ).catch(
+      error => enqueueSnackbar(`Approval error: ${error}`, {variant: 'error'})
+    )
   }
 
   const onDeposit = () => {
@@ -52,7 +65,6 @@ export default function SectionOpenedPool(props) {
       account,
       provider,
       amount: depositedBalance,
-      tokenDecimals: pool.tokenDecimals,
       contractAddress: pool.earnContractAddress,
     })
   }
@@ -72,7 +84,6 @@ export default function SectionOpenedPool(props) {
       account,
       provider,
       amount: pool.depositedBalance,
-      tokenDecimals: pool.tokenDecimals,
       contractAddress: pool.earnContractAddress,
     })
   }
@@ -132,15 +143,23 @@ export default function SectionOpenedPool(props) {
                   onChange: handleDepositedBalance,
                 }}
               />
-              <Button 
-                color="primary" 
-                onClick={depositedBalance>pool.allowance?onApproval:onDeposit}
-                disabled={
-                  !Boolean(depositedBalance) || (depositedBalance==0)
-                }
-              >
-                {depositedBalance>pool.allowance?"Approval":"Deposit"}
-              </Button>
+              {depositedBalance>pool.allowance ? (
+                  <Button 
+                    color="primary" 
+                    onClick={onApproval}
+                    disabled={fetchApprovalPending}
+                  >
+                    {fetchApprovalPending ? 'Approval...' : 'Approval'}
+                  </Button>
+               ) : (
+                <Button 
+                  color="primary" 
+                  onClick={onDeposit}
+                  disabled={!Boolean(depositedBalance) || (depositedBalance==0) || fetchDepositPending}
+                >
+                  {fetchDepositPending ? 'Deposit...' : 'Deposit'}
+                </Button>
+              )}
             </div>
           </div>
           <div

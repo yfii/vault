@@ -32,7 +32,6 @@ export function fetchBalances(data) {
       for (let key in tokens) {
         newTokens.push({
           token: key,
-          tokenDecimals: tokens[key].tokenDecimals,
           tokenAddress: tokens[key].tokenAddress,
           tokenBalance: tokens[key].tokenBalance,
         });
@@ -42,9 +41,8 @@ export function fetchBalances(data) {
           (callbackInner) => { 
             fetchBalance({
               web3,
-              tokenAddress: token.tokenAddress,
-              tokenDecimals: token.tokenDecimals,
-              account
+              account,
+              tokenAddress: token.tokenAddress
             }).then(
               data => callbackInner(null, data)
             ).catch(
@@ -67,7 +65,6 @@ export function fetchBalances(data) {
         const newTokens = {};
         for(let i = 0; i < tokens.length; i++) {
           newTokens[tokens[i].token] = {
-            tokenDecimals: tokens[i].tokenDecimals,
             tokenAddress: tokens[i].tokenAddress,
             tokenBalance: tokens[i].tokenBalance
           }

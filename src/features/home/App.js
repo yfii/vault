@@ -7,6 +7,8 @@ import { injected } from "../configure";
 //  core pages
 import { LoadingPage } from "../common";
 
+import { SnackbarProvider } from 'notistack';
+
 export default function App({ children }) {
   const { isInit, initialApp } = useInitialApp();
 
@@ -30,8 +32,8 @@ export default function App({ children }) {
   }, [initialApp])
 
   return (
-    <>
+    <SnackbarProvider>
       { isInit ? children : <LoadingPage /> }
-    </>
+    </SnackbarProvider>
   );
 }

@@ -2,23 +2,14 @@ import { earnContractABI } from "../configure";
 import { fetchGasPrice } from '.';
 import BigNumber from "bignumber.js";
 
-export const withdraw = async ({web3, account, amount, tokenDecimals, contractAddress}) => {
-  console.log('withdraw begin=================================================')
-  console.log('account: ' + account)
-  console.log('contractAddress: ' + contractAddress)
+export const withdraw = async ({web3, account, amount, contractAddress}) => {
+  console.log('=====withdraw account: ' + account+ ' contractAddress: ' + contractAddress + 'begin=====')
   const gasPrice = await fetchGasPrice();
   console.log('gasPrice: ' + gasPrice);
   const contract = new web3.eth.Contract(earnContractABI, contractAddress);
   console.log('amount: ' + amount);
-  let amountToSend
-  if (tokenDecimals !== 18) {
-    amountToSend = amount*10**tokenDecimals;
-  } else {
-    amountToSend = web3.utils.toWei(new BigNumber(amount).toString(), "ether");
-  }
-  const data = await _withdraw({web3, contract, amountToSend,  account, gasPrice});
-  
-  console.log('withdraw success=================================================')
+  const data = await _withdraw({web3, contract, amount: web3.utils.toWei(amount, "ether"),  account, gasPrice});
+  console.log('=====withdraw success=====')
   return data;
 }
 
@@ -26,7 +17,6 @@ const _withdraw = ({web3, contract, account, amountToSend, gasPrice}) => {
   return new Promise((resolve, reject) => {
     contract.methods.withdraw(amountToSend).send({ from: account, gasPrice: web3.utils.toWei(gasPrice, 'gwei') }).on('transactionHash', function(hash){
         console.log(hash)
-        // callback(null, hash)
         resolve(hash)
       })
       .on('confirmation', function(confirmationNumber, receipt){
@@ -36,22 +26,10 @@ const _withdraw = ({web3, contract, account, amountToSend, gasPrice}) => {
         console.log(receipt);
       })
       .on('error', function(error) {
-        // if (!error.toString().includes("-32601")) {
-        //   if(error.message) {
-        //     return callback(error.message)
-        //   }
-        //   callback(error)
-        // }
         console.log(error)
         reject(error)
       })
       .catch((error) => {
-        // if (!error.toString().includes("-32601")) {
-        //   if(error.message) {
-        //     return callback(error.message)
-        //   }
-        //   callback(error)
-        // }
         console.log(error)
         reject(error)
       })

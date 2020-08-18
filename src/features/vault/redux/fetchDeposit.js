@@ -24,31 +24,27 @@ export function fetchDeposit(data) {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/home/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
-      const { account, provider, amount, tokenDecimals, contractAddress } = data;
+      const { account, provider, amount, contractAddress } = data;
       const web3 = new Web3(provider);
-      deposit({
-        web3,
-        account,
-        amount, tokenDecimals, contractAddress
-      }).then(
-          data => {
-            dispatch({
-              type: VAULT_FETCH_DEPOSIT_SUCCESS,
-              data,
-            });
-            console.log(data)
-            resolve(data);
-          },
-        ).catch(
-          // Use rejectHandler as the second argument so that render errors won't be caught.
-          error => {
-            dispatch({
-              type: VAULT_FETCH_DEPOSIT_FAILURE,
-              data: { error: error.message || error },
-            });
-            reject(error);
-          }
-        )
+      deposit({ web3, account, amount, contractAddress }).then(
+        data => {
+          dispatch({
+            type: VAULT_FETCH_DEPOSIT_SUCCESS,
+            data,
+          });
+          console.log(data)
+          resolve(data);
+        },
+      ).catch(
+        // Use rejectHandler as the second argument so that render errors won't be caught.
+        error => {
+          dispatch({
+            type: VAULT_FETCH_DEPOSIT_FAILURE,
+            data: { error: error.message || error },
+          });
+          reject(error);
+        }
+      )
     });
     return promise;
   };
