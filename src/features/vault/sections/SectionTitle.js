@@ -4,6 +4,7 @@ import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
 import sectionTitleStyle from "../jss/sections/sectionTitleStyle";
 
@@ -13,9 +14,7 @@ export default function SectionTitle() {
 
   return (
     <Grid container item className={classes.root} justify="center">
-      <h2 className={classNames(classes.title)}>
-        Deposit WETH into this vault to earn YFII
-      </h2>
+      <Typography variant="h1" className={classNames(classes.title)} noWrap>Deposit WETH into this vault to earn YFII</Typography>
     </Grid>
   )
 }

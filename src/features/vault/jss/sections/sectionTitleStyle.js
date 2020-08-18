@@ -15,6 +15,8 @@ const sectionTitleStyle = theme => ({
   },
   title: {
     ...title,
+    fontSize: "1.5rem",
+    lineHeight: 1.2,
     color: grayColor,
   },
   textCenter: {
