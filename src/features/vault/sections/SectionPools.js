@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 // @material-ui/core components
+import Grid from '@material-ui/core/Grid';
 import { makeStyles } from "@material-ui/core/styles";
 // core components
 import Table from "components/Table/Table.js";
@@ -43,41 +44,44 @@ export default function SectionPools() {
     fetchPoolBalances({account, provider, pools});
   }, [account, provider,fetchPoolBalances]);
 
-  return pools.map((pool, index) => {
-    return (
-      openedCardList.includes(index) ?
-        <SectionOpenedPool closeCard={openCard.bind(this, index)} pool={pool} index={index} key={index}/> :
-        <div style={{width: '100%'}} key={index}>
-          <Card>
-            <CardBody style={{ 
-              display: "flex",
-              justifyContent : "space-around",
-              alignItems : "center",
-              alignContent: "space-around"
-            }}>
-              <div>logo</div>
-              <div>{tokens[pool.token].tokenBalance}</div>
-              <div>
-                <h5>{pool.token}</h5>
-                <h6>Balance</h6>
-              </div>
-              <div>
-                <h5>{pool.depositedBalance}</h5>
-                <h6>Deposited { pool.token }</h6>
-              </div>
-              <div>
-                <h5>{pool.claimAbleBalance}</h5>
-                <h6>Earned { pool.earnedToken }</h6>
-              </div>
-              <div>
-                <h5>{pool.claimPendingBalance}</h5>
-                <h6>Pending { pool.earnedToken }</h6>
-              </div>
-              <div><Button color="primary" onClick={openCard.bind(this, index)}>展开/关闭</Button></div>
-            </CardBody>
-          </Card>
-        </div>
-      
-    )
-  })
+  return (
+    <Grid container item className={classes.root} justify="center">
+      {pools.map((pool, index) => {
+        return openedCardList.includes(index) ? (
+          <SectionOpenedPool closeCard={openCard.bind(this, index)} pool={pool} index={index} key={index}/>
+          ) : (
+          <div style={{width: '100%'}} key={index}>
+            <Card>
+              <CardBody style={{ 
+                display: "flex",
+                justifyContent : "space-around",
+                alignItems : "center",
+                alignContent: "space-around"
+              }}>
+                <div>logo</div>
+                <div>{tokens[pool.token].tokenBalance}</div>
+                <div>
+                  <h5>{pool.token}</h5>
+                  <h6>Balance</h6>
+                </div>
+                <div>
+                  <h5>{pool.depositedBalance}</h5>
+                  <h6>Deposited { pool.token }</h6>
+                </div>
+                <div>
+                  <h5>{pool.claimAbleBalance}</h5>
+                  <h6>Earned { pool.earnedToken }</h6>
+                </div>
+                <div>
+                  <h5>{pool.claimPendingBalance}</h5>
+                  <h6>Pending { pool.earnedToken }</h6>
+                </div>
+                <div><Button color="primary" onClick={openCard.bind(this, index)}>展开/关闭</Button></div>
+              </CardBody>
+            </Card>
+          </div>
+        )
+      })}
+    </Grid>
+  )
 }
