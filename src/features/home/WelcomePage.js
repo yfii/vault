@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Slide from "@material-ui/core/Slide";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
+import Grid from "@material-ui/core/Grid";
 // core components
 import Header from "components/Header/Header.js";
 import HeaderLinks from "components/Header/HeaderLinks.js";
@@ -45,12 +46,34 @@ export default function WelcomePage() {
         color="transparent"
         links={<HeaderLinks/>}
       />
+        <GridContainer spacing={3} className={classes.gridContainer}>
+          <GridItem xs={4} >
+            <div className={classes.yfiiSize}>
+              YFII
+            </div>
+            <br/>
+            <h6 className={classes.text}>
+              A Better Way For Everyone To Get Rich.
+            </h6>
+          </GridItem>
+          <GridItem xs>
+
+          </GridItem>
+          <GridItem xs={4}>
+            <div>
+              <h6 className={classes.text}>
+                This porject is in beta, Use at your own risk.
+                <br />
+                Connect your wallet to continue.
+              </h6>
+              <Button color="rose" round onClick={openModal}>
+                Connect
+              </Button>
+            </div>
+          </GridItem>
+        </GridContainer>
       <div className={classes.main, classes.mainRaised}>
-        <div className={classes.container}>
-          <Button color="primary" onClick={openModal}>
-            connect
-          </Button>
-        </div>
+
       </div>
       <SectionModal />
     </div>

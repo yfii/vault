@@ -1,4 +1,4 @@
-import { container, title } from "assets/jss/material-kit-pro-react.js";
+import { container, title, whiteColor } from "assets/jss/material-kit-pro-react.js";
 import headerLinksStyle from "assets/jss/material-kit-pro-react/components/headerLinksStyle.js";
 
 const welcomePageStyle = theme => ({
@@ -54,6 +54,21 @@ const welcomePageStyle = theme => ({
     padding: "0px",
     borderRadius: "50%",
     marginLeft: "5px"
+  },
+  text: {
+      minHeight: "32px",
+      textDecoration: "none",
+      textTransform:"none",
+      color: whiteColor
+  },
+  gridContainer: {
+      textAlign: "center",
+      justifyContent: "space-around",
+  },
+  yfiiSize:{
+      fontSize: "120px",
+      color: whiteColor,
+      fontWeight: "600",
   }
 });
 
