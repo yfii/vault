@@ -39,7 +39,7 @@ export default function SectionOpenedPool(props) {
 
   const [ claimPendingBalance, setClaimPendingBalance ] = useState(0);
   const [ yieldValue, setYieldValue ] = useState(0);
-  const [ modalOpen, setModalOpen ] = useState({ isOpen: false, depositedTime: 0,func: { name:'',func:null}});
+  const [ modalOpen, setModalOpen ] = useState({ isOpen: false, depositedTime: 0,func: null });
 
   const [depositedBalance, setDepositedBalance] = useState();
 
@@ -109,7 +109,7 @@ export default function SectionOpenedPool(props) {
     fetchDeposit({
       account,
       provider,
-      amount: new BigNumber(depositedBalance).toString(),
+      amount: new BigNumber(depositedBalance).toNumber(),
       contractAddress: pool.earnContractAddress,
     }).then(
       () => enqueueSnackbar(`Deposit success`, {variant: 'success'})
@@ -122,15 +122,16 @@ export default function SectionOpenedPool(props) {
     const time = new BigNumber(pool.depositedTime).multipliedBy(1000).toNumber();
     const nowTime = new Date().getTime();
     const depositedTime = new BigNumber(nowTime).minus(time).toNumber();
-    const func ={
-      name: 'Claim',
-      func: () => {
-        fetchClaim({
-          account,
-          provider,
-          contractAddress: pool.earnContractAddress,
-        })
-      }
+    const func = () => {
+      fetchClaim({
+        account,
+        provider,
+        contractAddress: pool.earnContractAddress,
+      }).then(
+        () => enqueueSnackbar(`Claim success`, {variant: 'success'})
+      ).catch(
+        error => enqueueSnackbar(`Claim error: ${error}`, {variant: 'error'})
+      )
     }
     if (depositedTime < 1000*60*60*24) {
       setModalOpen({
@@ -156,16 +157,17 @@ export default function SectionOpenedPool(props) {
     const time = new BigNumber(pool.depositedTime).multipliedBy(1000).toNumber();
     const nowTime = new Date().getTime();
     const depositedTime = new BigNumber(nowTime).minus(time).toNumber();
-    const func ={
-      name: 'Withdraw',
-      func: () => {
-        fetchWithdraw({
-          account,
-          provider,
-          amount: new BigNumber(pool.depositedBalance).toString(),
-          contractAddress: pool.earnContractAddress,
-        })
-      }
+    const func = () => {
+      fetchWithdraw({
+        account,
+        provider,
+        amount: pool.depositedBalance,
+        contractAddress: pool.earnContractAddress,
+      }).then(
+        () => enqueueSnackbar(`Withdraw success`, {variant: 'success'})
+      ).catch(
+        error => enqueueSnackbar(`Withdraw error: ${error}`, {variant: 'error'})
+      )
     }
     if (depositedTime < 1000*60*60*24) {
       setModalOpen({
@@ -177,7 +179,7 @@ export default function SectionOpenedPool(props) {
       fetchWithdraw({
         account,
         provider,
-        amount: new BigNumber(pool.depositedBalance).toString(),
+        amount: pool.depositedBalance,
         contractAddress: pool.earnContractAddress,
       }).then(
         () => enqueueSnackbar(`Withdraw success`, {variant: 'success'})

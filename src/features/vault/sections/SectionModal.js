@@ -36,15 +36,11 @@ function SectionModal(props) {
 
   const handleClick = () => {
     const func = props.modalOpen.func;
-    func.func().then(
-      () => enqueueSnackbar(`${func.name} success`, {variant: 'success'})
-    ).catch(
-      error => enqueueSnackbar(`${func.name} error: ${error}`, {variant: 'error'})
-    )
+    func()
     props.setModalOpen({
       isOpen: false,
       depositedTime: 0,
-      func: { name:'',func:null}
+      func: null
     })
   }
 
@@ -52,7 +48,7 @@ function SectionModal(props) {
     props.setModalOpen({
       isOpen: false,
       depositedTime: 0,
-      func: { name:'',func:null}
+      func: null
     })
   }
 

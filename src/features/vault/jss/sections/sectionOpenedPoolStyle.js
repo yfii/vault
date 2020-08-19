@@ -13,6 +13,7 @@ const sectionOpenedPoolStyle = theme => ({
   root: {
     display: 'flex',
     backgroundColor: 'rgb(229, 229, 229)',
+    marginTop: "30px",
     '& > *': {
       margin: theme.spacing(1),
       // width: theme.spacing(16),
