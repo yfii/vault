@@ -22,10 +22,10 @@ const initialState = {
       usd: 0
     },
     "curve-dao-token": {
-      usd: 0
+      usd: 4
     },
     "yfii-finance":{
-      usd: 0
+      usd: 250
     },
   },
   fetchPoolBalancesPending: false,
