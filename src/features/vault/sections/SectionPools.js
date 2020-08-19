@@ -11,6 +11,8 @@ import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import Button from "components/CustomButtons/Button.js";
 import Avatar from '@material-ui/core/Avatar';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
 // sections for this section
 import SectionOpenedPool from "./SectionOpenedPool";
 //  hooks
@@ -108,6 +110,7 @@ export default function SectionPools() {
                 borderRadius: "50rem",
                 borderStyle: "solid",
                 borderWidth: "2px",
+                backgroudColor: "#f2f2f2",
                 // borderColor: "rgb(233, 30, 99)",
                 boxShadow: "0 0",
                 // opacity: 0.5
@@ -118,9 +121,10 @@ export default function SectionPools() {
                 display: "flex",
                 justifyContent : "space-around",
                 alignItems : "center",
-                alignContent: "space-around"
+                alignContent: "space-around",
+                backgroudColor: "#f2f2f2",
               }}>
-                <Avatar alt="Remy Sharp" src={logo} />
+                <Avatar alt={pool.token} src={require(`../../../images/${pool.token}-logo.png`)} />
                 <div
                   style={{
                     fontSize: "1.5rem"
@@ -142,7 +146,7 @@ export default function SectionPools() {
                   <h5>{byDecimals(getClaimPendingBalance(pool))}</h5>
                   <h6>Pending { pool.earnedToken }</h6>
                 </div>
-                <div><Button color="primary" onClick={openCard.bind(this, index)}>展开/关闭</Button></div>
+                <div><ArrowDropDownIcon onClick={openCard.bind(this, index)} fontSize="large"/></div>
               </CardBody>
             </Card>
           )

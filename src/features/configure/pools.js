@@ -11,7 +11,7 @@ export const pools = [
   {
     id: 'ycrv',
     name: 'YCRV',  
-    token: 'YCRV',
+    token: 'yCRV',
     tokenDescription: 'YCRV',
     tokenAddress: '0xdF5e0e81Dff6FAF3A7e52BA697820c5e32D806A8',
     earnedToken: 'YFII',
