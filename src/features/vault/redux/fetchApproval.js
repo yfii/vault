@@ -58,10 +58,9 @@ export function useFetchApproval() {
   // if array, means args passed to the action creator
   const dispatch = useDispatch();
 
-  const { fetchApprovalPending, fetchApprovalError } = useSelector(
+  const { fetchApprovalPending } = useSelector(
     state => ({
       fetchApprovalPending: state.vault.fetchApprovalPending,
-      fetchApprovalError: state.vault.fetchApprovalError,
     }),
     shallowEqual,
   );
@@ -71,7 +70,6 @@ export function useFetchApproval() {
   return {
     fetchApproval: boundAction,
     fetchApprovalPending,
-    fetchApprovalError,
   };
 }
 

@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from "@material-ui/core/styles";
 // core components
+import GridContainer from "components/Grid/GridContainer.js";
+import GridItem from "components/Grid/GridItem.js";
 import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
@@ -43,15 +45,25 @@ export default function SectionPools() {
   useEffect(() => {
     fetchPoolBalances({account, provider, pools});
   }, [account, provider,fetchPoolBalances]);
-
+  
   return (
-    <Grid container item>
-      {pools.map((pool, index) => {
-        return openedCardList.includes(index) ? (
-          <SectionOpenedPool closeCard={openCard.bind(this, index)} pool={pool} index={index} key={index}/>
-          ) : (
-          <div style={{width: '100%'}} key={index}>
-            <Card>
+    <GridContainer justify="center">
+      <GridItem xs={12} sm={10}>
+        {pools.map((pool, index) => {
+          return openedCardList.includes(index) ? (
+            <SectionOpenedPool closeCard={openCard.bind(this, index)} pool={pool} index={index} key={index}/>
+            ) : (
+            <Card key={index}
+              style={{
+                borderRadius: "50rem",
+                borderStyle: "solid",
+                borderWidth: "2px",
+                // borderColor: "rgb(233, 30, 99)",
+                boxShadow: "0 0",
+                // opacity: 0.5
+                
+              }}
+            >
               <CardBody style={{ 
                 display: "flex",
                 justifyContent : "space-around",
@@ -59,7 +71,11 @@ export default function SectionPools() {
                 alignContent: "space-around"
               }}>
                 <div>logo</div>
-                <div>{tokens[pool.token].tokenBalance}</div>
+                <div
+                  style={{
+                    fontSize: "1.5rem"
+                  }}
+                >{tokens[pool.token].tokenBalance}</div>
                 <div>
                   <h5>{pool.token}</h5>
                   <h6>Balance</h6>
@@ -79,9 +95,9 @@ export default function SectionPools() {
                 <div><Button color="primary" onClick={openCard.bind(this, index)}>展开/关闭</Button></div>
               </CardBody>
             </Card>
-          </div>
-        )
-      })}
-    </Grid>
+          )
+        })}
+      </GridItem>
+    </GridContainer>
   )
 }

@@ -4,7 +4,6 @@ import {
   VAULT_FETCH_BALANCES_BEGIN,
   VAULT_FETCH_BALANCES_SUCCESS,
   VAULT_FETCH_BALANCES_FAILURE,
-  VAULT_FETCH_BALANCES_DISMISS_ERROR,
 } from './constants';
 import { fetchBalance } from "../../web3";
 import Web3 from 'web3';
@@ -58,9 +57,8 @@ export function fetchBalances(data) {
           console.log(error)
           dispatch({
             type: VAULT_FETCH_BALANCES_FAILURE,
-            data: error.message || error,
           })
-          return reject()
+          return reject(error.message || error)
         }
         const newTokens = {};
         for(let i = 0; i < tokens.length; i++) {
@@ -81,24 +79,15 @@ export function fetchBalances(data) {
   };
 }
 
-// Async action saves request error by default, this method is used to dismiss the error info.
-// If you don't want errors to be saved in Redux store, just ignore this method.
-export function dismissFetchBalancesError() {
-  return {
-    type: VAULT_FETCH_BALANCES_DISMISS_ERROR,
-  };
-}
-
 export function useFetchBalances() {
   // args: false value or array
   // if array, means args passed to the action creator
   const dispatch = useDispatch();
 
-  const { tokens, fetchBalancesPending, fetchBalancesError } = useSelector(
+  const { tokens, fetchBalancesPending } = useSelector(
     state => ({
       tokens: state.vault.tokens,
       fetchBalancesPending: state.vault.fetchBalancesPending,
-      fetchBalancesError: state.vault.fetchBalancesError,
     }),
     shallowEqual,
   );
@@ -110,16 +99,10 @@ export function useFetchBalances() {
     [dispatch],
   );
 
-  const boundDismissFetchBalancesError = useCallback(() => {
-    dispatch(dismissFetchBalancesError());
-  }, [dispatch]);
-
   return {
     tokens,
     fetchBalances: boundAction,
     fetchBalancesPending,
-    fetchBalancesError,
-    dismissFetchBalancesError: boundDismissFetchBalancesError,
   };
 }
 
@@ -130,7 +113,6 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchBalancesPending: true,
-        fetchBalancesError: null,
       };
 
     case VAULT_FETCH_BALANCES_SUCCESS:
@@ -139,7 +121,6 @@ export function reducer(state, action) {
         ...state,
         tokens: action.data,
         fetchBalancesPending: false,
-        fetchBalancesError: null,
       };
 
     case VAULT_FETCH_BALANCES_FAILURE:
@@ -147,14 +128,6 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchBalancesPending: false,
-        fetchBalancesError: action.data.error,
-      };
-
-    case VAULT_FETCH_BALANCES_DISMISS_ERROR:
-      // Dismiss the request failure error
-      return {
-        ...state,
-        fetchBalancesError: null,
       };
 
     default:

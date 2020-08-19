@@ -10,3 +10,5 @@ export { withdraw } from './withdraw';
 export { fetchEarningsPerShare } from './fetchEarningsPerShare';
 export { farm } from './farm';
 export { harvest } from './harvest';
+export { fetchIdle } from './fetchIdle';
+export { fetchYield } from './fetchYield';

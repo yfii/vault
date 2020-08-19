@@ -65,6 +65,25 @@ export const pools = [
     depositedBalance: 0,
     claimAbleBalance: 0,
     claimPendingBalance: 0,
+    idle: 0,
+    yield: 0,
+    allowance: 0
+  },
+  {
+    id: 'ycrv2',
+    name: 'YCRV',  
+    token: 'YCRV',
+    tokenDescription: 'YCRV',
+    tokenAddress: '0xdF5e0e81Dff6FAF3A7e52BA697820c5e32D806A8',
+    earnedToken: 'YFII',
+    earnedTokenAddress: '0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83',
+    earnContractAddress: '0x35926815383961fEEECe0AFDd6089f4dBD8295A3',
+    strategyContractAddress: '0xfd4c75184bed2013fdb621f54885b2d2ed7c3894',
+    depositedBalance: 0,
+    claimAbleBalance: 0,
+    claimPendingBalance: 0,
+    idle: 0,
+    yield: 0,
     allowance: 0
   }
 ]

@@ -13,22 +13,21 @@ export default function App({ children }) {
   const { isInit, initialApp } = useInitialApp();
 
   useEffect(() => {
-    injected.isAuthorized().then(
-      isAuthorized => {
+    const data = {account: null, provider: null}
+    async function fetchData(){
+      try {
+        const isAuthorized = await injected.isAuthorized();
         if (isAuthorized) {
-          injected.activate()
-          .then(({account, provider}) => {
-            const data = { account, provider };
-            initialApp(data);
-            // setAccount(data).then(()=>setInit(true))
-          })
-          .catch((e) => {
-            console.log(e)
-          })
-        } else {
-          initialApp({ account: null, provider: null});
+          const {account, provider} = await injected.activate();
+          data.account = account;
+          data.provider = provider;
         }
-      });
+        initialApp(data);
+      } catch {
+        initialApp(data);
+      }
+    }
+    fetchData();
   }, [initialApp])
 
   return (

@@ -1,8 +1,8 @@
-export { fetchBalances, dismissFetchBalancesError } from './fetchBalances';
-export { fetchPoolBalances, dismissFetchPoolBalancesError } from './fetchPoolBalances';
+export { fetchBalances } from './fetchBalances';
+export { fetchPoolBalances } from './fetchPoolBalances';
 export { fetchApproval } from './fetchApproval';
-export { fetchDeposit, dismissFetchDepositError } from './fetchDeposit';
-export { fetchClaim, dismissFetchClaimError } from './fetchClaim';
-export { fetchWithdraw, dismissFetchWithdrawError } from './fetchWithdraw';
-export { fetchFarm, dismissFetchFarmError } from './fetchFarm';
-export { fetchHarvest, dismissFetchHarvestError } from './fetchHarvest';
+export { fetchDeposit } from './fetchDeposit';
+export { fetchClaim } from './fetchClaim';
+export { fetchWithdraw } from './fetchWithdraw';
+export { fetchFarm } from './fetchFarm';
+export { fetchHarvest } from './fetchHarvest';

@@ -2,14 +2,16 @@ import { strategyContractABI } from "../configure";
 import { fetchGasPrice } from '.';
 
 export const harvest = async ({web3, account, contractAddress}) => {
-  console.log('harvest begin=================================================')
-  console.log('account: ' + account)
-  console.log('contractAddress: ' + contractAddress)
+  console.log(`=====================================harvest begin=====================================`)
   const gasPrice = await fetchGasPrice();
-  console.log('gasPrice: ' + gasPrice);
+  console.log(`
+    account:${account}\n
+    contractAddress:${contractAddress}\n
+    gasPrice:${gasPrice}\n
+  `)
   const contract = new web3.eth.Contract(strategyContractABI, contractAddress);
   const data = await _harvest({web3, contract, account, gasPrice});
-  console.log('harvest success=================================================')
+  console.log(`=====================================harvest success=====================================`)
   return data;
 }
 

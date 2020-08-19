@@ -5,9 +5,8 @@ import {
   VAULT_FETCH_POOL_BALANCES_BEGIN,
   VAULT_FETCH_POOL_BALANCES_SUCCESS,
   VAULT_FETCH_POOL_BALANCES_FAILURE,
-  VAULT_FETCH_POOL_BALANCES_DISMISS_ERROR,
 } from './constants';
-import { fetchDepositedBalance, fetchEarnedBalance, fetchAllowance, fetchEarningsPerShare } from "../../web3";
+import { fetchDepositedBalance, fetchEarnedBalance, fetchAllowance, fetchEarningsPerShare, fetchIdle } from "../../web3";
 import Web3 from 'web3';
 import async from 'async';
 
@@ -81,6 +80,18 @@ export function fetchPoolBalances(data) {
               error => callbackInner(error, 0)
             ) 
           },
+          (callbackInner) => {
+            fetchIdle({
+              web3,
+              tokenAddress: pool.tokenAddress,
+              contractAddress:pool.earnContractAddress,
+              account,
+            }).then(
+              data => callbackInner(null, data)
+            ).catch(
+              error => callbackInner(error, 0)
+            ) 
+          }
         ], (error, data) => {
           const magnitude = 10**40;
           const payout = data[0] && data[0].payout || 0;
@@ -88,17 +99,16 @@ export function fetchPoolBalances(data) {
           pool.depositedBalance = data[0] && data[0].depositedBalance || 0
           pool.claimAbleBalance = data[1] || 0
           pool.allowance = data[2] || 0
+          pool.idle = data[4] || 0
           pool.claimPendingBalance = earningsPerShare*pool.depositedBalance/magnitude - payout;
           callback(null, pool)
         })
       }, (error, pools) => {
         if(error) {
-          console.log(error.message || error)
           dispatch({
             type: VAULT_FETCH_POOL_BALANCES_FAILURE,
-            data: error.message || error,
           })
-          return reject()
+          return reject(error.message || error)
         }
         dispatch({
           type: VAULT_FETCH_POOL_BALANCES_SUCCESS,
@@ -112,24 +122,15 @@ export function fetchPoolBalances(data) {
   };
 }
 
-// Async action saves request error by default, this method is used to dismiss the error info.
-// If you don't want errors to be saved in Redux store, just ignore this method.
-export function dismissFetchPoolBalancesError() {
-  return {
-    type: VAULT_FETCH_POOL_BALANCES_DISMISS_ERROR,
-  };
-}
-
 export function useFetchPoolBalances() {
   // args: false value or array
   // if array, means args passed to the action creator
   const dispatch = useDispatch();
 
-  const { pools, fetchPoolBalancesPending, fetchPoolBalancesError } = useSelector(
+  const { pools, fetchPoolBalancesPending } = useSelector(
     state => ({
       pools: state.vault.pools,
       fetchPoolBalancesPending: state.vault.fetchPoolBalancesPending,
-      fetchPoolBalancesError: state.vault.fetchPoolBalancesError,
     }),
     shallowEqual,
   );
@@ -141,16 +142,10 @@ export function useFetchPoolBalances() {
     [dispatch],
   );
 
-  const boundDismissFetchPoolBalancesError = useCallback(() => {
-    dispatch(dismissFetchPoolBalancesError());
-  }, [dispatch]);
-
   return {
     pools,
     fetchPoolBalances: boundAction,
-    fetchPoolBalancesPending,
-    fetchPoolBalancesError,
-    dismissFetchPoolBalancesError: boundDismissFetchPoolBalancesError,
+    fetchPoolBalancesPending
   };
 }
 
@@ -161,7 +156,6 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchPoolBalancesPending: true,
-        fetchPoolBalancesError: null,
       };
 
     case VAULT_FETCH_POOL_BALANCES_SUCCESS:
@@ -170,7 +164,6 @@ export function reducer(state, action) {
         ...state,
         pools: action.data,
         fetchPoolBalancesPending: false,
-        fetchPoolBalancesError: null,
       };
 
     case VAULT_FETCH_POOL_BALANCES_FAILURE:
@@ -178,14 +171,6 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchPoolBalancesPending: false,
-        fetchPoolBalancesError: action.data.error,
-      };
-
-    case VAULT_FETCH_POOL_BALANCES_DISMISS_ERROR:
-      // Dismiss the request failure error
-      return {
-        ...state,
-        fetchPoolBalancesError: null,
       };
 
     default:

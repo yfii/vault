@@ -4,7 +4,6 @@ import {
   VAULT_FETCH_WITHDRAW_BEGIN,
   VAULT_FETCH_WITHDRAW_SUCCESS,
   VAULT_FETCH_WITHDRAW_FAILURE,
-  VAULT_FETCH_WITHDRAW_DISMISS_ERROR,
 } from './constants';
 import { withdraw } from "../../web3";
 import Web3 from 'web3';
@@ -32,7 +31,6 @@ export function fetchWithdraw(data) {
             type: VAULT_FETCH_WITHDRAW_SUCCESS,
             data,
           });
-            console.log(data)
             resolve(data);
           },
         ).catch(
@@ -40,21 +38,12 @@ export function fetchWithdraw(data) {
           error => {
             dispatch({
               type: VAULT_FETCH_WITHDRAW_FAILURE,
-              data: { error: error.message || error },
             });
-            reject(error);
+            reject(error.message || error);
           }
         )
     });
     return promise;
-  };
-}
-
-// Async action saves request error by default, this method is used to dismiss the error info.
-// If you don't want errors to be saved in Redux store, just ignore this method.
-export function dismissFetchWithdrawError() {
-  return {
-    type: VAULT_FETCH_WITHDRAW_DISMISS_ERROR,
   };
 }
 
@@ -63,10 +52,9 @@ export function useFetchWithdraw() {
   // if array, means args passed to the action creator
   const dispatch = useDispatch();
 
-  const { fetchWithdrawPending, fetchWithdrawError } = useSelector(
+  const { fetchWithdrawPending } = useSelector(
     state => ({
       fetchWithdrawPending: state.vault.fetchWithdrawPending,
-      fetchWithdrawError: state.vault.fetchWithdrawError,
     }),
     shallowEqual,
   );
@@ -78,15 +66,9 @@ export function useFetchWithdraw() {
     [dispatch],
   );
 
-  const boundDismissFetchWithdrawError = useCallback(() => {
-    dispatch(dismissFetchWithdrawError());
-  }, [dispatch]);
-
   return {
     fetchWithdraw: boundAction,
-    fetchWithdrawPending,
-    fetchWithdrawError,
-    dismissFetchWithdrawError: boundDismissFetchWithdrawError,
+    fetchWithdrawPending
   };
 }
 
@@ -97,7 +79,6 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchWithdrawPending: true,
-        fetchWithdrawError: null,
       };
 
     case VAULT_FETCH_WITHDRAW_SUCCESS:
@@ -105,7 +86,6 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchWithdrawPending: false,
-        fetchWithdrawError: null,
       };
 
     case VAULT_FETCH_WITHDRAW_FAILURE:
@@ -113,14 +93,6 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchWithdrawPending: false,
-        fetchWithdrawError: action.data.error,
-      };
-
-    case VAULT_FETCH_WITHDRAW_DISMISS_ERROR:
-      // Dismiss the request failure error
-      return {
-        ...state,
-        fetchWithdrawError: null,
       };
 
     default:

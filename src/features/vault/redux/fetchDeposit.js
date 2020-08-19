@@ -4,7 +4,6 @@ import {
   VAULT_FETCH_DEPOSIT_BEGIN,
   VAULT_FETCH_DEPOSIT_SUCCESS,
   VAULT_FETCH_DEPOSIT_FAILURE,
-  VAULT_FETCH_DEPOSIT_DISMISS_ERROR,
 } from './constants';
 import { deposit } from "../../web3";
 import Web3 from 'web3';
@@ -32,7 +31,6 @@ export function fetchDeposit(data) {
             type: VAULT_FETCH_DEPOSIT_SUCCESS,
             data,
           });
-          console.log(data)
           resolve(data);
         },
       ).catch(
@@ -40,21 +38,12 @@ export function fetchDeposit(data) {
         error => {
           dispatch({
             type: VAULT_FETCH_DEPOSIT_FAILURE,
-            data: { error: error.message || error },
           });
-          reject(error);
+          reject(error.message || error);
         }
       )
     });
     return promise;
-  };
-}
-
-// Async action saves request error by default, this method is used to dismiss the error info.
-// If you don't want errors to be saved in Redux store, just ignore this method.
-export function dismissFetchDepositError() {
-  return {
-    type: VAULT_FETCH_DEPOSIT_DISMISS_ERROR,
   };
 }
 
@@ -63,10 +52,9 @@ export function useFetchDeposit() {
   // if array, means args passed to the action creator
   const dispatch = useDispatch();
 
-  const { fetchDepositPending, fetchDepositError } = useSelector(
+  const { fetchDepositPending } = useSelector(
     state => ({
       fetchDepositPending: state.vault.fetchDepositPending,
-      fetchDepositError: state.vault.fetchDepositError,
     }),
     shallowEqual,
   );
@@ -78,15 +66,9 @@ export function useFetchDeposit() {
     [dispatch],
   );
 
-  const boundDismissFetchDepositError = useCallback(() => {
-    dispatch(dismissFetchDepositError());
-  }, [dispatch]);
-
   return {
     fetchDeposit: boundAction,
-    fetchDepositPending,
-    fetchDepositError,
-    dismissFetchDepositError: boundDismissFetchDepositError,
+    fetchDepositPending
   };
 }
 
@@ -97,7 +79,6 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchDepositPending: true,
-        fetchDepositError: null,
       };
 
     case VAULT_FETCH_DEPOSIT_SUCCESS:
@@ -105,7 +86,6 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchDepositPending: false,
-        fetchDepositError: null,
       };
 
     case VAULT_FETCH_DEPOSIT_FAILURE:
@@ -113,14 +93,6 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchDepositPending: false,
-        fetchDepositError: action.data.error,
-      };
-
-    case VAULT_FETCH_DEPOSIT_DISMISS_ERROR:
-      // Dismiss the request failure error
-      return {
-        ...state,
-        fetchDepositError: null,
       };
 
     default:

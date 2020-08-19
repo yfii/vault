@@ -4,7 +4,6 @@ import {
   VAULT_FETCH_CLAIM_BEGIN,
   VAULT_FETCH_CLAIM_SUCCESS,
   VAULT_FETCH_CLAIM_FAILURE,
-  VAULT_FETCH_CLAIM_DISMISS_ERROR,
 } from './constants';
 import { claim } from "../../web3";
 import Web3 from 'web3';
@@ -36,7 +35,6 @@ export function fetchClaim(data) {
               type: VAULT_FETCH_CLAIM_SUCCESS,
               data,
             });
-            console.log(data)
             resolve(data);
           },
         ).catch(
@@ -44,21 +42,12 @@ export function fetchClaim(data) {
           error => {
             dispatch({
               type: VAULT_FETCH_CLAIM_FAILURE,
-              data: { error: error.message || error },
             });
-            reject(error);
+            reject(error.message || error);
           }
         )
     });
     return promise;
-  };
-}
-
-// Async action saves request error by default, this method is used to dismiss the error info.
-// If you don't want errors to be saved in Redux store, just ignore this method.
-export function dismissFetchClaimError() {
-  return {
-    type: VAULT_FETCH_CLAIM_DISMISS_ERROR,
   };
 }
 
@@ -67,10 +56,9 @@ export function useFetchClaim() {
   // if array, means args passed to the action creator
   const dispatch = useDispatch();
 
-  const { fetchClaimPending, fetchClaimError } = useSelector(
+  const { fetchClaimPending } = useSelector(
     state => ({
       fetchClaimPending: state.vault.fetchClaimPending,
-      fetchClaimError: state.vault.fetchClaimError,
     }),
     shallowEqual,
   );
@@ -82,15 +70,9 @@ export function useFetchClaim() {
     [dispatch],
   );
 
-  const boundDismissFetchClaimError = useCallback(() => {
-    dispatch(dismissFetchClaimError());
-  }, [dispatch]);
-
   return {
     fetchClaim: boundAction,
     fetchClaimPending,
-    fetchClaimError,
-    dismissFetchClaimError: boundDismissFetchClaimError,
   };
 }
 
@@ -101,7 +83,6 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchClaimPending: true,
-        fetchClaimError: null,
       };
 
     case VAULT_FETCH_CLAIM_SUCCESS:
@@ -109,7 +90,6 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchClaimPending: false,
-        fetchClaimError: null,
       };
 
     case VAULT_FETCH_CLAIM_FAILURE:
@@ -117,14 +97,6 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchClaimPending: false,
-        fetchClaimError: action.data.error,
-      };
-
-    case VAULT_FETCH_CLAIM_DISMISS_ERROR:
-      // Dismiss the request failure error
-      return {
-        ...state,
-        fetchClaimError: null,
       };
 
     default:

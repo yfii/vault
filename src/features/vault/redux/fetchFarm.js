@@ -4,7 +4,6 @@ import {
   VAULT_FETCH_FARM_BEGIN,
   VAULT_FETCH_FARM_SUCCESS,
   VAULT_FETCH_FARM_FAILURE,
-  VAULT_FETCH_FARM_DISMISS_ERROR,
 } from './constants';
 import { farm } from "../../web3";
 import Web3 from 'web3';
@@ -42,9 +41,8 @@ export function fetchFarm(data) {
         error => {
           dispatch({
             type: VAULT_FETCH_FARM_FAILURE,
-            data: { error: error.message || error },
           })
-          // reject(error);
+          reject(error.message || error);
         }
       )
     });
@@ -53,38 +51,23 @@ export function fetchFarm(data) {
   };
 }
 
-// Async action saves request error by default, this method is used to dismiss the error info.
-// If you don't want errors to be saved in Redux store, just ignore this method.
-export function dismissFetchFarmError() {
-  return {
-    type: VAULT_FETCH_FARM_DISMISS_ERROR,
-  };
-}
-
 export function useFetchFarm() {
   // args: false value or array
   // if array, means args passed to the action creator
   const dispatch = useDispatch();
 
-  const { fetchFarmPending, fetchFarmError } = useSelector(
+  const { fetchFarmPending } = useSelector(
     state => ({
       fetchFarmPending: state.vault.fetchFarmPending,
-      fetchFarmError: state.vault.fetchFarmError,
     }),
     shallowEqual,
   );
 
   const boundAction = useCallback(data => dispatch(fetchFarm(data)), [dispatch]);
 
-  const boundDismissFetchFarmError = useCallback(() => {
-    dispatch(dismissFetchFarmError());
-  }, [dispatch]);
-
   return {
     fetchFarm: boundAction,
-    fetchFarmPending,
-    fetchFarmError,
-    dismissFetchFarmError: boundDismissFetchFarmError,
+    fetchFarmPending
   };
 }
 
@@ -95,7 +78,6 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchFarmPending: true,
-        fetchFarmError: null,
       };
 
     case VAULT_FETCH_FARM_SUCCESS:
@@ -103,7 +85,6 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchFarmPending: false,
-        fetchFarmError: null,
       };
 
     case VAULT_FETCH_FARM_FAILURE:
@@ -111,14 +92,6 @@ export function reducer(state, action) {
       return {
         ...state,
         fetchFarmPending: false,
-        fetchFarmError: action.data.error,
-      };
-
-    case VAULT_FETCH_FARM_DISMISS_ERROR:
-      // Dismiss the request failure error
-      return {
-        ...state,
-        fetchFarmError: null,
       };
 
     default:
