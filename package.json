@@ -104,7 +104,7 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "buildAndDeploy": "node scripts/build.js && echo 'beta.yfii.finance' >> ./build/CNAME && gh-pages -d build",
-    "deploy1": "echo 'beta.yfii.finance' >> ./build/CNAME && gh-pages -d build",
+    "deploy1": "echo 'beta.yfii.finance' >> ./build/CNAME && gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
