@@ -96,6 +96,7 @@ export default function HeaderLinks(props) {
           className={
             classes.navLink + " " + classes.socialIconsButton
           }
+          href="#contained-buttons"
         >
           <i
             className={

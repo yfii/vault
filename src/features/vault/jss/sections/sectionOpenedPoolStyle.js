@@ -16,7 +16,7 @@ const sectionOpenedPoolStyle = theme => ({
       margin: theme.spacing(1),
       // width: theme.spacing(16),
       // height: theme.spacing(16),
-    },
+    }
   },
 });
 

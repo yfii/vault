@@ -87,7 +87,7 @@ export default function SectionOpenedPool(props) {
 
   const byDecimals = number => {
     const decimals = new BigNumber(10).exponentiatedBy(18);
-    return new BigNumber(number).dividedBy(decimals).toFormat(2);
+    return new BigNumber(number).dividedBy(decimals).toFormat(4);
   }
 
   const onApproval = () => {
