@@ -12,3 +12,5 @@ export { farm } from './farm';
 export { harvest } from './harvest';
 export { fetchIdle } from './fetchIdle';
 export { fetchYield } from './fetchYield';
+export { fetchClaimAbleTokens } from './fetchClaimAbleTokens'; 
+export { fetchDepositedTime } from './fetchDepositedTime';

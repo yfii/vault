@@ -6,3 +6,4 @@ export { fetchClaim } from './fetchClaim';
 export { fetchWithdraw } from './fetchWithdraw';
 export { fetchFarm } from './fetchFarm';
 export { fetchHarvest } from './fetchHarvest';
+export { fetchPrice } from './fetchPrice';

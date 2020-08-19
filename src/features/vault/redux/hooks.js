@@ -6,3 +6,4 @@ export { useFetchClaim } from './fetchClaim';
 export { useFetchWithdraw } from './fetchWithdraw';
 export { useFetchFarm } from './fetchFarm';
 export { useFetchHarvest } from './fetchHarvest';
+export { useFetchPrice } from './fetchPrice';

@@ -1,18 +1,19 @@
+import axios from 'axios';
 import { useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import {
-  VAULT_FETCH_DEPOSIT_BEGIN,
-  VAULT_FETCH_DEPOSIT_SUCCESS,
-  VAULT_FETCH_DEPOSIT_FAILURE,
+  VAULT_FETCH_PRICE_BEGIN,
+  VAULT_FETCH_PRICE_SUCCESS,
+  VAULT_FETCH_PRICE_FAILURE,
 } from './constants';
-import { deposit } from "../../web3";
-import Web3 from 'web3';
 
-export function fetchDeposit(data) {
+// Rekit uses redux-thunk for async actions by default: https://github.com/gaearon/redux-thunk
+// If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
+export function fetchPrice() {
   return dispatch => {
     // optionally you can have getState as the second argument
     dispatch({
-      type: VAULT_FETCH_DEPOSIT_BEGIN,
+      type: VAULT_FETCH_PRICE_BEGIN,
     });
 
     // Return a promise so that you could control UI flow without states in the store.
@@ -21,78 +22,79 @@ export function fetchDeposit(data) {
     // e.g.: handleSubmit() { this.props.actions.submitForm(data).then(()=> {}).catch(() => {}); }
     const promise = new Promise((resolve, reject) => {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
-      // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/home/redux/fetchRedditReactjsList.js
-      // args.error here is only for test coverage purpose.
-      const { account, provider, amount, contractAddress } = data;
-      const web3 = new Web3(provider);
-      deposit({ web3, account, amount, contractAddress }).then(
-        data => {
+      const doRequest = axios.get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,curve-dao-token,yfii-finance&vs_currencies=usd');
+
+      doRequest.then(
+        res => {
           dispatch({
-            type: VAULT_FETCH_DEPOSIT_SUCCESS,
-            data,
+            type: VAULT_FETCH_PRICE_SUCCESS,
+            data: res.data,
           });
-          resolve(data);
+          resolve(res);
         },
-      ).catch(
         // Use rejectHandler as the second argument so that render errors won't be caught.
         error => {
           dispatch({
-            type: VAULT_FETCH_DEPOSIT_FAILURE,
+            type: VAULT_FETCH_PRICE_FAILURE,
           });
           reject(error.message || error);
-        }
-      )
+        },
+      );
     });
+
     return promise;
   };
 }
 
-export function useFetchDeposit() {
+export function useFetchPrice() {
   // args: false value or array
   // if array, means args passed to the action creator
   const dispatch = useDispatch();
 
-  const { fetchDepositPending } = useSelector(
+  const { price, fetchPricePending } = useSelector(
     state => ({
-      fetchDepositPending: state.vault.fetchDepositPending,
+      price: state.vault.price,
+      fetchPricePending: state.vault.fetchPricePending,
     }),
     shallowEqual,
   );
 
   const boundAction = useCallback(
-    (data) => {
-      return dispatch(fetchDeposit(data));
+    () => {
+      dispatch(fetchPrice());
     },
     [dispatch],
   );
 
   return {
-    fetchDeposit: boundAction,
-    fetchDepositPending
+    price,
+    fetchPrice: boundAction,
+    fetchPricePending
   };
 }
 
 export function reducer(state, action) {
   switch (action.type) {
-    case VAULT_FETCH_DEPOSIT_BEGIN:
+    case VAULT_FETCH_PRICE_BEGIN:
       // Just after a request is sent
       return {
         ...state,
-        fetchDepositPending: true,
+        fetchPricePending: true,
       };
 
-    case VAULT_FETCH_DEPOSIT_SUCCESS:
+    case VAULT_FETCH_PRICE_SUCCESS:
       // The request is success
       return {
         ...state,
-        fetchDepositPending: false,
+        price: action.data,
+        fetchPricePending: false,
       };
 
-    case VAULT_FETCH_DEPOSIT_FAILURE:
+    case VAULT_FETCH_PRICE_FAILURE:
       // The request is failed
       return {
         ...state,
-        fetchDepositPending: false,
+        fetchPricePending: false,
       };
 
     default:

@@ -65,7 +65,7 @@ export function useFetchClaim() {
 
   const boundAction = useCallback(
     (data) => {
-      dispatch(fetchClaim(data));
+      return dispatch(fetchClaim(data));
     },
     [dispatch],
   );

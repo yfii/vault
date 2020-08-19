@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import moment from "moment";
 import BigNumber from "bignumber.js";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
@@ -14,7 +15,9 @@ import Button from "components/CustomButtons/Button.js";
 import { useSnackbar } from 'notistack';
 //  hooks
 import { useAccount } from '../../common/redux/hooks';
-import { useFetchBalances, useFetchApproval, useFetchDeposit, useFetchClaim, useFetchWithdraw, useFetchFarm, useFetchHarvest } from '../redux/hooks';
+import { useFetchBalances, useFetchApproval, useFetchDeposit, useFetchClaim, useFetchWithdraw, useFetchFarm, useFetchHarvest, useFetchPrice } from '../redux/hooks';
+// sections for this section
+import SectionModal from "./SectionModal";
 
 import sectionOpenedPoolStyle from "../jss/sections/sectionOpenedPoolStyle";
 
@@ -32,6 +35,11 @@ export default function SectionOpenedPool(props) {
   const { fetchWithdraw, fetchWithdrawPending } = useFetchWithdraw();
   const { fetchFarm, fetchFarmPending } = useFetchFarm();
   const { fetchHarvest, fetchHarvestPending } = useFetchHarvest();
+  const { price } = useFetchPrice();
+
+  const [ claimPendingBalance, setClaimPendingBalance ] = useState(0);
+  const [ yieldValue, setYieldValue ] = useState(0);
+  const [ modalOpen, setModalOpen ] = useState({ isOpen: false, depositedTime: 0,func: { name:'',func:null}});
 
   const [depositedBalance, setDepositedBalance] = useState();
 
@@ -44,6 +52,43 @@ export default function SectionOpenedPool(props) {
   const handleDepositedBalance = event => {
     setDepositedBalance(event.target.value);
   };
+
+  const getYieldValue = () => {
+    return new BigNumber(price["curve-dao-token"].usd).multipliedBy(
+      new BigNumber(pool.claimAbleTokens)
+    ).dividedBy(
+      new BigNumber(price["yfii-finance"].usd)
+    ).toNumber()
+  }
+
+  const getEarningsPerShare = (yieldValue) => {
+    // earningsPerShare = earnings_per_share + yield_value*(magnitude)/(total_stake);
+    return new BigNumber(pool.earningsPerShare).plus(
+      new BigNumber(yieldValue).multipliedBy(
+        new BigNumber(pool.magnitude)
+      ).dividedBy(
+        new BigNumber(pool.totalStake || 1)
+      )
+    ).toNumber();
+  }
+
+  const getClaimPendingBalance = (value) => {
+    // claimPendingBalance = earningsPerShare*pool.depositedBalance/magnitude - payout;
+    const earningsPerShare = getEarningsPerShare(value);
+    console.log(earningsPerShare)
+    return new BigNumber(earningsPerShare).multipliedBy(
+      new BigNumber(pool.depositedBalance)
+    ).dividedBy(
+      new BigNumber(pool.magnitude)
+    ).minus(
+      new BigNumber(pool.payout)
+    ).toNumber();
+  }
+
+  const byDecimals = number => {
+    const decimals = new BigNumber(10).exponentiatedBy(18);
+    return new BigNumber(number).dividedBy(decimals).toFormat(2);
+  }
 
   const onApproval = () => {
     fetchApproval({
@@ -64,7 +109,7 @@ export default function SectionOpenedPool(props) {
     fetchDeposit({
       account,
       provider,
-      amount: depositedBalance,
+      amount: new BigNumber(depositedBalance).toString(),
       contractAddress: pool.earnContractAddress,
     }).then(
       () => enqueueSnackbar(`Deposit success`, {variant: 'success'})
@@ -74,30 +119,72 @@ export default function SectionOpenedPool(props) {
   }
 
   const onClaim = () => {
-    // alert('onClaim')
-    fetchClaim({
-      account,
-      provider,
-      contractAddress: pool.earnContractAddress,
-    }).then(
-      () => enqueueSnackbar(`Claim success`, {variant: 'success'})
-    ).catch(
-      error => enqueueSnackbar(`Claim error: ${error}`, {variant: 'error'})
-    )
+    const time = new BigNumber(pool.depositedTime).multipliedBy(1000).toNumber();
+    const nowTime = new Date().getTime();
+    const depositedTime = new BigNumber(nowTime).minus(time).toNumber();
+    const func ={
+      name: 'Claim',
+      func: () => {
+        fetchClaim({
+          account,
+          provider,
+          contractAddress: pool.earnContractAddress,
+        })
+      }
+    }
+    if (depositedTime < 1000*60*60*24) {
+      setModalOpen({
+        isOpen: true,
+        depositedTime,
+        func
+      })
+    } else {
+      fetchClaim({
+        account,
+        provider,
+        contractAddress: pool.earnContractAddress,
+      }).then(
+        () => enqueueSnackbar(`Claim success`, {variant: 'success'})
+      ).catch(
+        error => enqueueSnackbar(`Claim error: ${error}`, {variant: 'error'})
+      )
+    }    
   }
 
   const onWithdraw = () => {
     // alert('Withdraw')
-    fetchWithdraw({
-      account,
-      provider,
-      amount: pool.depositedBalance,
-      contractAddress: pool.earnContractAddress,
-    }).then(
-      () => enqueueSnackbar(`Withdraw success`, {variant: 'success'})
-    ).catch(
-      error => enqueueSnackbar(`Withdraw error: ${error}`, {variant: 'error'})
-    )
+    const time = new BigNumber(pool.depositedTime).multipliedBy(1000).toNumber();
+    const nowTime = new Date().getTime();
+    const depositedTime = new BigNumber(nowTime).minus(time).toNumber();
+    const func ={
+      name: 'Withdraw',
+      func: () => {
+        fetchWithdraw({
+          account,
+          provider,
+          amount: new BigNumber(pool.depositedBalance).toString(),
+          contractAddress: pool.earnContractAddress,
+        })
+      }
+    }
+    if (depositedTime < 1000*60*60*24) {
+      setModalOpen({
+        isOpen: true,
+        depositedTime,
+        func
+      })
+    } else {
+      fetchWithdraw({
+        account,
+        provider,
+        amount: new BigNumber(pool.depositedBalance).toString(),
+        contractAddress: pool.earnContractAddress,
+      }).then(
+        () => enqueueSnackbar(`Withdraw success`, {variant: 'success'})
+      ).catch(
+        error => enqueueSnackbar(`Withdraw error: ${error}`, {variant: 'error'})
+      )
+    }    
   }
 
   const onFarm = () => {
@@ -124,13 +211,16 @@ export default function SectionOpenedPool(props) {
     )
   }
 
-  const byDecimals = number => {
-    const decimals = new BigNumber(10).exponentiatedBy(18);
-    return new BigNumber(number).dividedBy(decimals).toFormat(2);
-  }
+  useEffect(() => {
+    const value = getYieldValue()
+    const data = getClaimPendingBalance(value);
+    setClaimPendingBalance(data);
+    setYieldValue(value)
+  }, [pool]);
 
   return (
     <GridContainer>
+      <SectionModal pool={pool} modalOpen={modalOpen} setModalOpen={setModalOpen}/>
       <GridItem xs={12}>
         <Paper className={classes.root}>
           <GridContainer>
@@ -209,7 +299,7 @@ export default function SectionOpenedPool(props) {
               <Card>
                 <CardBody>
                   <h4 className={classes.cardTitle}>Pending</h4>
-                  <h5>{byDecimals(pool.claimPendingBalance)}{pool.earnedToken}</h5>
+                  <h5>{byDecimals(claimPendingBalance)}{pool.earnedToken}</h5>
                   <p>Something descriptions<br/>contents for pending</p>
                 </CardBody>
               </Card>
@@ -233,7 +323,7 @@ export default function SectionOpenedPool(props) {
             <Card>
               <CardBody>
                 <h4 className={classes.cardTitle}>Yield</h4>
-                <h5 className={classes.textCenter}>{byDecimals(pool.yield)}{pool.earnedToken}</h5>
+                <h5 className={classes.textCenter}>{byDecimals(yieldValue)}{pool.earnedToken}</h5>
                 <Button color="primary" round block onClick={onHarvest}>Harvest</Button>
               </CardBody>
             </Card>

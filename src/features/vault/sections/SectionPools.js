@@ -13,7 +13,7 @@ import Button from "components/CustomButtons/Button.js";
 import SectionOpenedPool from "./SectionOpenedPool";
 //  hooks
 import { useAccount } from '../../common/redux/hooks';
-import { useFetchBalances, useFetchPoolBalances } from '../redux/hooks';
+import { useFetchBalances, useFetchPoolBalances, useFetchPrice } from '../redux/hooks';
 
 import sectionPoolsStyle from "../jss/sections/sectionPoolsStyle";
 
@@ -23,6 +23,7 @@ export default function SectionPools() {
   const { account, provider } = useAccount();
   const { pools, fetchPoolBalances } = useFetchPoolBalances();
   const { tokens, fetchBalances } = useFetchBalances();
+  const { fetchPrice } = useFetchPrice();
   const [ openedCardList, setOpenCardList ] = useState([]);
   const classes = useStyles();
 
@@ -44,6 +45,10 @@ export default function SectionPools() {
 
   useEffect(() => {
     fetchPoolBalances({account, provider, pools});
+  }, [account, provider,fetchPoolBalances]);
+  
+  useEffect(() => {
+    fetchPrice();
   }, [account, provider,fetchPoolBalances]);
   
   return (

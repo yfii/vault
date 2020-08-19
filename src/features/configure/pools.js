@@ -6,52 +6,8 @@
 // earnedToken: '奖励代币',
 // earnedTokenAddress: '奖励代币ERC20地址',
 // earnContractAddress: '池子合约地址',
+import BigNumber from "bignumber.js";
 export const pools = [
-  // {
-  //   id: 'weth',
-  //   name: 'WETH',  
-  //   token: 'WETH',
-  //   tokenDescription: 'WETH',
-  //   tokenAddress: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
-  //   earnedToken: 'YFII',
-  //   earnedTokenAddress: '0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83',
-  //   earnContractAddress: '0xA9C7216650dA5A9bbC049ffa56008029344DB010',
-  //   strategyContractAddress: '0xfd4c75184bed2013fdb621f54885b2d2ed7c3894',
-  //   depositedBalance: 0,
-  //   claimAbleBalance: 0,
-  //   claimPendingBalance: 0,
-  //   allowance: 0
-  // },
-  // {
-  //   id: 'snx',
-  //   name: 'SNX',  
-  //   token: 'SNX',
-  //   tokenDescription: 'SNX',
-  //   tokenAddress: '0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f',
-  //   earnedToken: 'YFII',
-  //   earnedTokenAddress: '0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83',
-  //   earnContractAddress: '0x956da37db508901294f62488e030ce0871293270',
-  //   strategyContractAddress: '0xfd4c75184bed2013fdb621f54885b2d2ed7c3894',
-  //   depositedBalance: 0,
-  //   claimAbleBalance: 0,
-  //   claimPendingBalance: 0,
-  //   allowance: 0
-  // },
-  // {
-  //   id: 'ycrv',
-  //   name: 'YCRV',  
-  //   token: 'YCRV',
-  //   tokenDescription: 'YCRV',
-  //   tokenAddress: '0xdF5e0e81Dff6FAF3A7e52BA697820c5e32D806A8',
-  //   earnedToken: 'YFII',
-  //   earnedTokenAddress: '0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83',
-  //   earnContractAddress: '0xD2db1EF55549eCdacb4e7da081216AE96f0Eedcb',
-  //   strategyContractAddress: '0xfd4c75184bed2013fdb621f54885b2d2ed7c3894',
-  //   depositedBalance: 0,
-  //   claimAbleBalance: 0,
-  //   claimPendingBalance: 0,
-  //   allowance: 0
-  // },
   {
     id: 'ycrv',
     name: 'YCRV',  
@@ -65,25 +21,13 @@ export const pools = [
     depositedBalance: 0,
     claimAbleBalance: 0,
     claimPendingBalance: 0,
+    claimAbleTokens: 0,
+    magnitude: new BigNumber(10).exponentiatedBy(40).toNumber(),
+    totalStake: 0,
+    earningsPerShare: 0,
     idle: 0,
-    yield: 0,
-    allowance: 0
-  },
-  {
-    id: 'ycrv2',
-    name: 'YCRV',  
-    token: 'YCRV',
-    tokenDescription: 'YCRV',
-    tokenAddress: '0xdF5e0e81Dff6FAF3A7e52BA697820c5e32D806A8',
-    earnedToken: 'YFII',
-    earnedTokenAddress: '0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83',
-    earnContractAddress: '0x35926815383961fEEECe0AFDd6089f4dBD8295A3',
-    strategyContractAddress: '0xfd4c75184bed2013fdb621f54885b2d2ed7c3894',
-    depositedBalance: 0,
-    claimAbleBalance: 0,
-    claimPendingBalance: 0,
-    idle: 0,
-    yield: 0,
-    allowance: 0
+    allowance: 0,
+    payout: 0,
+    depositedTime: 0
   }
 ]

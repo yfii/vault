@@ -4,6 +4,8 @@ import BigNumber from "bignumber.js";
 
 export const withdraw = async ({web3, account, amount, contractAddress}) => {
   console.log(`=====================================withdraw begin=====================================`)
+  console.log(amount)
+  const contract = new web3.eth.Contract(earnContractABI, contractAddress);
   const gasPrice = await fetchGasPrice();
   console.log(`
     account:${account}\n
@@ -11,15 +13,16 @@ export const withdraw = async ({web3, account, amount, contractAddress}) => {
     gasPrice:${gasPrice}\n
     amount:${web3.utils.toWei(amount, "ether")}
   `)
-  const contract = new web3.eth.Contract(earnContractABI, contractAddress);
+  
+  console.log(`=====================================withdraw=====================================`)
   const data = await _withdraw({web3, contract, amount: web3.utils.toWei(amount, "ether"), account, gasPrice});
   console.log(`=====================================withdraw success=====================================`)
   return data;
 }
 
-const _withdraw = ({web3, contract, account, amountToSend, gasPrice}) => {
+const _withdraw = ({web3, contract, account, amount, gasPrice}) => {
   return new Promise((resolve, reject) => {
-    contract.methods.withdraw(amountToSend).send({ from: account, gasPrice: web3.utils.toWei(gasPrice, 'gwei') }).on('transactionHash', function(hash){
+    contract.methods.withdraw(amount).send({ from: account, gasPrice: web3.utils.toWei(gasPrice, 'gwei') }).on('transactionHash', function(hash){
         console.log(hash)
         resolve(hash)
       })

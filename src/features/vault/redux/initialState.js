@@ -17,6 +17,17 @@ console.log(tokens)
 
 const initialState = {
   pools,
+  price: {
+    "bitcoin": {
+      usd: 0
+    },
+    "curve-dao-token": {
+      usd: 0
+    },
+    "yfii-finance":{
+      usd: 0
+    },
+  },
   fetchPoolBalancesPending: false,
   tokens,
   fetchBalancesPending: false,

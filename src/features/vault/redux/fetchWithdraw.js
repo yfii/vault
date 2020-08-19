@@ -33,15 +33,15 @@ export function fetchWithdraw(data) {
           });
             resolve(data);
           },
-        ).catch(
+      ).catch(
           // Use rejectHandler as the second argument so that render errors won't be caught.
-          error => {
-            dispatch({
-              type: VAULT_FETCH_WITHDRAW_FAILURE,
-            });
-            reject(error.message || error);
-          }
-        )
+        error => {
+          dispatch({
+            type: VAULT_FETCH_WITHDRAW_FAILURE,
+          });
+          reject(error.message || error);
+        }
+      )
     });
     return promise;
   };
@@ -60,9 +60,7 @@ export function useFetchWithdraw() {
   );
 
   const boundAction = useCallback(
-    (data) => {
-      dispatch(fetchWithdraw(data));
-    },
+    (data) => dispatch(fetchWithdraw(data)),
     [dispatch],
   );
 
