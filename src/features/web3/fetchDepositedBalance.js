@@ -9,8 +9,18 @@ export const fetchDepositedBalance = async ({web3, account, contractAddress}) =>
     contractAddress:${contractAddress}\n
   `)
   const data = await contract.methods.plyr_(account).call({ from: account });
+  console.log(`
+  data:${data}\n
+  `)
+  console.log(`
+  data:${data.stake}\n
+  `)
   const depositedBalance = new BigNumber(data.stake).toNumber();
   const payout = new BigNumber(data.payout).toNumber();
+  console.log(`
+    depositedBalance:${depositedBalance}\n
+    payout:${payout}\n
+  `)
   console.log(`=====================================fetchDepositedBalance success=====================================`)
 
   return { depositedBalance, payout };

@@ -2,15 +2,15 @@ import { erc20ABI } from "../configure";
 import BigNumber from "bignumber.js";
 
 export const fetchAllowance = async ({web3, account, tokenAddress, contractAddress}) => {
-  console.log(`=====================================fetchAllowance begin=====================================`)
+  // console.log(`=====================================fetchAllowance begin=====================================`)
   const contract = new web3.eth.Contract(erc20ABI, tokenAddress);
-  console.log(`
-    account:${account}\n
-    tokenAddress:${tokenAddress}\n
-    contractAddress:${contractAddress}\n
-  `)
+  // console.log(`
+  //   account:${account}\n
+  //   tokenAddress:${tokenAddress}\n
+  //   contractAddress:${contractAddress}\n
+  // `)
   const balance = await contract.methods.allowance(account, contractAddress).call({ from: account });
   const allowance = web3.utils.fromWei(balance, "ether");
-  console.log(`=====================================fetchAllowance success=====================================`)
+  // console.log(`=====================================fetchAllowance success=====================================`)
   return new BigNumber(allowance).toNumber();
 }

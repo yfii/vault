@@ -94,7 +94,7 @@ export function useFetchBalances() {
 
   const boundAction = useCallback(
     (data) => {
-      dispatch(fetchBalances(data));
+      return dispatch(fetchBalances(data));
     },
     [dispatch],
   );

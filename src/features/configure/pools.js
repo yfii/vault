@@ -28,6 +28,6 @@ export const pools = [
     idle: 0,
     allowance: 0,
     payout: 0,
-    depositedTime: 0
+    depositedTime: 0,
   }
 ]
