@@ -12,6 +12,7 @@ import tooltips from "assets/jss/material-kit-pro-react/tooltipsStyle.js";
 const sectionOpenedPoolStyle = theme => ({
   root: {
     display: 'flex',
+    backgroundColor: 'rgb(229, 229, 229)',
     '& > *': {
       margin: theme.spacing(1),
       // width: theme.spacing(16),

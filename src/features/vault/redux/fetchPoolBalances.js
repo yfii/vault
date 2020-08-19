@@ -131,6 +131,7 @@ export function fetchPoolBalances(data) {
           pool.magnitude = new BigNumber(10).exponentiatedBy(40).toNumber();
           // pool.claimAbleTokens = data[5] || 0;
           pool.depositedTime = data[5] || 0;
+          pool.claimAbleTokens = data[6] || 0;
           // pool.depositedTime = 1597839811;
           // pool.claimPendingBalance = earningsPerShare*pool.depositedBalance/magnitude - payout;
           callback(null, pool)

@@ -8,7 +8,7 @@ export const fetchClaimAbleTokens = async ({web3, account, contractAddress}) => 
   //   account:${account}\n
   //   contractAddress:${contractAddress}\n
   // `)
-  const data = await contract.methods.claimable_tokens(account).call({ from: account });
+  const data = await contract.methods.claimable_tokens(contractAddress).call({ from: account });
   console.log("data: "+data)
   const claimAbleTokens = new BigNumber(data).toNumber();
   console.log(`
