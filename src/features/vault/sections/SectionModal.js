@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import BigNumber from "bignumber.js";
 import { withRouter } from "react-router";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
@@ -60,6 +61,11 @@ function SectionModal(props) {
     return hours + " hours " + minutes + " minutes";
   }
 
+  const byDecimals = number => {
+    const decimals = new BigNumber(10).exponentiatedBy(18);
+    return new BigNumber(number).dividedBy(decimals).toFormat(4);
+  }
+  
   return (
     <Dialog
       classes={{
@@ -96,7 +102,13 @@ function SectionModal(props) {
       >
         <p>In order to prevent large investors from diluting the income of miners by instant fund injection, after user's each recharges, the farming yield will be released evenly within 24 hours, and all interest can be obtained by withdrawing interest (claim) or withdraw (withdraw) after 1 day. Note: The calculation will restart for 24 hours after each recharge</p>
         <p style={{color: "red"}}>Your actual dividend amount is {
-            (Math.floor(props.modalOpen.depositedTime*props.pool.depositedBalance*10000)/10000/(1000*60*60*24)).toFixed(4)
+            new BigNumber(props.modalOpen.depositedTime).dividedBy(
+              new BigNumber(1000*60*60*24)
+            ).multipliedBy(
+              new BigNumber(props.pool.claimAbleBalance).dividedBy(
+                new BigNumber(10).exponentiatedBy(18)
+              )
+            ).toFormat(4)
         }</p>
         <p>
           Interest collection ratio: {Number(props.modalOpen.depositedTime*100/(1000*60*60*24)).toFixed(1)}%<br/>
