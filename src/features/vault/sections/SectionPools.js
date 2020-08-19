@@ -59,9 +59,9 @@ export default function SectionPools() {
   }, [account, provider,fetchPoolBalances]);
 
   const byDecimals = number => {
-    console.log(number)
+    // console.log(number)
     const decimals = new BigNumber(10).exponentiatedBy(18);
-    console.log(new BigNumber(number).dividedBy(decimals || 0).toFormat(4))
+    // console.log(new BigNumber(number).dividedBy(decimals || 0).toFormat(4))
     return new BigNumber(number).dividedBy(decimals || 0).toFormat(4);
   }
   
@@ -88,7 +88,7 @@ export default function SectionPools() {
     // claimPendingBalance = earningsPerShare*pool.depositedBalance/magnitude - payout;
     const value = getYieldValue(pool)
     const earningsPerShare = getEarningsPerShare(value, pool);
-    console.log(earningsPerShare)
+    // console.log(earningsPerShare)
     return new BigNumber(earningsPerShare).multipliedBy(
       new BigNumber(pool.depositedBalance)
     ).dividedBy(

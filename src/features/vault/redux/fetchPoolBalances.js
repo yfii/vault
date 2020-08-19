@@ -36,12 +36,12 @@ export function fetchPoolBalances(data) {
               account,
             }).then(
               data => {
-                console.log(data)
+                // console.log(data)
                 return callbackInner(null, data)
               }
             ).catch(
               error => {
-                console.log(error)
+                // console.log(error)
                 return callbackInner(error, {depositedBalance: 0, payout: 0})
               }
             ) 
@@ -65,12 +65,12 @@ export function fetchPoolBalances(data) {
               account,
             }).then(
               data => {
-                console.log('data:' + data);
+                // console.log('data:' + data);
                 return callbackInner(null, data)
               }
             ).catch(
               error => {
-                console.log(error)
+                // console.log(error)
                 callbackInner(error, 0)
               }
             )
@@ -98,17 +98,6 @@ export function fetchPoolBalances(data) {
               error => callbackInner(error, 0)
             ) 
           },
-          // (callbackInner) => {
-          //   fetchClaimAbleTokens({
-          //     web3,
-          //     contractAddress:pool.strategyContractAddress,
-          //     account,
-          //   }).then(
-          //     data => callbackInner(null, data)
-          //   ).catch(
-          //     error => callbackInner(error, 0)
-          //   ) 
-          // },
           (callbackInner) => {
             fetchDepositedTime({
               web3,
@@ -120,12 +109,18 @@ export function fetchPoolBalances(data) {
               error => callbackInner(error, 0)
             ) 
           },
+          (callbackInner) => {
+            fetchClaimAbleTokens({
+              web3,
+              contractAddress:pool.strategyContractAddress,
+              account,
+            }).then(
+              data => callbackInner(null, data)
+            ).catch(
+              error => callbackInner(error, 0)
+            ) 
+          },
         ], (error, data) => {
-          console.log(error)
-          console.log(data)
-          console.log(data[0])
-          console.log(pool)
-          console.log(pool.depositedBalance)
           pool.depositedBalance = data[0].depositedBalance || 0;
           pool.payout = data[0].payout || 0;
           pool.claimAbleBalance = data[1] || 0
