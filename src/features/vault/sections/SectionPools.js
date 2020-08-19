@@ -10,11 +10,14 @@ import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import Button from "components/CustomButtons/Button.js";
+import Avatar from '@material-ui/core/Avatar';
 // sections for this section
 import SectionOpenedPool from "./SectionOpenedPool";
 //  hooks
 import { useAccount } from '../../common/redux/hooks';
 import { useFetchBalances, useFetchPoolBalances, useFetchPrice } from '../redux/hooks';
+
+import logo from 'images/SNX-logo.png'
 
 import sectionPoolsStyle from "../jss/sections/sectionPoolsStyle";
 
@@ -117,7 +120,7 @@ export default function SectionPools() {
                 alignItems : "center",
                 alignContent: "space-around"
               }}>
-                <div>logo</div>
+                <Avatar alt="Remy Sharp" src={logo} />
                 <div
                   style={{
                     fontSize: "1.5rem"

@@ -109,29 +109,29 @@ export function fetchPoolBalances(data) {
           //     error => callbackInner(error, 0)
           //   ) 
           // },
-          // (callbackInner) => {
-          //   fetchDepositedTime({
-          //     web3,
-          //     contractAddress:pool.earnContractAddress,
-          //     account,
-          //   }).then(
-          //     data => callbackInner(null, data)
-          //   ).catch(
-          //     error => callbackInner(error, 0)
-          //   ) 
-          // },
+          (callbackInner) => {
+            fetchDepositedTime({
+              web3,
+              contractAddress:pool.earnContractAddress,
+              account,
+            }).then(
+              data => callbackInner(null, data)
+            ).catch(
+              error => callbackInner(error, 0)
+            ) 
+          },
         ], (error, data) => {
           console.log(error)
           console.log(data)
           console.log(data[0])
           console.log(pool)
           console.log(pool.depositedBalance)
-          pool.depositedBalance = data[0].depositedBalance || 0;
-          pool.payout = data[0].payout || 0;
+          // pool.depositedBalance = data[0].depositedBalance || 0;
+          // pool.payout = data[0].payout || 0;
           pool.claimAbleBalance = data[1] || 0
           pool.allowance = data[2] || 0
-          pool.earningsPerShare = data[3].earningsPerShare || 0;
-          pool.totalStake = data[3].earningsPerShare || 0;
+          // pool.earningsPerShare = data[3].earningsPerShare || 0;
+          // pool.totalStake = data[3].earningsPerShare || 0;
           pool.idle = data[4] || 0;
           pool.magnitude = new BigNumber(10).exponentiatedBy(40).toNumber();
           // pool.claimAbleTokens = data[5] || 0;
