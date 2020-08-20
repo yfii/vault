@@ -6,7 +6,7 @@ import {
   VAULT_FETCH_POOL_BALANCES_SUCCESS,
   VAULT_FETCH_POOL_BALANCES_FAILURE,
 } from './constants';
-import { fetchDepositedBalance, fetchEarnedBalance, fetchAllowance, fetchEarningsPerShare, fetchIdle, fetchClaimAbleTokens, fetchDepositedTime } from "../../web3";
+import { fetchDepositedBalance, fetchEarnedBalance,fetchEarnedPendingBalance, fetchAllowance, fetchEarningsPerShare, fetchIdle, fetchClaimAbleTokens, fetchDepositedTime } from "../../web3";
 import Web3 from 'web3';
 import async from 'async';
 
@@ -114,6 +114,18 @@ export function fetchPoolBalances(data) {
               web3,
               contractAddress:pool.strategyContractAddress,
               account,
+            }).then(
+              data => callbackInner(null, data)
+            ).catch(
+              error => callbackInner(error, 0)
+            ) 
+          }, 
+          (callbackInner) => {
+            fetchEarnedPendingBalance({
+              web3: web3,
+              account: account,
+              contractAddress: pool.earnContractAddress,
+              yieldValue: "100000000000000000000"
             }).then(
               data => callbackInner(null, data)
             ).catch(
