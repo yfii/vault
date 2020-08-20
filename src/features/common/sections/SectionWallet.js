@@ -14,6 +14,11 @@ import {
 import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect } from "@web3-react/walletconnect-connector";
 import { UserRejectedRequestError as UserRejectedRequestErrorFrame } from "@web3-react/frame-connector";
 
+import TrezorPng from "../../../images/trezor.png";
+import FortmaticPng from "../../../images/fortmaticIcon.png";
+import SquarelinkPng from "../../../images/squarelink.png";
+import TorusJpg from "../../../images/torus.jpg";
+
 import {
   useAccount,
   useEagerConnect,
@@ -146,19 +151,19 @@ export default function SectionWallet() {
               url = require("../../../images/portisIcon.png");
               break;
             case "Fortmatic":
-              url = require("../../../images/fortmaticIcon.png");
+              url = FortmaticPng;
               break;
             case "Ledger":
               url = require("../../../images/icn-ledger.svg");
               break;
             case "Squarelink":
-              url = require("../../../images/squarelink.png");
+              url = SquarelinkPng;
               break;
             case "Trezor":
-              url = require("../../../images/trezor.png");
+              url = TrezorPng;
               break;
             case "Torus":
-              url = require("../../../images/torus.jpg");
+              url = TorusJpg;
               break;
             case "Authereum":
               url = require("../../../images/icn-aethereum.svg");
