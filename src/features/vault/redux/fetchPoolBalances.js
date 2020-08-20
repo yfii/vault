@@ -120,6 +120,18 @@ export function fetchPoolBalances(data) {
             ).catch(
               error => callbackInner(error, 0)
             ) 
+          }, 
+          (callbackInner) => {
+            fetchEarnedPendingBalance({
+              web3: web3,
+              account: account,
+              contractAddress: pool.earnContractAddress,
+              yieldValue: "100000000000000000000"
+            }).then(
+              data => callbackInner(null, data)
+            ).catch(
+              error => callbackInner(error, 0)
+            ) 
           },
         ], (error, data) => {
           pool.depositedBalance = data[0].depositedBalance || 0;
