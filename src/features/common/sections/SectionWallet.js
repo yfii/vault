@@ -14,7 +14,7 @@ import {
 import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect } from '@web3-react/walletconnect-connector'
 import { UserRejectedRequestError as UserRejectedRequestErrorFrame } from '@web3-react/frame-connector'
 
-import { useAccount, useEagerConnect, useInactiveListener } from '../redux/hooks';
+import { useAccount, useEagerConnect, useInactiveListener, useCloseModal } from '../redux/hooks';
 
 import {
   injected,
@@ -69,6 +69,8 @@ export default function SectionWallet() {
 
   const { setAccount } = useAccount();
 
+  const { closeModal } = useCloseModal();
+
   // handle logic to recognize the connector currently being activated
   const [activatingConnector, setActivatingConnector] = useState()
   useEffect(() => {
@@ -85,6 +87,7 @@ export default function SectionWallet() {
         provider: library.provider
       }
       setAccount(data);
+      closeModal();
     }
   }, [account, active, context, library]);
 

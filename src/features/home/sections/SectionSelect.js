@@ -34,6 +34,11 @@ function SectionSelect(props) {
   const [modalOpen, setModalOpen] = useState(Boolean(account));
 
   console.log(props.location.pathname)
+
+  useEffect(()=> {
+    setModalOpen(Boolean(account))
+  }, [account])
+  
   return (
     <Dialog
       classes={{
