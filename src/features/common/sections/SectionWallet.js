@@ -96,9 +96,9 @@ export default function SectionWallet() {
   useEffect(() => {
     if (account && active && library) {
       const data = {
-        account,
-        provider: library.provider,
-      };
+        account: account || '',
+        provider: library.provider
+      }
       setAccount(data);
       closeModal();
     }

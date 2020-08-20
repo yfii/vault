@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import Slide from "@material-ui/core/Slide";
@@ -25,6 +26,7 @@ import { useOpenModal, useAccount } from 'features/common/redux/hooks';
 const useStyles = makeStyles(welcomePageStyle);
 
 export default function WelcomePage() {
+  const { t, i18n } = useTranslation();
   const { openModal } = useOpenModal();
   const { account } = useAccount();
   const classes = useStyles();
@@ -50,23 +52,23 @@ export default function WelcomePage() {
         }}
       />
       <GridContainer>
-        <GridItem xs={12} style={{display: 'flex', alignItems: "center", justifyContent: "space-around",height: "300px"}}>
+        <GridItem xs={12} style={{display: 'flex', alignItems: "center", justifyContent: "space-around",height: "100vh"}}>
           <div>
             <div className={classes.yfiiSize}>
               YFII
             </div>
             <h6 className={classes.leftText}>
-              A Better Way For Everyone To Get Rich.
+              {t('Home-Subtitle')}
             </h6>
           </div>
           <div>
             <h6 className={classes.text}>
-              This porject is in beta, Use at your own risk.
+              {t('Home-Warning')}
               <br />
-              Connect your wallet to continue.
+              {t('Home-ConnectWallet')}
             </h6>
             <Button color="rose" round onClick={openModal}>
-              Connect
+              {t('Home-ConnectButton')}
             </Button>
           </div>
           <SectionModal />

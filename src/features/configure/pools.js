@@ -54,5 +54,29 @@ export const pools = [
     payout: 0,
     depositedTime: 0,
     isCrv: false
+  },
+  {
+    id: 'link',
+    name: 'LINK',  
+    token: 'LINK',
+    tokenDescription: 'LINK',
+    tokenAddress: '0x514910771AF9Ca656af840dff83E8264EcF986CA',
+    earnedToken: 'YFII',
+    earnedTokenAddress: '0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83',
+    earnContractAddress: '0xCda9230923FCb25e26a20D7D9D12e1744405C9fC',
+    strategyContractAddress: '0x780c2450632ecb4be69DA859987Be4875545E90b',
+    price: 'spaghetti',
+    depositedBalance: 0,
+    claimAbleBalance: 0,
+    claimPendingBalance: 0,
+    claimAbleTokens: 0,
+    magnitude: new BigNumber(10).exponentiatedBy(40).toNumber(),
+    totalStake: 0,
+    earningsPerShare: 0,
+    idle: 0,
+    allowance: 0,
+    payout: 0,
+    depositedTime: 0,
+    isCrv: false
   }
 ]

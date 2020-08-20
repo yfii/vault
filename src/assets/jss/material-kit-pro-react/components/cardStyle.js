@@ -14,8 +14,8 @@ import {
 const cardStyle = {
   card: {
     border: "0",
-    marginBottom: "30px",
-    marginTop: "30px",
+    marginBottom: "8px",
+    marginTop: "8px",
     borderRadius: "6px",
     color: "rgba(" + hexToRgb(blackColor) + ", 0.87)",
     background: whiteColor,
