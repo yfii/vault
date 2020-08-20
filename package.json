@@ -1,5 +1,6 @@
 {
   "name": "vault",
+  "homepage": "https://dfi.money",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -108,8 +109,8 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
-    "buildAndDeploy": "node scripts/build.js && echo 'beta.yfii.finance' >> ./build/CNAME && gh-pages -d build",
-    "deploy1": "echo 'beta.yfii.finance' >> ./build/CNAME && gh-pages -d build"
+    "buildAndDeploy": "node scripts/build.js && echo 'dfi.money' >> ./build/CNAME && gh-pages -d build",
+    "deploy1": "echo 'dfi.money' >> ./build/CNAME && gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
