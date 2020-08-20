@@ -58,17 +58,17 @@ export default function WelcomePage() {
               YFII
             </div>
             <h6 className={classes.leftText}>
-              {t('Home.Subtitle')}
+              {t('Home-Subtitle')}
             </h6>
           </div>
           <div>
             <h6 className={classes.text}>
-              {t('Home.Warning')}
+              {t('Home-Warning')}
               <br />
-              {t('Home.ConnectWallet')}
+              {t('Home-ConnectWallet')}
             </h6>
             <Button color="rose" round onClick={openModal}>
-              {t('Home.ConnectButton')}
+              {t('Home-ConnectButton')}
             </Button>
           </div>
           <SectionModal />
