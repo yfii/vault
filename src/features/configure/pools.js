@@ -41,7 +41,7 @@ export const pools = [
     earnedTokenAddress: '0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83',
     earnContractAddress: '0xf693705e79ccc8707D3FcB4D89381CaC28e45a22',
     strategyContractAddress: '0x602ec22B362B0E8ae658D18f4435fE8c5c23cA0C',
-    price: 'ethereum',
+    price: 'spaghetti',
     depositedBalance: 0,
     claimAbleBalance: 0,
     claimPendingBalance: 0,
