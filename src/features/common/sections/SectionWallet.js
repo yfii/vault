@@ -101,9 +101,9 @@ export default function SectionWallet() {
   useEffect(() => {
     if (account && active && library) {
       const data = {
-        account: account || '',
-        provider: library.provider
-      }
+        account: account || "",
+        provider: library.provider,
+      };
       setAccount(data);
       closeModal();
     }
@@ -181,6 +181,7 @@ export default function SectionWallet() {
             <div
               key={name}
               style={{
+                width: "252px",
                 padding: "12px 0px",
                 display: "flex",
                 justifyContent: "space-between",
