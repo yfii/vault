@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import BigNumber from "bignumber.js";
 // @material-ui/core components
@@ -41,6 +42,7 @@ import sectionPoolsStyle from "../jss/sections/sectionPoolsStyle";
 const useStyles = makeStyles(sectionPoolsStyle);
 
 export default function SectionPools() {
+  const { t, i18n } = useTranslation();
   const { account, provider } = useAccount();
   const { pools, fetchPoolBalances } = useFetchPoolBalances();
   const { tokens, fetchBalances } = useFetchBalances();
@@ -278,7 +280,7 @@ export default function SectionPools() {
                     }</div>
                     <div>
                       <h5>{pool.token}</h5>
-                      <h6>Balance</h6>
+                      <h6>{t('Vault-Balance')}</h6>
                     </div>
                   </GridItem>
                   {
@@ -294,7 +296,7 @@ export default function SectionPools() {
                         <CustomInput
                           id="password"
                           inputProps={{
-                              placeholder: `Input numbers of ${pool.token} you want to deposit`,
+                              placeholder: `${t('Vault-Input-1')}${pool.token}${t('Vault-Input-2')}`,
                               type: "number",
                               autoComplete: "off"
                           }}
@@ -313,7 +315,7 @@ export default function SectionPools() {
                             onClick={onApproval.bind(this, pool, index)}
                             disabled={fetchApprovalPending}
                           >
-                            {fetchApprovalPending ? 'Approval...' : 'Approval'}
+                            {fetchApprovalPending ? `${t('Vault-ApproveING')}` : `${t('Vault-ApproveButton')}`}
                           </Button>
                         ) : (
                           <Button
@@ -324,7 +326,7 @@ export default function SectionPools() {
                               !Boolean(depositedBalance) || (depositedBalance==0) || fetchDepositPending || (new BigNumber(depositedBalance).toNumber() > byDecimals(tokens[pool.token].tokenBalance).toNumber())
                             }
                           >
-                            {fetchDepositPending ? 'Deposit...' : 'Deposit'}
+                            {fetchDepositPending ? `${t('Vault-DepositING')}` : `${t('Vault-DepositButton')}`}
                           </Button>
                         )}
                         {/* </FormControl> */}
@@ -340,15 +342,15 @@ export default function SectionPools() {
                       >
                         <div>
                           <h5>{byDecimals(pool.depositedBalance).toFormat(4)}</h5>
-                          <h6>Deposited { pool.token }</h6>
+                          <h6>{t('Vault-ListDeposited')} { pool.token }</h6>
                         </div>
                         <div>
                           <h5>{byDecimals(pool.claimAbleBalance).toFormat(4)}</h5>
-                          <h6>Earned { pool.earnedToken }</h6>
+                          <h6>{t('Vault-ListEarned')} { pool.earnedToken }</h6>
                         </div>
                         <div>
                           <h5>{byDecimals(pool.claimPendingBalance).toFormat(4)}</h5>
-                          <h6>Pending { pool.earnedToken }</h6>
+                          <h6>{t('Vault-ListPending')} { pool.earnedToken }</h6>
                         </div>
                       </GridItem>
                     )}
@@ -388,7 +390,7 @@ export default function SectionPools() {
                   }}>
                     <Card className={classes.cardWrap}>
                       <CardBody>
-                        <h4 className={classes.cardTitle}>Deposited</h4>
+                        <h4 className={classes.cardTitle}>{t('Vault-Deposited')}</h4>
                         <h5 className={classes.textCenter}>{byDecimals(pool.depositedBalance).toFormat(4)} {pool.token}</h5>
                         <Button
                           color="primary"
@@ -397,7 +399,7 @@ export default function SectionPools() {
                           onClick={onWithdraw.bind(this, pool)}
                           disabled={fetchWithdrawPending}
                         >
-                          {fetchWithdrawPending ? 'Withdraw...': 'Withdraw'}
+                          {fetchWithdrawPending ? `${t('Vault-WithdrawING')}`: `${t('Vault-WithdrawButton')}`}
                         </Button>
                       </CardBody>
                     </Card>
@@ -405,10 +407,10 @@ export default function SectionPools() {
                   <GridItem xs={12} md={4}>
                     <Card className={classes.cardWrap}>
                       <CardBody>
-                        <h4 className={classes.cardTitle}>Earned</h4>
+                        <h4 className={classes.cardTitle}>{t('Vault-Earned')}</h4>
                         <h5 className={classes.textCenter}>{byDecimals(pool.claimAbleBalance).toFormat(4)} {pool.earnedToken}</h5>
                         <Button color="primary" round block onClick={onClaim.bind(this, pool)} disabled={fetchClaimPending}>
-                          {fetchClaimPending ? 'claim...' : 'claim'}
+                          {fetchClaimPending ? `${t('Vault-ClaimING')}` : `${t('Vault-ClaimButton')}`}
                         </Button>
                       </CardBody>
                     </Card>
@@ -416,19 +418,19 @@ export default function SectionPools() {
                   <GridItem xs={12} md={4}>
                     <Card className={classes.cardWrap}>
                       <CardBody>
-                        <h4 className={classes.cardTitle}>Pending</h4>
+                        <h4 className={classes.cardTitle}>{t('Vault-Pending')}</h4>
                         <h5>{byDecimals(pool.claimPendingBalance).toFormat(4)} {pool.earnedToken}</h5>
-                        <p>Something descriptions<br/>contents for pending</p>
+                        <p>{t('Vault-PendingDescription')}<br/>{t('Vault-PendingContent')}</p>
                       </CardBody>
                     </Card>
                   </GridItem>
                   <GridItem xs={6} sm={6}>
                     <Card>
                       <CardBody>
-                        <h4 className={classes.cardTitle}>Idle</h4>
+                        <h4 className={classes.cardTitle}>{t('Vault-Idle')}</h4>
                         <h5 className={classes.textCenter}>{byDecimals(pool.idle).toFormat(4)} {pool.token}</h5>
                         <Button color="primary" round block onClick={onFarm.bind(this, pool)} disabled={fetchFarmPending}>
-                          {fetchFarmPending?'Farm...':'Farm'}
+                          {fetchFarmPending?`${t('Vault-FarmING')}`:`${t('Vault-FarmButton')}`}
                         </Button>
                       </CardBody>
                     </Card>
@@ -436,10 +438,10 @@ export default function SectionPools() {
                   <GridItem xs={6} sm={6}>
                     <Card>
                       <CardBody>
-                        <h4 className={classes.cardTitle}>Yield</h4>
+                        <h4 className={classes.cardTitle}>{t('Vault-Yield')}</h4>
                         <h5 className={classes.textCenter}>{byDecimals(pool.yield).toFormat(4)} {pool.earnedToken}</h5>
                         <Button color="primary" round block onClick={onHarvest.bind(this, pool)} disabled={fetchHarvestPending}>
-                        {fetchHarvestPending?'Harvest...':'Harvest'}
+                        {fetchHarvestPending?`${t('Vault-HarvestING')}`:`${t('Vault-HarvestButton')}`}
                         </Button>
                       </CardBody>
                     </Card>
