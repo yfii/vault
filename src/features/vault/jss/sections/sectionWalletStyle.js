@@ -17,7 +17,7 @@ const sectionWalletStyle = theme => ({
   walletCard: {
     borderRadius: "50rem",
     marginTop: 0,
-    marginBottom: 0,
+    // marginBottom: 0,
     borderStyle: "solid",
     borderWidth: "2px",
     borderColor: "rgb(233, 30, 99)",

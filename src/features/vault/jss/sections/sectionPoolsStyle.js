@@ -16,6 +16,22 @@ const sectionPoolsStyle = theme => ({
   ...checkboxes,
   ...buttonGroup,
   ...tooltips,
+  icon: {
+    verticalAlign: 'bottom',
+    height: 20,
+    width: 20,
+  },
+  details: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  column: {
+    flexBasis: '33.33%',
+    display: "flex",
+    justifyContent : "space-around",
+    alignItems : "center",
+    alignContent: "space-around",
+  },
   space50: {
     height: "50px",
     display: "block"
