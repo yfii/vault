@@ -192,7 +192,7 @@ export default function SectionOpenedPool(props) {
               alignContent: "space-around"
             }}>
               <Avatar alt={pool.token} src={require(`../../../images/${pool.token}-logo.png`)} />
-              <div>{byDecimals(tokens[pool.token].tokenBalance).toFormat(4)}</div>
+              <div>{new BigNumber(byDecimals(tokens[pool.token].tokenBalance).toNumber()).multipliedBy(10000).dividedToIntegerBy(1).dividedBy(10000).toString()}</div>
               <div>
                 <h5>{pool.token}</h5>
                 <h6>Balance</h6>
