@@ -14,6 +14,7 @@ import AccordionSummary from '@material-ui/core/AccordionSummary'
 import AccordionDetails from '@material-ui/core/AccordionActions'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
+import Tooltip from '@material-ui/core/Tooltip';
 
 // core components
 import GridContainer from "components/Grid/GridContainer.js";
@@ -429,9 +430,11 @@ export default function SectionPools() {
                       <CardBody>
                         <h4 className={classes.cardTitle}>{t('Vault-Idle')}</h4>
                         <h5 className={classes.textCenter}>{byDecimals(pool.idle).toFormat(4)} {pool.token}</h5>
-                        <Button color="primary" round block onClick={onFarm.bind(this, pool)} disabled={fetchFarmPending}>
-                          {fetchFarmPending?`${t('Vault-FarmING')}`:`${t('Vault-FarmButton')}`}
-                        </Button>
+                        <Tooltip title="手动把合约内的钱送进去挖矿" aria-label="add">
+                          <Button color="primary" round block onClick={onFarm.bind(this, pool)} disabled={fetchFarmPending}>
+                            {fetchFarmPending?`${t('Vault-FarmING')}`:`${t('Vault-FarmButton')}`}
+                          </Button>
+                        </Tooltip>
                       </CardBody>
                     </Card>
                   </GridItem>
@@ -440,9 +443,11 @@ export default function SectionPools() {
                       <CardBody>
                         <h4 className={classes.cardTitle}>{t('Vault-Yield')}</h4>
                         <h5 className={classes.textCenter}>{byDecimals(pool.yield).toFormat(4)} {pool.earnedToken}</h5>
-                        <Button color="primary" round block onClick={onHarvest.bind(this, pool)} disabled={fetchHarvestPending}>
-                        {fetchHarvestPending?`${t('Vault-HarvestING')}`:`${t('Vault-HarvestButton')}`}
-                        </Button>
+                        <Tooltip title="帮助领取收益,触发者可获得1%的金额。" aria-label="add">
+                          <Button color="primary" round block onClick={onHarvest.bind(this, pool)} disabled={fetchHarvestPending}>
+                          {fetchHarvestPending?`${t('Vault-HarvestING')}`:`${t('Vault-HarvestButton')}`}
+                          </Button>
+                        </Tooltip>
                       </CardBody>
                     </Card>
                   </GridItem>
