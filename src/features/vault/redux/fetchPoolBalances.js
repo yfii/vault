@@ -165,6 +165,8 @@ export function fetchPoolBalances(data) {
             new BigNumber(pool.magnitude)
           ).minus(
             new BigNumber(pool.payout)
+          ).minus(
+            new BigNumber(pool.claimAbleBalance)
           ).toNumber();
           // fetchClaimPendingBalance({
           //   amount: pool.yield,
