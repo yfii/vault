@@ -31,7 +31,7 @@ export default function VaultPage() {
   return (
     <div className={classes.page}>
       <Header
-        brand="Vault"
+        brand="YFII"
         links={<HeaderLinks/>}
         color="primary"
       />

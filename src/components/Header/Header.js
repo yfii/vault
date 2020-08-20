@@ -12,14 +12,12 @@ import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import Hidden from "@material-ui/core/Hidden";
 import Drawer from "@material-ui/core/Drawer";
-// import SvgIcon from '@material-ui/core/SvgIcon';
-
+import Avatar from '@material-ui/core/Avatar';
 // @material-ui/icons
 import Menu from "@material-ui/icons/Menu";
 import Close from "@material-ui/icons/Close";
 // core components
 import styles from "assets/jss/material-kit-pro-react/components/headerStyle.js";
-// import Logo from "images/YFII-logo.svg";
 
 const useStyles = makeStyles(styles);
 
@@ -70,8 +68,8 @@ export default function Header(props) {
     <AppBar className={appBarClasses}>
       <Toolbar className={classes.container}>
         <Button className={classes.title}>
+          <Avatar alt="YFII" src={require(`../../images/YFII-logo.png`)} style={{width: "30px", height: "30px", marginRight: "5px"}}/>
           <Link to="/">
-            {/* <SvgIcon><Logo/></SvgIcon> */}
             {brand}
           </Link>
         </Button>

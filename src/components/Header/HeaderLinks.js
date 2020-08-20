@@ -37,6 +37,7 @@ import Layers from "@material-ui/icons/Layers";
 import ShoppingBasket from "@material-ui/icons/ShoppingBasket";
 import LineStyle from "@material-ui/icons/LineStyle";
 import Error from "@material-ui/icons/Error";
+import TranslateIcon from '@material-ui/icons/Translate';
 
 // core components
 import CustomDropdown from "components/CustomDropdown/CustomDropdown.js";
@@ -45,6 +46,13 @@ import Button from "components/CustomButtons/Button.js";
 import styles from "assets/jss/material-kit-pro-react/components/headerLinksStyle.js";
 
 const useStyles = makeStyles(styles);
+
+const options = [
+  'Show some love to Material-UI',
+  'Show all notification content',
+  'Hide sensitive notification content',
+  'Hide all notification content',
+];
 
 export default function HeaderLinks(props) {
   const easeInOutQuad = (t, b, c, d) => {
@@ -90,6 +98,25 @@ export default function HeaderLinks(props) {
   const classes = useStyles();
   return (
     <List className={classes.list + " " + classes.mlAuto}>
+      <ListItem className={classes.listItem}>
+
+        <CustomDropdown
+          buttonText="Dropdown"
+          dropdownHeader="Dropdown Header"
+          buttonProps={{
+            className: classes.navLink,
+            color: "transparent",
+            startIcon: <TranslateIcon />
+          }}
+          
+          // buttonIcon={{<TranslateIcon/>}}
+          dropdownList={[
+            "Action",
+            "Another action",
+            "Something else here",
+          ]}
+        />
+      </ListItem>
       <ListItem className={classes.listItem}>
         <Button
           color="transparent"
