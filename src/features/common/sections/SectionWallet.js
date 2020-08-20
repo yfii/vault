@@ -83,7 +83,7 @@ export default function SectionWallet() {
     if (account && active && library) {
 
       const data = {
-        account,
+        account: account || '',
         provider: library.provider
       }
       setAccount(data);

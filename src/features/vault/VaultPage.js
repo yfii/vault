@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { withRouter } from "react-router";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import Container from '@material-ui/core/Container';
@@ -15,16 +16,22 @@ import GridItem from "components/Grid/GridItem.js";
 import SectionTitle from './sections/SectionTitle';
 import SectionWallet from './sections/SectionWallet';
 import SectionPools from './sections/SectionPools';
+// hooks
+import { useAccount } from 'features/common/redux/hooks';
 
 
 import vaultPageStyle from "./jss/vaultPageStyle";
 
 const useStyles = makeStyles(vaultPageStyle);
 
-export default function VaultPage() {
+function VaultPage(props) {
   const classes = useStyles();
+  const { account } = useAccount();
 
   useEffect(() => {
+    if (!account) { 
+      return props.history.push('/')
+    }
     window.scrollTo(0, 0);
     document.body.scrollTop = 0;
   });
@@ -43,3 +50,5 @@ export default function VaultPage() {
     </div>
   );
 }
+
+export default withRouter(VaultPage);

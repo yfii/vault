@@ -52,7 +52,7 @@ export default function WelcomePage() {
         }}
       />
       <GridContainer>
-        <GridItem xs={12} style={{display: 'flex', alignItems: "center", justifyContent: "space-around",height: "300px"}}>
+        <GridItem xs={12} style={{display: 'flex', alignItems: "center", justifyContent: "space-around",height: "100vh"}}>
           <div>
             <div className={classes.yfiiSize}>
               YFII
