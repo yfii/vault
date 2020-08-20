@@ -11,6 +11,7 @@ import ListItem from "@material-ui/core/ListItem";
 import Icon from "@material-ui/core/Icon";
 // @material-ui/icons
 import TranslateIcon from '@material-ui/icons/Translate';
+import TelegramIcon from '@material-ui/icons/Telegram';
 // core components
 import CustomDropdown from "components/CustomDropdown/CustomDropdown.js";
 import Button from "components/CustomButtons/Button.js";
@@ -43,27 +44,27 @@ export default function HeaderLinks(props) {
         return 'English'
     }
   }
-  // React.useEffect(()=>{
-  //   const language = i18n.language
-  //   switch(language) {
-  //     case 'zh':
-  //     case 'zh-CN':
-  //       return '中文'
-  //     case 'en':
-  //       return 'English'
-  //     case 'ja':
-  //       return '日本語'
-  //     case 'th':
-  //       return 'ไทย'
-  //     default:
-  //       return 'English'
-  //   }
-  // })
+
+  const handleClick = event => {
+    console.log(event)
+    switch(event) {
+      case 'English':
+        return i18n.changeLanguage('en').then(()=>setLanguage(event))
+      case '中文':
+        return i18n.changeLanguage('zh').then(()=>setLanguage(event))
+      case '日本語':
+        return i18n.changeLanguage('ja').then(()=>setLanguage(event))
+      case 'ไทย':
+        return i18n.changeLanguage('th').then(()=>setLanguage(event))
+      default:
+        return
+    }
+  }
 
   useEffect(() => {
     const lng = switchLanguage()
     setLanguage(lng);
-  }, [i18n]);
+  });
   
   return (
     <List className={classes.list + " " + classes.mlAuto}>
@@ -72,12 +73,12 @@ export default function HeaderLinks(props) {
           navDropdown
           hoverColor={dropdownHoverColor}
           buttonIcon={TranslateIcon}
-          buttonText="Dropdown"
+          buttonText={lng}
           buttonProps={{
             className: classes.navLink,
             color: "transparent",
           }}
-          onClick={e=>console.log(e)}
+          onClick={handleClick}
           dropdownList={[
             "English",
             "中文",
@@ -99,7 +100,6 @@ export default function HeaderLinks(props) {
           className={
             classes.navLink + " " + classes.socialIconsButton
           }
-          href="#contained-buttons"
         >
           <i
             className={
