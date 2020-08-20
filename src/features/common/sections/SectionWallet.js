@@ -253,40 +253,40 @@ export default function SectionWallet() {
             </div>
           );
         })}
-      </div>
-      <div style={{ width: "252px", margin: "12px 0px" }}>
-        <Button
-          style={{
-            padding: "12px",
-            backgroundColor: "white",
-            borderRadius: "20px",
-            border: "1px solid #E1E1E1",
-            fontWeight: 500,
-            minWidth: "250px",
-          }}
-          variant="outlined"
-          color="primary"
-          onClick={() => {
-            if (deactivate) {
-              deactivate();
-            }
-            if (connector && connector.close) {
-              connector.close();
-            }
-          }}
-        >
-          <Typography
+        <div style={{ width: "252px", margin: "12px 0px" }}>
+          <Button
             style={{
-              marginLeft: "12px",
-              fontWeight: "700",
-              color: "#DC6BE5",
+              padding: "12px",
+              backgroundColor: "white",
+              borderRadius: "20px",
+              border: "1px solid #E1E1E1",
+              fontWeight: 500,
+              minWidth: "250px",
             }}
-            variant={"h5"}
+            variant="outlined"
             color="primary"
+            onClick={() => {
+              if (deactivate) {
+                deactivate();
+              }
+              if (connector && connector.close) {
+                connector.close();
+              }
+            }}
           >
-            Deactivate
-          </Typography>
-        </Button>
+            <Typography
+              style={{
+                marginLeft: "12px",
+                fontWeight: "700",
+                color: "#DC6BE5",
+              }}
+              variant={"h5"}
+              color="primary"
+            >
+              Deactivate
+            </Typography>
+          </Button>
+        </div>
       </div>
     </DialogContent>
   );
