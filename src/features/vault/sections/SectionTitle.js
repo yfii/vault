@@ -14,7 +14,7 @@ export default function SectionTitle() {
 
   return (
     <Grid container item className={classes.root} justify="center">
-      <Typography variant="h1" className={classNames(classes.title)} noWrap>Deposit WETH into this vault to earn YFII</Typography>
+      <Typography variant="h1" className={classNames(classes.title)} noWrap>Deposit to Earn</Typography>
     </Grid>
   )
 }
