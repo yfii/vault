@@ -14,3 +14,4 @@ export { fetchIdle } from './fetchIdle';
 export { fetchYield } from './fetchYield';
 export { fetchClaimAbleTokens } from './fetchClaimAbleTokens'; 
 export { fetchDepositedTime } from './fetchDepositedTime';
+export { fetchClaimPendingBalance } from './fetchClaimPendingBalance';

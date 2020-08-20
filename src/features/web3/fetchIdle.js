@@ -10,7 +10,6 @@ export const fetchIdle = async ({web3, account, tokenAddress, contractAddress}) 
     contractAddress:${contractAddress}\n
   `)
   const balance = await contract.methods.balanceOf(contractAddress).call({ from: account });
-  console.log(balance)
   const idle = new BigNumber(balance).toNumber();
   console.log(`
   balance:${balance}\n

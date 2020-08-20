@@ -18,6 +18,7 @@ export const pools = [
     earnedTokenAddress: '0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83',
     earnContractAddress: '0xD2db1EF55549eCdacb4e7da081216AE96f0Eedcb',
     strategyContractAddress: '0x9eFE9FB2010B2c5fa7D34E69e709DD296d9c0bD9',
+    price: 'curve-dao-token',
     depositedBalance: 0,
     claimAbleBalance: 0,
     claimPendingBalance: 0,
@@ -29,5 +30,6 @@ export const pools = [
     allowance: 0,
     payout: 0,
     depositedTime: 0,
+    isCrv: true
   }
 ]

@@ -51,8 +51,8 @@ export default function SectionPools() {
   }, [account, provider,fetchBalances]);
 
   useEffect(() => {
-    fetchPoolBalances({account, provider, pools});
-  }, [account, provider,fetchPoolBalances]);
+    fetchPoolBalances({account, provider, pools, price});
+  }, [account, provider, price, fetchPoolBalances]);
   
   useEffect(() => {
     fetchPrice();

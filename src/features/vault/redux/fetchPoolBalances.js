@@ -6,7 +6,7 @@ import {
   VAULT_FETCH_POOL_BALANCES_SUCCESS,
   VAULT_FETCH_POOL_BALANCES_FAILURE,
 } from './constants';
-import { fetchDepositedBalance, fetchEarnedBalance, fetchAllowance, fetchEarningsPerShare, fetchIdle, fetchClaimAbleTokens, fetchDepositedTime } from "../../web3";
+import { fetchDepositedBalance, fetchEarnedBalance, fetchAllowance, fetchEarningsPerShare, fetchIdle, fetchClaimAbleTokens, fetchDepositedTime, fetchClaimPendingBalance } from "../../web3";
 import Web3 from 'web3';
 import async from 'async';
 
@@ -25,7 +25,7 @@ export function fetchPoolBalances(data) {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/home/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
-      const { account, provider, pools } = data;
+      const { account, provider, pools, price } = data;
       const web3 = new Web3(provider);
       async.map(pools, (pool, callback) => {
         async.parallel([
@@ -114,6 +114,7 @@ export function fetchPoolBalances(data) {
               web3,
               contractAddress:pool.strategyContractAddress,
               account,
+              isCrv: Boolean(pool.isCrv)
             }).then(
               data => callbackInner(null, data)
             ).catch(
@@ -132,9 +133,35 @@ export function fetchPoolBalances(data) {
           // pool.claimAbleTokens = data[5] || 0;
           pool.depositedTime = data[5] || 0;
           pool.claimAbleTokens = data[6] || 0;
+          console.log(price[pool.price].usd)
+          pool.yield = new BigNumber(price[pool.price].usd).multipliedBy(
+            new BigNumber(pool.claimAbleTokens)
+          ).dividedBy(
+            new BigNumber(price["yfii-finance"].usd)
+          ).toNumber()
+          // pool.earningsPerShare = new BigNumber(pool.earningsPerShare).plus(
+          //   new BigNumber(pool.yield).multipliedBy(
+          //     new BigNumber(pool.magnitude)
+          //   ).dividedBy(
+          //     new BigNumber(pool.totalStake || 1)
+          //   )
+          // ).toNumber();
+          // fetchClaimPendingBalance({
+          //   amount: pool.yield,
+          //   web3,
+          //   contractAddress:pool.earnContractAddress,
+          //   account
+          // }).then(
+          //   data => {
+          //     pool.claimPendingBalance = data
+          //     return callback(null, pool)
+          //   }
+          // ).catch(
+          //   error => callback(null, pool)
+          // ) 
+          callback(null, pool)
           // pool.depositedTime = 1597839811;
           // pool.claimPendingBalance = earningsPerShare*pool.depositedBalance/magnitude - payout;
-          callback(null, pool)
         })
       }, (error, pools) => {
         if(error) {
