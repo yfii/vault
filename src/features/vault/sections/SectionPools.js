@@ -31,7 +31,6 @@ export default function SectionPools() {
   const { tokens, fetchBalances } = useFetchBalances();
   const { price, fetchPrice } = useFetchPrice();
   const [ openedCardList, setOpenCardList ] = useState([]);
-  const [ claimPendingBalance, setClaimPendingBalance ] = useState(0);
   const classes = useStyles();
 
   const openCard = id => {
@@ -65,39 +64,6 @@ export default function SectionPools() {
     return new BigNumber(number).dividedBy(decimals || 0).toFormat(4);
   }
   
-  const getYieldValue = (pool) => {
-    return new BigNumber(price["curve-dao-token"].usd).multipliedBy(
-      new BigNumber(pool.claimAbleTokens)
-    ).dividedBy(
-      new BigNumber(price["yfii-finance"].usd)
-    ).toNumber()
-  }
-
-  const getEarningsPerShare = (yieldValue, pool) => {
-    // earningsPerShare = earnings_per_share + yield_value*(magnitude)/(total_stake);
-    return new BigNumber(pool.earningsPerShare).plus(
-      new BigNumber(yieldValue).multipliedBy(
-        new BigNumber(pool.magnitude)
-      ).dividedBy(
-        new BigNumber(pool.totalStake || 1)
-      )
-    ).toNumber();
-  }
-
-  const getClaimPendingBalance = (pool) => {
-    // claimPendingBalance = earningsPerShare*pool.depositedBalance/magnitude - payout;
-    const value = getYieldValue(pool)
-    const earningsPerShare = getEarningsPerShare(value, pool);
-    // console.log(earningsPerShare)
-    return new BigNumber(earningsPerShare).multipliedBy(
-      new BigNumber(pool.depositedBalance)
-    ).dividedBy(
-      new BigNumber(pool.magnitude)
-    ).minus(
-      new BigNumber(pool.payout)
-    ).toNumber();
-  }
-
   return (
     <GridContainer justify="center">
       <GridItem xs={12} sm={10}>
@@ -143,7 +109,7 @@ export default function SectionPools() {
                   <h6>Earned { pool.earnedToken }</h6>
                 </div>
                 <div>
-                  <h5>{byDecimals(getClaimPendingBalance(pool))}</h5>
+                  <h5>{byDecimals(pool.claimPendingBalance)}</h5>
                   <h6>Pending { pool.earnedToken }</h6>
                 </div>
                 <div><ArrowDropDownIcon onClick={openCard.bind(this, index)} fontSize="large"/></div>

@@ -121,18 +121,18 @@ export function fetchPoolBalances(data) {
               error => callbackInner(error, 0)
             ) 
           }, 
-          (callbackInner) => {
-            fetchEarnedPendingBalance({
-              web3: web3,
-              account: account,
-              contractAddress: pool.earnContractAddress,
-              yieldValue: "100000000000000000000"
-            }).then(
-              data => callbackInner(null, data)
-            ).catch(
-              error => callbackInner(error, 0)
-            ) 
-          },
+          // (callbackInner) => {
+          //   fetchEarnedPendingBalance({
+          //     web3: web3,
+          //     account: account,
+          //     contractAddress: pool.earnContractAddress,
+          //     yieldValue: "100000000000000000000"
+          //   }).then(
+          //     data => callbackInner(null, data)
+          //   ).catch(
+          //     error => callbackInner(error, 0)
+          //   ) 
+          // },
         ], (error, data) => {
           pool.depositedBalance = data[0].depositedBalance || 0;
           pool.payout = data[0].payout || 0;
@@ -150,14 +150,22 @@ export function fetchPoolBalances(data) {
             new BigNumber(pool.claimAbleTokens)
           ).dividedBy(
             new BigNumber(price["yfii-finance"].usd)
-          ).toNumber()
-          // pool.earningsPerShare = new BigNumber(pool.earningsPerShare).plus(
-          //   new BigNumber(pool.yield).multipliedBy(
-          //     new BigNumber(pool.magnitude)
-          //   ).dividedBy(
-          //     new BigNumber(pool.totalStake || 1)
-          //   )
-          // ).toNumber();
+          ).toNumber();
+          pool.earningsPerShare = new BigNumber(pool.earningsPerShare).plus(
+            new BigNumber(pool.yield).multipliedBy(
+              new BigNumber(pool.magnitude)
+            ).dividedBy(
+              new BigNumber(pool.totalStake || 1)
+            )
+          ).toNumber();
+
+          pool.claimPendingBalance = new BigNumber(pool.earningsPerShare).multipliedBy(
+            new BigNumber(pool.depositedBalance)
+          ).dividedBy(
+            new BigNumber(pool.magnitude)
+          ).minus(
+            new BigNumber(pool.payout)
+          ).toNumber();
           // fetchClaimPendingBalance({
           //   amount: pool.yield,
           //   web3,

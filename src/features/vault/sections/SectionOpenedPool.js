@@ -37,8 +37,6 @@ export default function SectionOpenedPool(props) {
   const { fetchHarvest, fetchHarvestPending } = useFetchHarvest();
   const { price } = useFetchPrice();
 
-  const [ claimPendingBalance, setClaimPendingBalance ] = useState(0);
-  const [ yieldValue, setYieldValue ] = useState(0);
   const [ modalOpen, setModalOpen ] = useState({ isOpen: false, depositedTime: 0,func: null });
 
   const [depositedBalance, setDepositedBalance] = useState();
@@ -52,38 +50,6 @@ export default function SectionOpenedPool(props) {
   const handleDepositedBalance = event => {
     setDepositedBalance(event.target.value);
   };
-
-  const getYieldValue = () => {
-    return new BigNumber(price["curve-dao-token"].usd).multipliedBy(
-      new BigNumber(pool.claimAbleTokens)
-    ).dividedBy(
-      new BigNumber(price["yfii-finance"].usd)
-    ).toNumber()
-  }
-
-  const getEarningsPerShare = (yieldValue) => {
-    // earningsPerShare = earnings_per_share + yield_value*(magnitude)/(total_stake);
-    return new BigNumber(pool.earningsPerShare).plus(
-      new BigNumber(yieldValue).multipliedBy(
-        new BigNumber(pool.magnitude)
-      ).dividedBy(
-        new BigNumber(pool.totalStake || 1)
-      )
-    ).toNumber();
-  }
-
-  const getClaimPendingBalance = (value) => {
-    // claimPendingBalance = earningsPerShare*pool.depositedBalance/magnitude - payout;
-    const earningsPerShare = getEarningsPerShare(value);
-    console.log(earningsPerShare)
-    return new BigNumber(earningsPerShare).multipliedBy(
-      new BigNumber(pool.depositedBalance)
-    ).dividedBy(
-      new BigNumber(pool.magnitude)
-    ).minus(
-      new BigNumber(pool.payout)
-    ).toNumber();
-  }
 
   const byDecimals = number => {
     const decimals = new BigNumber(10).exponentiatedBy(18);
@@ -213,13 +179,6 @@ export default function SectionOpenedPool(props) {
     )
   }
 
-  useEffect(() => {
-    const value = getYieldValue()
-    const data = getClaimPendingBalance(value);
-    setClaimPendingBalance(data);
-    setYieldValue(value)
-  }, [pool]);
-
   return (
     <GridContainer>
       <SectionModal pool={pool} modalOpen={modalOpen} setModalOpen={setModalOpen}/>
@@ -301,7 +260,7 @@ export default function SectionOpenedPool(props) {
               <Card>
                 <CardBody>
                   <h4 className={classes.cardTitle}>Pending</h4>
-                  <h5>{byDecimals(claimPendingBalance)}{pool.earnedToken}</h5>
+                  <h5>{byDecimals(pool.claimPendingBalance)}{pool.earnedToken}</h5>
                   <p>Something descriptions<br/>contents for pending</p>
                 </CardBody>
               </Card>
@@ -325,7 +284,7 @@ export default function SectionOpenedPool(props) {
             <Card>
               <CardBody>
                 <h4 className={classes.cardTitle}>Yield</h4>
-                <h5 className={classes.textCenter}>{byDecimals(yieldValue)}{pool.earnedToken}</h5>
+                <h5 className={classes.textCenter}>{byDecimals(pool.yield)}{pool.earnedToken}</h5>
                 <Button color="primary" round block onClick={onHarvest}>Harvest</Button>
               </CardBody>
             </Card>
