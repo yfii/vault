@@ -81,9 +81,12 @@ export function fetchPoolBalances(data) {
               contractAddress:pool.earnContractAddress,
               account,
             }).then(
-              data => callbackInner(null, data)
+              data => {
+                console.log(data)
+                return callbackInner(null, data)
+              }
             ).catch(
-              error => callbackInner(error, 0)
+              error => callbackInner(error, {earningsPerShare: 0, totalStake: 0})
             ) 
           },
           (callbackInner) => {
@@ -134,12 +137,14 @@ export function fetchPoolBalances(data) {
           //   ) 
           // },
         ], (error, data) => {
+          console.log(error)
+          console.log(data[3])
           pool.depositedBalance = data[0].depositedBalance || 0;
           pool.payout = data[0].payout || 0;
           pool.claimAbleBalance = data[1] || 0
           pool.allowance = data[2] || 0
           pool.earningsPerShare = data[3].earningsPerShare || 0;
-          pool.totalStake = data[3].earningsPerShare || 0;
+          pool.totalStake = data[3].totalStake || 0;
           pool.idle = data[4] || 0;
           pool.magnitude = new BigNumber(10).exponentiatedBy(40).toNumber();
           // pool.claimAbleTokens = data[5] || 0;

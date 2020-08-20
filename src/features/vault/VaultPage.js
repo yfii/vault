@@ -32,7 +32,7 @@ export default function VaultPage() {
     <div className={classes.page}>
       <Header
         brand="YFII"
-        links={<HeaderLinks/>}
+        links={<HeaderLinks dropdownHoverColor="primary"/>}
         color="primary"
       />
       <div className={classes.container}>

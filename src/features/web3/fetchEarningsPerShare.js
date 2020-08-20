@@ -11,7 +11,9 @@ export const fetchEarningsPerShare = async ({web3, account, contractAddress}) =>
   const data = await contract.methods.global_(0).call({ from: account });
   const totalStake = data["total_stake"];
   const earningsPerShare = data['earnings_per_share'];
-  // console.log(`=====================================fetchEarningsPerShare success=====================================`)
+  console.log( `totalStake:${totalStake}\n
+  earningsPerShare:${earningsPerShare}\n`)
+  console.log(`=====================================fetchEarningsPerShare success=====================================`)
 
   return { earningsPerShare, totalStake };
 }

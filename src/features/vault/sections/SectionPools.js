@@ -26,11 +26,13 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
 // sections for this section
-// import SectionOpenedPool from "./SectionOpenedPool";
+import SectionOpenedPool from "./SectionOpenedPool";
 import { useSnackbar } from 'notistack';
 //  hooks
 import { useAccount } from '../../common/redux/hooks';
 import { useFetchBalances, useFetchPoolBalances, useFetchPrice, useFetchApproval, useFetchDeposit, useFetchClaim, useFetchWithdraw, useFetchFarm, useFetchHarvest } from '../redux/hooks';
+
+import SectionModal from "./SectionModal";
 
 import logo from 'images/SNX-logo.png'
 
@@ -237,6 +239,7 @@ export default function SectionPools() {
               >
                 <GridItem xs={12}>
                 <GridContainer>
+                  <SectionModal pool={pool} modalOpen={modalOpen} setModalOpen={setModalOpen}/>
                   <GridItem xs={12} sm={4} style={{
                     display: "flex",
                     justifyContent : "space-around",
