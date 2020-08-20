@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import BigNumber from "bignumber.js";
 import { withRouter } from "react-router";
 // @material-ui/core components
@@ -32,6 +33,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const useStyles = makeStyles(sectionModalStyle);
 
 function SectionModal(props) {
+  const { t, i18n } = useTranslation();
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -96,14 +98,14 @@ function SectionModal(props) {
           {" "}
           <Close className={classes.modalClose} />
         </Button>
-        <h4 className={classes.modalTitle}>New features of CRV Vault:</h4>
+        <h4 className={classes.modalTitle}>{t('Vault-Modal-Title')}</h4>
       </DialogTitle>
       <DialogContent
         id="classic-modal-slide-description"
         className={classes.modalBody}
       >
-        <p>In order to prevent large investors from diluting the income of miners by instant fund injection, after user's each recharges, the farming yield will be released evenly within 24 hours, and all interest can be obtained by withdrawing interest (claim) or withdraw (withdraw) after 1 day. Note: The calculation will restart for 24 hours after each recharge</p>
-        <p style={{color: "red"}}>Your actual dividend amount is {
+        <p>{t('Vault-Modal-Content')}</p>
+        <p style={{color: "red"}}>{t('Vault-Modal-Amount')} {
             new BigNumber(props.modalOpen.depositedTime).dividedBy(
               new BigNumber(1000*60*60*24)
             ).multipliedBy(
@@ -113,15 +115,15 @@ function SectionModal(props) {
             ).toFormat(4)
         }</p>
         <p>
-          Interest collection ratio: {Number(props.modalOpen.depositedTime*100/(1000*60*60*24)).toFixed(1)}%<br/>
-          Time to full prize: {formatDuring((1000*60*60*24)-props.modalOpen.depositedTime)}
+          {t('Vault-Modal-Ratio')}{Number(props.modalOpen.depositedTime*100/(1000*60*60*24)).toFixed(1)}%<br/>
+          {t('Vault-Modal-TIme')}{formatDuring((1000*60*60*24)-props.modalOpen.depositedTime)}
         </p>
       </DialogContent>
       <DialogActions className={classes.modalFooter}>
         <Button onClick={handleClose} color="secondary">
-          Close
+         {t('Vault-Modal-CloseButton')}
         </Button>
-        <Button color="primary" onClick={handleClick}>Confirm</Button>
+        <Button color="primary" onClick={handleClick}>{t('Vault-Modal-ConfirmButton')}</Button>
       </DialogActions>
     </Dialog>   
   );
