@@ -31,5 +31,28 @@ export const pools = [
     payout: 0,
     depositedTime: 0,
     isCrv: true
+  },{
+    id: 'weth',
+    name: 'WETH',  
+    token: 'WETH',
+    tokenDescription: 'WETH',
+    tokenAddress: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    earnedToken: 'YFII',
+    earnedTokenAddress: '0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83',
+    earnContractAddress: '0xf693705e79ccc8707D3FcB4D89381CaC28e45a22',
+    strategyContractAddress: '0x602ec22B362B0E8ae658D18f4435fE8c5c23cA0C',
+    price: 'curve-dao-token',
+    depositedBalance: 0,
+    claimAbleBalance: 0,
+    claimPendingBalance: 0,
+    claimAbleTokens: 0,
+    magnitude: new BigNumber(10).exponentiatedBy(40).toNumber(),
+    totalStake: 0,
+    earningsPerShare: 0,
+    idle: 0,
+    allowance: 0,
+    payout: 0,
+    depositedTime: 0,
+    isCrv: true
   }
 ]
