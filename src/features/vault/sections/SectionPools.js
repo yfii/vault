@@ -27,7 +27,7 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
 // sections for this section
-import SectionOpenedPool from "./SectionOpenedPool";
+// import SectionOpenedPool from "./SectionOpenedPool";
 import { useSnackbar } from 'notistack';
 //  hooks
 import { useAccount } from '../../common/redux/hooks';
