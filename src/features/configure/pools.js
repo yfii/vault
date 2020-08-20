@@ -53,6 +53,6 @@ export const pools = [
     allowance: 0,
     payout: 0,
     depositedTime: 0,
-    isCrv: true
+    isCrv: false
   }
 ]

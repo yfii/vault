@@ -75,19 +75,23 @@ export function fetchPoolBalances(data) {
               }
             )
           },
-          (callbackInner) => { 
-            fetchEarningsPerShare({
-              web3,
-              contractAddress:pool.earnContractAddress,
-              account,
-            }).then(
-              data => {
-                console.log(data)
-                return callbackInner(null, data)
-              }
-            ).catch(
-              error => callbackInner(error, {earningsPerShare: 0, totalStake: 0})
-            ) 
+          (callbackInner) => {
+            if (pool.isCrv) {
+              fetchEarningsPerShare({
+                web3,
+                contractAddress:pool.earnContractAddress,
+                account,
+              }).then(
+                data => {
+                  console.log(data)
+                  return callbackInner(null, data)
+                }
+              ).catch(
+                error => callbackInner(error, {earningsPerShare: 0, totalStake: 0})
+              )
+            } else {
+              return callbackInner(null, {earningsPerShare: 0, totalStake: 0})
+            }
           },
           (callbackInner) => {
             fetchIdle({
@@ -156,23 +160,44 @@ export function fetchPoolBalances(data) {
           ).dividedBy(
             new BigNumber(price["yfii-finance"].usd)
           ).toNumber();
-          pool.earningsPerShare = new BigNumber(pool.earningsPerShare).plus(
-            new BigNumber(pool.yield).multipliedBy(
-              new BigNumber(pool.magnitude)
+          if (pool.isCrv) {
+            pool.earningsPerShare = new BigNumber(pool.earningsPerShare).plus(
+              new BigNumber(pool.yield).multipliedBy(
+                new BigNumber(pool.magnitude)
+              ).dividedBy(
+                new BigNumber(pool.totalStake || 1)
+              )
+            ).toNumber();
+  
+            pool.claimPendingBalance = new BigNumber(pool.earningsPerShare).multipliedBy(
+              new BigNumber(pool.depositedBalance)
             ).dividedBy(
-              new BigNumber(pool.totalStake || 1)
-            )
-          ).toNumber();
-
-          pool.claimPendingBalance = new BigNumber(pool.earningsPerShare).multipliedBy(
-            new BigNumber(pool.depositedBalance)
-          ).dividedBy(
-            new BigNumber(pool.magnitude)
-          ).minus(
-            new BigNumber(pool.payout)
-          ).minus(
-            new BigNumber(pool.claimAbleBalance)
-          ).toNumber();
+              new BigNumber(pool.magnitude)
+            ).minus(
+              new BigNumber(pool.payout)
+            ).minus(
+              new BigNumber(pool.claimAbleBalance)
+            ).toNumber();
+            callback(null, pool)
+          } else {
+            fetchClaimPendingBalance({
+              amount: pool.yield,
+              web3,
+              contractAddress:pool.earnContractAddress,
+              account
+            }).then(
+              data => {
+                pool.claimPendingBalance = data
+                return callback(null, pool)
+              }
+            ).catch(
+              error => {
+                console.log(error)
+                return callback(null, pool)
+              }
+            ) 
+          }
+          
           // fetchClaimPendingBalance({
           //   amount: pool.yield,
           //   web3,
@@ -186,7 +211,7 @@ export function fetchPoolBalances(data) {
           // ).catch(
           //   error => callback(null, pool)
           // ) 
-          callback(null, pool)
+          // callback(null, pool)
           // pool.depositedTime = 1597839811;
           // pool.claimPendingBalance = earningsPerShare*pool.depositedBalance/magnitude - payout;
         })
