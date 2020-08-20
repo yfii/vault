@@ -211,11 +211,17 @@ export default function SectionPools() {
   } 
 
   useEffect(() => {
-    fetchBalances({account, provider, tokens});
+    const id = setInterval(() => {
+      fetchBalances({account, provider, tokens});
+    }, 10000);
+    return () => clearInterval(id);
   }, [account, provider,fetchBalances]);
 
   useEffect(() => {
-    fetchPoolBalances({account, provider, pools, price});
+    const id = setInterval(() => {
+      fetchPoolBalances({account, provider, pools, price});
+    }, 10000);
+    return () => clearInterval(id);
   }, [account, provider, price, fetchPoolBalances]);
   
   useEffect(() => {
