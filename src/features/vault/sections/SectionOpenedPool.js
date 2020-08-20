@@ -53,7 +53,7 @@ export default function SectionOpenedPool(props) {
 
   const byDecimals = number => {
     const decimals = new BigNumber(10).exponentiatedBy(18);
-    return new BigNumber(number).dividedBy(decimals).toFormat(4);
+    return new BigNumber(number).dividedBy(decimals);
   }
 
   const onApproval = () => {
@@ -191,7 +191,7 @@ export default function SectionOpenedPool(props) {
               alignItems : "center",
               alignContent: "space-around"
             }}>
-              <div>logo</div>
+              <Avatar alt={pool.token} src={require(`../../../images/${pool.token}-logo.png`)} />
               <div>{byDecimals(tokens[pool.token].tokenBalance)}</div>
               <div>
                 <h5>{pool.token}</h5>
@@ -263,7 +263,7 @@ export default function SectionOpenedPool(props) {
               <Card>
                 <CardBody>
                   <h4 className={classes.cardTitle}>Earned</h4>
-                  <h5 className={classes.textCenter}>{byDecimals(pool.claimAbleBalance)} {pool.earnedToken}</h5>
+                  <h5 className={classes.textCenter}>{byDecimals(pool.claimAbleBalance).toFormat(4)} {pool.earnedToken}</h5>
                   <Button color="primary" round block onClick={onClaim} disabled={fetchClaimPending}>
                     {fetchClaimPending ? 'claim...' : 'claim'}
                   </Button>
@@ -272,7 +272,7 @@ export default function SectionOpenedPool(props) {
               <Card>
                 <CardBody>
                   <h4 className={classes.cardTitle}>Pending</h4>
-                  <h5>{byDecimals(pool.claimPendingBalance)} {pool.earnedToken}</h5>
+                  <h5>{byDecimals(pool.claimPendingBalance).toFormat(4)} {pool.earnedToken}</h5>
                   <p>Something descriptions<br/>contents for pending</p>
                 </CardBody>
               </Card>
@@ -287,7 +287,7 @@ export default function SectionOpenedPool(props) {
             <Card>
               <CardBody>
                 <h4 className={classes.cardTitle}>Idle</h4>
-                <h5 className={classes.textCenter}>{byDecimals(pool.idle)} {pool.token}</h5>
+                <h5 className={classes.textCenter}>{byDecimals(pool.idle).toFormat(4)} {pool.token}</h5>
                 <Button color="primary" round block onClick={onFarm} disabled={fetchFarmPending}>
                   {fetchFarmPending?'Farm...':'Farm'}
                 </Button>
@@ -298,7 +298,7 @@ export default function SectionOpenedPool(props) {
             <Card>
               <CardBody>
                 <h4 className={classes.cardTitle}>Yield</h4>
-                <h5 className={classes.textCenter}>{byDecimals(pool.yield)} {pool.earnedToken}</h5>
+                <h5 className={classes.textCenter}>{byDecimals(pool.yield).toFormat(4)} {pool.earnedToken}</h5>
                 <Button color="primary" round block onClick={onHarvest} disabled={fetchHarvestPending}>
                 {fetchHarvestPending?'Harvest...':'Harvest'}
                 </Button>
