@@ -217,6 +217,20 @@ export default function SectionPools() {
   useEffect(() => {
     fetchPoolBalances({account, provider, pools, price});
   }, [account, provider, price, fetchPoolBalances]);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      fetchBalances({account, provider, tokens});
+    }, 10000);
+    return () => clearInterval(id);
+  }, [account, provider,fetchBalances]);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      fetchPoolBalances({account, provider, pools, price});
+    }, 10000);
+    return () => clearInterval(id);
+  }, [account, provider, price, fetchPoolBalances]);
   
   useEffect(() => {
     fetchPrice();
@@ -226,18 +240,18 @@ export default function SectionPools() {
     <GridContainer justify="center">
       <GridItem xs={12} sm={10}>
         {pools.map((pool, index) => {
-            return <Accordion 
-              key={ index }
-              expanded={ Boolean(openedCardList.includes(index))}
-              onChange={ () => openCard(index) }
+          return <Accordion
+            key={ index }
+            expanded={ Boolean(openedCardList.includes(index))}
+            onChange={ () => openCard(index) }
+                 >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1bh-content"
+              id="panel1bh-header"
+              className={classes.details}
             >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1bh-content"
-                id="panel1bh-header"
-                className={classes.details}
-              >
-                <GridItem xs={12}>
+              <GridItem xs={12}>
                 <GridContainer>
                   <SectionModal pool={pool} modalOpen={modalOpen} setModalOpen={setModalOpen}/>
                   <GridItem xs={12} sm={4} style={{
@@ -277,33 +291,33 @@ export default function SectionPools() {
                           alignContent: "space-around"
                         }}
                       >
-                          <CustomInput
-                            id="password"
-                            inputProps={{
+                        <CustomInput
+                          id="password"
+                          inputProps={{
                               placeholder: `Input numbers of ${pool.token} you want to deposit`,
                               type: "number",
                               autoComplete: "off"
-                            }}
-                            formControlProps={{
-                              onClick: (event) => event.stopPropagation(),
-                              onFocus: (event) => event.stopPropagation(),
+                          }}
+                          formControlProps={{
+                            onClick: (event) => event.stopPropagation(),
+                            onFocus: (event) => event.stopPropagation(),
                               fullWidth: true,
                               className: classes.formControl,
                               onChange: handleDepositedBalance,
-                            }}
-                            // onClick={e=>e.stopPropagation()}
-                          />
-                          {depositedBalance>pool.allowance ? (
-                            <Button 
-                              color="primary" 
-                              onClick={onApproval.bind(this, pool, index)}
-                              disabled={fetchApprovalPending}
-                            >
-                              {fetchApprovalPending ? 'Approval...' : 'Approval'}
-                            </Button>
-                          ) : (
-                          <Button 
-                            color="primary" 
+                          }}
+                          // onClick={e=>e.stopPropagation()}
+                        />
+                        {depositedBalance>pool.allowance ? (
+                          <Button
+                            color="primary"
+                            onClick={onApproval.bind(this, pool, index)}
+                            disabled={fetchApprovalPending}
+                          >
+                            {fetchApprovalPending ? 'Approval...' : 'Approval'}
+                          </Button>
+                        ) : (
+                          <Button
+                            color="primary"
                             onClick={onDeposit.bind(this, pool)}
                             onFocus={(event) => event.stopPropagation()}
                             disabled={
@@ -324,24 +338,24 @@ export default function SectionPools() {
                           alignContent: "space-around",
                         }}
                       >
-                      <div>
-                        <h5>{byDecimals(pool.depositedBalance).toFormat(4)}</h5>
-                        <h6>Deposited { pool.token }</h6>
-                      </div>
-                      <div>
-                        <h5>{byDecimals(pool.claimAbleBalance).toFormat(4)}</h5>
-                        <h6>Earned { pool.earnedToken }</h6>
-                      </div>
-                      <div>
-                        <h5>{byDecimals(pool.claimPendingBalance).toFormat(4)}</h5>
-                        <h6>Pending { pool.earnedToken }</h6>
-                      </div>
-                    </GridItem>
+                        <div>
+                          <h5>{byDecimals(pool.depositedBalance).toFormat(4)}</h5>
+                          <h6>Deposited { pool.token }</h6>
+                        </div>
+                        <div>
+                          <h5>{byDecimals(pool.claimAbleBalance).toFormat(4)}</h5>
+                          <h6>Earned { pool.earnedToken }</h6>
+                        </div>
+                        <div>
+                          <h5>{byDecimals(pool.claimPendingBalance).toFormat(4)}</h5>
+                          <h6>Pending { pool.earnedToken }</h6>
+                        </div>
+                      </GridItem>
                     )}
                 </GridContainer>
-                </GridItem>
-            {/* <Card key={index}
-              style={{
+              </GridItem>
+              {/* <Card key={index}
+                style={{
                 borderRadius: "50rem",
                 borderStyle: "solid",
                 borderWidth: "2px",
@@ -349,10 +363,10 @@ export default function SectionPools() {
                 // borderColor: "rgb(233, 30, 99)",
                 boxShadow: "0 0",
                 // opacity: 0.5
-                
-              }}
-            >
-              <CardBody style={{ 
+
+                }}
+                >
+                <CardBody style={{
                 display: "flex",
                 justifyContent : "space-around",
                 alignItems : "center",
@@ -360,23 +374,23 @@ export default function SectionPools() {
                 backgroudColor: "#f2f2f2",
               }}> */}
 
-                
-                
-              </AccordionSummary>
-              <AccordionDetails>
+
+
+            </AccordionSummary>
+            <AccordionDetails>
               <GridItem xs={12}>
                 <GridContainer>
-                <GridItem xs={12} style={{ 
+                  <GridItem xs={12} md={4} style={{
                     display: "flex",
                     justifyContent : "space-between",
                     alignItems : "center",
                     alignContent: "space-around"
                   }}>
-                    <Card>
+                    <Card className={classes.cardWrap}>
                       <CardBody>
                         <h4 className={classes.cardTitle}>Deposited</h4>
                         <h5 className={classes.textCenter}>{byDecimals(pool.depositedBalance).toFormat(4)} {pool.token}</h5>
-                        <Button 
+                        <Button
                           color="primary"
                           round
                           block
@@ -387,7 +401,9 @@ export default function SectionPools() {
                         </Button>
                       </CardBody>
                     </Card>
-                    <Card>
+                  </GridItem>
+                  <GridItem xs={12} md={4}>
+                    <Card className={classes.cardWrap}>
                       <CardBody>
                         <h4 className={classes.cardTitle}>Earned</h4>
                         <h5 className={classes.textCenter}>{byDecimals(pool.claimAbleBalance).toFormat(4)} {pool.earnedToken}</h5>
@@ -396,7 +412,9 @@ export default function SectionPools() {
                         </Button>
                       </CardBody>
                     </Card>
-                    <Card>
+                  </GridItem>
+                  <GridItem xs={12} md={4}>
+                    <Card className={classes.cardWrap}>
                       <CardBody>
                         <h4 className={classes.cardTitle}>Pending</h4>
                         <h5>{byDecimals(pool.claimPendingBalance).toFormat(4)} {pool.earnedToken}</h5>

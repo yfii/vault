@@ -8,7 +8,7 @@
 
 const initialState = {
   modalIsOpen: false,
-  account: null,
+  account: '',
   provider: null
 };
 

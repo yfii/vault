@@ -107,7 +107,10 @@ const sectionPoolsStyle = theme => ({
     "& button": {
       marginRight: "5px"
     }
-  }
+  },
+  cardWrap: {
+    minHeight: '170px',
+  },
 });
 
 export default sectionPoolsStyle;
