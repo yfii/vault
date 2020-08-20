@@ -431,7 +431,11 @@ export default function SectionPools() {
                         <h4 className={classes.cardTitle}>{t('Vault-Idle')}</h4>
                         <h5 className={classes.textCenter}>{byDecimals(pool.idle).toFormat(4)} {pool.token}</h5>
                         <Tooltip title={t('Vault-FarmButtonDescription')}  aria-label="add">
-                          <Button color="primary" round block onClick={onFarm.bind(this, pool)} disabled={fetchFarmPending}>
+                          <Button color="primary" round block
+                            onClick={onFarm.bind(this, pool)} 
+                            disabled
+                            // disabled={fetchFarmPending}
+                          >
                             {fetchFarmPending?`${t('Vault-FarmING')}`:`${t('Vault-FarmButton')}`}
                           </Button>
                         </Tooltip>
@@ -444,7 +448,11 @@ export default function SectionPools() {
                         <h4 className={classes.cardTitle}>{t('Vault-Yield')}</h4>
                         <h5 className={classes.textCenter}>{byDecimals(pool.yield).toFormat(4)} {pool.earnedToken}</h5>
                         <Tooltip title={t('Vault-HarvestButtonDescription')} aria-label="add">
-                          <Button color="primary" round block onClick={onHarvest.bind(this, pool)} disabled={fetchHarvestPending}>
+                          <Button color="primary" round block
+                            disabled 
+                            onClick={onHarvest.bind(this, pool)}
+                            // disabled={fetchHarvestPending}
+                          >
                           {fetchHarvestPending?`${t('Vault-HarvestING')}`:`${t('Vault-HarvestButton')}`}
                           </Button>
                         </Tooltip>

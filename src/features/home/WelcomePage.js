@@ -39,7 +39,11 @@ export default function WelcomePage() {
   return (
     <div 
       className={classes.navigation}
-      style={{ backgroundImage: "url(" + image + ")" }}
+      style={{ 
+        backgroundImage: "url(" + image + ")",
+        backgroundSize: "100% 100vh",
+        backgroundRepeat: "no-repeat"
+      }}
     >
       <Header 
         brand="YFII"
