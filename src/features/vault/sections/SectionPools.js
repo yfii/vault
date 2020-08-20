@@ -430,7 +430,7 @@ export default function SectionPools() {
                       <CardBody>
                         <h4 className={classes.cardTitle}>{t('Vault-Idle')}</h4>
                         <h5 className={classes.textCenter}>{byDecimals(pool.idle).toFormat(4)} {pool.token}</h5>
-                        <Tooltip title="手动把合约内的钱送进去挖矿" aria-label="add">
+                        <Tooltip title={t('Vault-FarmButtonDescription')}  aria-label="add">
                           <Button color="primary" round block onClick={onFarm.bind(this, pool)} disabled={fetchFarmPending}>
                             {fetchFarmPending?`${t('Vault-FarmING')}`:`${t('Vault-FarmButton')}`}
                           </Button>
@@ -443,7 +443,7 @@ export default function SectionPools() {
                       <CardBody>
                         <h4 className={classes.cardTitle}>{t('Vault-Yield')}</h4>
                         <h5 className={classes.textCenter}>{byDecimals(pool.yield).toFormat(4)} {pool.earnedToken}</h5>
-                        <Tooltip title="帮助领取收益,触发者可获得1%的金额。" aria-label="add">
+                        <Tooltip title={t('Vault-HarvestButtonDescription')} aria-label="add">
                           <Button color="primary" round block onClick={onHarvest.bind(this, pool)} disabled={fetchHarvestPending}>
                           {fetchHarvestPending?`${t('Vault-HarvestING')}`:`${t('Vault-HarvestButton')}`}
                           </Button>
