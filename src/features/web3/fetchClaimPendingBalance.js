@@ -9,7 +9,9 @@ export const fetchClaimPendingBalance = async ({web3, account, amount, contractA
     amount:${amount}\n
     contractAddress:${contractAddress}\n
   `)
-  const data = await contract.methods.cal_out_pending(new BigNumber(amount).toString(), account).call({ from: account });
+  const data = await contract.methods.cal_out_pending(new BigNumber(amount).dividedToIntegerBy(
+    new BigNumber(1)
+  ).toString(), account).call({ from: account });
   console.log("data: "+data)
   const claimPendingBalance = new BigNumber(data).toNumber();
   console.log(`

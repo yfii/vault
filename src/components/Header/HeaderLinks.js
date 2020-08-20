@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React from "react";
+import React, { useEffect, useState } from "react";
 // nodejs library to set properties for components
 import PropTypes from "prop-types";
 // react components for routing our app without refresh
@@ -25,7 +25,24 @@ export default function HeaderLinks(props) {
   const { dropdownHoverColor } = props;
   const classes = useStyles();
   const { t, i18n } = useTranslation();
+  const [lng, setLanguage] = useState('en');
 
+  const switchLanguage = () => {
+    console.log('switchLanguage')
+    switch(i18n.language) {
+      case 'zh':
+      case 'zh-CN':
+        return '中文'
+      case 'en':
+        return 'English'
+      case 'ja':
+        return '日本語'
+      case 'th':
+        return 'ไทย'
+      default:
+        return 'English'
+    }
+  }
   // React.useEffect(()=>{
   //   const language = i18n.language
   //   switch(language) {
@@ -42,6 +59,11 @@ export default function HeaderLinks(props) {
   //       return 'English'
   //   }
   // })
+
+  useEffect(() => {
+    const lng = switchLanguage()
+    setLanguage(lng);
+  }, [i18n]);
   
   return (
     <List className={classes.list + " " + classes.mlAuto}>

@@ -27,8 +27,8 @@ const initialState = {
     "yfii-finance":{
       usd: 250
     },
-    ethereum: {
-      usd: 400
+    spaghetti: {
+      usd: 1.11
     }
   },
   fetchPoolBalancesPending: false,
