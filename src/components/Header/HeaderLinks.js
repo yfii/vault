@@ -8,7 +8,10 @@ import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
+import Popover from '@material-ui/core/Popover';
+import Typography from '@material-ui/core/Typography';
 import Icon from "@material-ui/core/Icon";
+import Avatar from '@material-ui/core/Avatar';
 // @material-ui/icons
 import TranslateIcon from '@material-ui/icons/Translate';
 import TelegramIcon from '@material-ui/icons/Telegram';
@@ -27,6 +30,18 @@ export default function HeaderLinks(props) {
   const classes = useStyles();
   const { t, i18n } = useTranslation();
   const [lng, setLanguage] = useState('en');
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handlePopoverOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
 
   const switchLanguage = () => {
     console.log('switchLanguage')
@@ -100,13 +115,15 @@ export default function HeaderLinks(props) {
           className={
             classes.navLink + " " + classes.socialIconsButton
           }
+          href="https://twitter.com/FinanceYfii"
+          target="_blank"
         >
           <i
             className={
               classes.socialIcons +
               " " +
               classes.marginRight5 +
-              " fab fa-twitter"
+              " fab fa fa-twitter"
             }
           />{" "}
           Twitter
@@ -118,16 +135,18 @@ export default function HeaderLinks(props) {
           className={
             classes.navLink + " " + classes.socialIconsButton
           }
+          href="https://t.me/yfiifinance"
+          target="_blank"
         >
           <i
             className={
               classes.socialIcons +
               " " +
               classes.marginRight5 +
-              " fab fa-facebook"
+              " fab fa fa-telegram"
             }
           />{" "}
-          Facebook
+          telegram
         </Button>
       </ListItem>
       <ListItem className={classes.listItem}>
@@ -136,17 +155,62 @@ export default function HeaderLinks(props) {
           className={
             classes.navLink + " " + classes.socialIconsButton
           }
+          href="https://github.com/yfii/vault"
+          target="_blank"
         >
           <i
             className={
               classes.socialIcons +
               " " +
               classes.marginRight5 +
-              " fab fa-instagram"
+              " fab fa fa-github"
             }
           />{" "}
-          Instagram
+          Github
         </Button>
+      </ListItem>
+      <ListItem className={classes.listItem}>
+        <Button
+          color="transparent"
+          className={
+            classes.navLink + " " + classes.socialIconsButton
+          }
+          aria-owns={open ? 'mouse-over-popover' : undefined}
+          aria-haspopup="true"
+          onMouseEnter={handlePopoverOpen}
+          onMouseLeave={handlePopoverClose}
+        >
+          <i
+            className={
+              classes.socialIcons +
+              " " +
+              classes.marginRight5 +
+              " fab fa fa-wechat"
+            }
+          />{" "}
+          Wechat
+        </Button>
+        <Popover
+          id="mouse-over-popover"
+          className={classes.popover}
+          classes={{
+            paper: classes.paper,
+          }}
+          open={open}
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          onClose={handlePopoverClose}
+          disableRestoreFocus
+        >
+          <Avatar variant="square" alt="YFII" src={require(`../../images/wechat.png`)} style={{width: "80px", height: "80px"}}/>
+        </Popover>
       </ListItem>
     </List>
   );
