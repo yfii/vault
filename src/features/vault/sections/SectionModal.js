@@ -76,6 +76,8 @@ function SectionModal(props) {
       TransitionComponent={Transition}
       keepMounted
       onClose={handleClose}
+      onClick={(event) => event.stopPropagation()}
+      onFocus={(event) => event.stopPropagation()}
       aria-labelledby="classic-modal-slide-title"
       aria-describedby="classic-modal-slide-description"
     >

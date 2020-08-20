@@ -22,7 +22,7 @@ export function fetchPrice() {
     // e.g.: handleSubmit() { this.props.actions.submitForm(data).then(()=> {}).catch(() => {}); }
     const promise = new Promise((resolve, reject) => {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
-      const doRequest = axios.get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,curve-dao-token,yfii-finance&vs_currencies=usd');
+      const doRequest = axios.get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,curve-dao-token,yfii-finance,spaghetti&vs_currencies=usd');
 
       doRequest.then(
         res => {

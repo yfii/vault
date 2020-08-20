@@ -44,7 +44,12 @@ export default function WelcomePage() {
       <Header 
         brand="YFII"
         color="transparent"
-        links={<HeaderLinks/>}
+        fixed
+        links={<HeaderLinks dropdownHoverColor="info"/>}
+        changeColorOnScroll={{
+          height: 400,
+          color: "info"
+        }}
       />
       <GridContainer>
         <GridItem xs={12} style={{display: 'flex', alignItems: "center", justifyContent: "space-around",height: "300px"}}>
