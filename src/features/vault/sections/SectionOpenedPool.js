@@ -4,6 +4,7 @@ import BigNumber from "bignumber.js";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from '@material-ui/core/Paper';
+import Avatar from '@material-ui/core/Avatar';
 // core components
 import Table from "components/Table/Table.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -15,7 +16,7 @@ import Button from "components/CustomButtons/Button.js";
 import { useSnackbar } from 'notistack';
 //  hooks
 import { useAccount } from '../../common/redux/hooks';
-import { useFetchBalances, useFetchApproval, useFetchDeposit, useFetchClaim, useFetchWithdraw, useFetchFarm, useFetchHarvest, useFetchPrice } from '../redux/hooks';
+import { useFetchBalances, useFetchApproval, useFetchDeposit, useFetchClaim, useFetchWithdraw, useFetchFarm, useFetchHarvest } from '../redux/hooks';
 // sections for this section
 import SectionModal from "./SectionModal";
 
@@ -35,7 +36,6 @@ export default function SectionOpenedPool(props) {
   const { fetchWithdraw, fetchWithdrawPending } = useFetchWithdraw();
   const { fetchFarm, fetchFarmPending } = useFetchFarm();
   const { fetchHarvest, fetchHarvestPending } = useFetchHarvest();
-  const { price } = useFetchPrice();
 
   const [ modalOpen, setModalOpen ] = useState({ isOpen: false, depositedTime: 0,func: null });
 
@@ -75,7 +75,7 @@ export default function SectionOpenedPool(props) {
     fetchDeposit({
       account,
       provider,
-      amount: new BigNumber(depositedBalance).toNumber(),
+      amount: new BigNumber(depositedBalance).toString(),
       contractAddress: pool.earnContractAddress,
     }).then(
       () => enqueueSnackbar(`Deposit success`, {variant: 'success'})
@@ -230,7 +230,9 @@ export default function SectionOpenedPool(props) {
                   <Button 
                     color="primary" 
                     onClick={onDeposit}
-                    disabled={!Boolean(depositedBalance) || (depositedBalance==0) || fetchDepositPending}
+                    disabled={
+                      !Boolean(depositedBalance) || (depositedBalance==0) || fetchDepositPending || (new BigNumber(depositedBalance).toNumber() > byDecimals(tokens[pool.token].tokenBalance))
+                    }
                   >
                     {fetchDepositPending ? 'Deposit...' : 'Deposit'}
                   </Button>
@@ -246,21 +248,31 @@ export default function SectionOpenedPool(props) {
               <Card>
                 <CardBody>
                   <h4 className={classes.cardTitle}>Deposited</h4>
-                  <h5 className={classes.textCenter}>{byDecimals(pool.depositedBalance)}{pool.token}</h5>
-                  <Button color="primary" round block onClick={onWithdraw}>Withdraw</Button>
+                  <h5 className={classes.textCenter}>{byDecimals(pool.depositedBalance)} {pool.token}</h5>
+                  <Button 
+                    color="primary"
+                    round
+                    block
+                    onClick={onWithdraw}
+                    disabled={fetchWithdrawPending}
+                  >
+                    {fetchWithdrawPending ? 'Withdraw...': 'Withdraw'}
+                  </Button>
                 </CardBody>
               </Card>
               <Card>
                 <CardBody>
                   <h4 className={classes.cardTitle}>Earned</h4>
-                  <h5 className={classes.textCenter}>{byDecimals(pool.claimAbleBalance)}{pool.earnedToken}</h5>
-                  <Button color="primary" round block onClick={onClaim}>claim</Button>
+                  <h5 className={classes.textCenter}>{byDecimals(pool.claimAbleBalance)} {pool.earnedToken}</h5>
+                  <Button color="primary" round block onClick={onClaim} disabled={fetchClaimPending}>
+                    {fetchClaimPending ? 'claim...' : 'claim'}
+                  </Button>
                 </CardBody>
               </Card>
               <Card>
                 <CardBody>
                   <h4 className={classes.cardTitle}>Pending</h4>
-                  <h5>{byDecimals(pool.claimPendingBalance)}{pool.earnedToken}</h5>
+                  <h5>{byDecimals(pool.claimPendingBalance)} {pool.earnedToken}</h5>
                   <p>Something descriptions<br/>contents for pending</p>
                 </CardBody>
               </Card>
@@ -275,8 +287,10 @@ export default function SectionOpenedPool(props) {
             <Card>
               <CardBody>
                 <h4 className={classes.cardTitle}>Idle</h4>
-                <h5 className={classes.textCenter}>{byDecimals(pool.idle)}{pool.token}</h5>
-                <Button color="primary" round block onClick={onFarm}>Farm</Button>
+                <h5 className={classes.textCenter}>{byDecimals(pool.idle)} {pool.token}</h5>
+                <Button color="primary" round block onClick={onFarm} disabled={fetchFarmPending}>
+                  {fetchFarmPending?'Farm...':'Farm'}
+                </Button>
               </CardBody>
             </Card>
           </GridItem>
@@ -284,8 +298,10 @@ export default function SectionOpenedPool(props) {
             <Card>
               <CardBody>
                 <h4 className={classes.cardTitle}>Yield</h4>
-                <h5 className={classes.textCenter}>{byDecimals(pool.yield)}{pool.earnedToken}</h5>
-                <Button color="primary" round block onClick={onHarvest}>Harvest</Button>
+                <h5 className={classes.textCenter}>{byDecimals(pool.yield)} {pool.earnedToken}</h5>
+                <Button color="primary" round block onClick={onHarvest} disabled={fetchHarvestPending}>
+                {fetchHarvestPending?'Harvest...':'Harvest'}
+                </Button>
               </CardBody>
             </Card>
           </GridItem>
