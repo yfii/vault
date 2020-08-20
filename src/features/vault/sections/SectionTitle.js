@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
@@ -10,11 +11,12 @@ import sectionTitleStyle from "../jss/sections/sectionTitleStyle";
 
 const useStyles = makeStyles(sectionTitleStyle);
 export default function SectionTitle() {
+  const { t, i18n } = useTranslation();
   const classes = useStyles();
 
   return (
     <Grid container item className={classes.root} justify="center">
-      <Typography variant="h1" className={classNames(classes.title)} noWrap>Deposit to Earn</Typography>
+      <Typography variant="h1" className={classNames(classes.title)} noWrap>{t('Vault-Title')}</Typography>
     </Grid>
   )
 }
