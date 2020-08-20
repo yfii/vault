@@ -192,7 +192,7 @@ export default function SectionOpenedPool(props) {
               alignContent: "space-around"
             }}>
               <Avatar alt={pool.token} src={require(`../../../images/${pool.token}-logo.png`)} />
-              <div>{byDecimals(tokens[pool.token].tokenBalance)}</div>
+              <div>{byDecimals(tokens[pool.token].tokenBalance).toFormat(4)}</div>
               <div>
                 <h5>{pool.token}</h5>
                 <h6>Balance</h6>
@@ -231,7 +231,7 @@ export default function SectionOpenedPool(props) {
                     color="primary" 
                     onClick={onDeposit}
                     disabled={
-                      !Boolean(depositedBalance) || (depositedBalance==0) || fetchDepositPending || (new BigNumber(depositedBalance).toNumber() > byDecimals(tokens[pool.token].tokenBalance))
+                      !Boolean(depositedBalance) || (depositedBalance==0) || fetchDepositPending || (new BigNumber(depositedBalance).toNumber() > byDecimals(tokens[pool.token].tokenBalance).toNumber())
                     }
                   >
                     {fetchDepositPending ? 'Deposit...' : 'Deposit'}
@@ -248,7 +248,7 @@ export default function SectionOpenedPool(props) {
               <Card>
                 <CardBody>
                   <h4 className={classes.cardTitle}>Deposited</h4>
-                  <h5 className={classes.textCenter}>{byDecimals(pool.depositedBalance)} {pool.token}</h5>
+                  <h5 className={classes.textCenter}>{byDecimals(pool.depositedBalance).toFormat(4)} {pool.token}</h5>
                   <Button 
                     color="primary"
                     round
