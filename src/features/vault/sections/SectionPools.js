@@ -339,7 +339,15 @@ export default function SectionPools() {
                                   onClick={()=>{
                                     setDepositedBalance({
                                       ...depositedBalance,
-                                      [index]: byDecimals(tokens[pool.token].tokenBalance).toNumber()
+                                      [index]: new BigNumber(
+                        byDecimals(tokens[pool.token].tokenBalance)
+                      ).multipliedBy(
+                        new BigNumber(10000)
+                      ).dividedToIntegerBy(
+                        new BigNumber(1)
+                      ).dividedBy(
+                        new BigNumber(10000)
+                      ).toString()
                                     })
                                   }}
                                 >Max</Button>
