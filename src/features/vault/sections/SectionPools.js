@@ -32,7 +32,7 @@ import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
 import { useSnackbar } from 'notistack';
 //  hooks
 import { useAccount } from '../../common/redux/hooks';
-import { useFetchBalances, useFetchPoolBalances, useFetchPrice, useFetchApproval, useFetchDeposit, useFetchClaim, useFetchWithdraw, useFetchFarm, useFetchHarvest } from '../redux/hooks';
+import { useFetchBalances, useFetchPoolBalances, useFetchCoingeckoPrice, useFetchUniswapPrices,useFetchApproval, useFetchDeposit, useFetchClaim, useFetchWithdraw, useFetchFarm, useFetchHarvest } from '../redux/hooks';
 
 import SectionModal from "./SectionModal";
 import SectionConfirmModal from "./SectionConfirmModal";
@@ -46,7 +46,8 @@ export default function SectionPools() {
   const { account, provider } = useAccount();
   const { pools, fetchPoolBalances } = useFetchPoolBalances();
   const { tokens, fetchBalances } = useFetchBalances();
-  const { price, fetchPrice } = useFetchPrice();
+  const { price, fetchCoingeckoPrice } = useFetchCoingeckoPrice();
+  const { fetchUniswapPrices } = useFetchUniswapPrices();
   const [ openedCardList, setOpenCardList ] = useState([]);
   const classes = useStyles();
 
@@ -233,29 +234,30 @@ export default function SectionPools() {
 
   useEffect(() => {
     fetchBalances({account, provider, tokens});
-  }, [account, provider,fetchBalances]);
+  }, [fetchBalances]);
 
   useEffect(() => {
     fetchPoolBalances({account, provider, pools, price});
-  }, [account, provider, price, fetchPoolBalances]);
+  }, [fetchPoolBalances]);
 
   useEffect(() => {
-    fetchPrice();
-  }, [account, provider,fetchPoolBalances]);
+    fetchCoingeckoPrice();
+    fetchUniswapPrices({provider, uniswapList: price.uniswapList})
+  }, [fetchCoingeckoPrice]);
 
   useEffect(() => {
     const id = setInterval(() => {
       fetchBalances({account, provider, tokens});
     }, 10000);
     return () => clearInterval(id);
-  }, [account, provider,fetchBalances]);
+  }, [fetchBalances]);
 
   useEffect(() => {
     const id = setInterval(() => {
       fetchPoolBalances({account, provider, pools, price});
     }, 10000);
     return () => clearInterval(id);
-  }, [account, provider, price, fetchPoolBalances]);
+  }, [fetchPoolBalances]);
 
   return (
     <GridContainer justify="center">

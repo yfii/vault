@@ -7,7 +7,8 @@ import { reducer as fetchClaimReducer } from './fetchClaim';
 import { reducer as fetchWithdrawReducer } from './fetchWithdraw';
 import { reducer as fetchFarmReducer } from './fetchFarm';
 import { reducer as fetchHarvestReducer } from './fetchHarvest';
-import { reducer as fetchPriceReducer } from './fetchPrice';
+import { reducer as fetchCoingeckoPriceReducer } from './fetchCoingeckoPrice';
+import { reducer as fetchUniswapPricesReducer } from './fetchUniswapPrices';
 
 const reducers = [
   fetchBalancesReducer,
@@ -18,7 +19,8 @@ const reducers = [
   fetchWithdrawReducer,
   fetchFarmReducer,
   fetchHarvestReducer,
-  fetchPriceReducer
+  fetchCoingeckoPriceReducer,
+  fetchUniswapPricesReducer
 ];
 
 

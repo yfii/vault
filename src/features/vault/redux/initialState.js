@@ -1,6 +1,6 @@
-import { pools } from "../../configure";
+import { pools, price } from "../../configure";
 
-let tokens = {};
+const tokens = {};
 
 pools.map(({token, tokenAddress, earnedToken, earnedTokenAddress})=> {
   tokens[token] = {
@@ -17,22 +17,9 @@ console.log(tokens)
 
 const initialState = {
   pools,
-  price: {
-    "bitcoin": {
-      usd: 0
-    },
-    "curve-dao-token": {
-      usd: 4
-    },
-    "yfii-finance":{
-      usd: 250
-    },
-    "spaghetti": {
-      usd: 1.11
-    }
-  },
-  fetchPoolBalancesPending: false,
+  price,
   tokens,
+  fetchPoolBalancesPending: false,
   fetchBalancesPending: false,
   fetchApprovalPending:false,
   fetchDepositPending:false,
@@ -40,6 +27,8 @@ const initialState = {
   fetchWithdrawPending:false,
   fetchFarmPending:false,
   fetchHarvestPending:false,
+  fetchCoingekoPricePending: false,
+  fetchUniswapPricesPending: false
 };
 
 export default initialState;

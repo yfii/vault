@@ -66,7 +66,7 @@ export const pools = [
     earnedTokenAddress: '0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83',
     earnContractAddress: '0xCda9230923FCb25e26a20D7D9D12e1744405C9fC',
     strategyContractAddress: '0x780c2450632ecb4be69DA859987Be4875545E90b',
-    price: 'spaghetti',
+    price: 'grap.finance',
     depositedBalance: 0,
     claimAbleBalance: 0,
     claimPendingBalance: 0,
