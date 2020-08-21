@@ -5,6 +5,7 @@ import BigNumber from "bignumber.js";
 // @material-ui/core components
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from "@material-ui/core/styles";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
@@ -62,7 +63,7 @@ export default function SectionPools() {
 
   const [ confirmModalOpen, setConfirmModalOpen ] = useState({ isOpen: false, description: '', func: null });
 
-  const [ depositedBalance, setDepositedBalance ] = useState();
+  const [ depositedBalance, setDepositedBalance ] = useState({});
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -70,8 +71,11 @@ export default function SectionPools() {
   //   // variant could be success, error, warning, info, or default
   //   enqueueSnackbar('This is a success message!', { variant });
   // };
-  const handleDepositedBalance = event => {
-    setDepositedBalance(event.target.value);
+  const handleDepositedBalance = (index, event) => {
+    setDepositedBalance({
+      ...depositedBalance,
+      [index]: event.target.value == '' ? '': Number(event.target.value)
+    });
   };
 
   const byDecimals = number => {
@@ -93,13 +97,13 @@ export default function SectionPools() {
     )
   }
 
-  const onDeposit = (pool, event) => {
+  const onDeposit = (pool, index, event) => {
     // alert(`onDeposit: ${depositedBalance}`)
     event.stopPropagation();
     fetchDeposit({
       account,
       provider,
-      amount: new BigNumber(depositedBalance).toString(),
+      amount: new BigNumber(depositedBalance[index]).toString(),
       contractAddress: pool.earnContractAddress,
     }).then(
       () => enqueueSnackbar(`Deposit success`, {variant: 'success'})
@@ -302,7 +306,7 @@ export default function SectionPools() {
                     }</div>
                     <div>
                       <h5>{pool.token}</h5>
-                      <h6>{t('Vault-Balance')}</h6>
+                  <h6>{t('Vault-Balance')}</h6>
                     </div>
                   </GridItem>
                   {
@@ -316,18 +320,37 @@ export default function SectionPools() {
                         }}
                       >
                         <CustomInput
-                          id="password"
                           inputProps={{
-                              placeholder: `${t('Vault-Input-1')}${pool.token}${t('Vault-Input-2')}`,
-                              type: "number",
-                              autoComplete: "off"
-                          }}
+                            placeholder: `${t('Vault-Input-1')}${pool.token}${t('Vault-Input-2')}`,
+                            type: "number",
+                            autoComplete: "off",
+                            value: depositedBalance[index] == null ? '' : depositedBalance[index],
+                            onChange: handleDepositedBalance.bind(this, index),
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <Button variant="outlined" round color="primary"
+                                  style={{
+                                    width: "1em",
+                                    height:"1em", 
+                                    backgroundColor: "transparent",
+                                    color: '#9c27b0',
+                                    border: "1px solid #9c27b0"
+                                  }}
+                                  onClick={()=>{
+                                    setDepositedBalance({
+                                      ...depositedBalance,
+                                      [index]: byDecimals(tokens[pool.token].tokenBalance).toNumber()
+                                    })
+                                  }}
+                                >Max</Button>
+                              </InputAdornment>)
+                            }}
                           formControlProps={{
                             onClick: (event) => event.stopPropagation(),
                             onFocus: (event) => event.stopPropagation(),
-                              fullWidth: true,
-                              className: classes.formControl,
-                              onChange: handleDepositedBalance,
+                            fullWidth: true,
+                            className: classes.formControl,
+                            // onChange: handleDepositedBalance.bind(this, index),
                           }}
                           // onClick={e=>e.stopPropagation()}
                         />
@@ -335,17 +358,17 @@ export default function SectionPools() {
                           <Button
                             color="primary"
                             onClick={onApproval.bind(this, pool, index)}
-                            disabled={fetchApprovalPending}
+                            disabled={fetchApprovalPending }
                           >
                             {fetchApprovalPending ? `${t('Vault-ApproveING')}` : `${t('Vault-ApproveButton')}`}
                           </Button>
                         ) : (
                           <Button
                             color="primary"
-                            onClick={onDeposit.bind(this, pool)}
+                            onClick={onDeposit.bind(this, pool, index)}
                             onFocus={(event) => event.stopPropagation()}
                             disabled={
-                              !Boolean(depositedBalance) || (depositedBalance==0) || fetchDepositPending || (new BigNumber(depositedBalance).toNumber() > byDecimals(tokens[pool.token].tokenBalance).toNumber())
+                              !Boolean(depositedBalance[index]) || fetchDepositPending || (new BigNumber(depositedBalance[index]).toNumber() > byDecimals(tokens[pool.token].tokenBalance).toNumber())
                             }
                           >
                             {fetchDepositPending ? `${t('Vault-DepositING')}` : `${t('Vault-DepositButton')}`}
