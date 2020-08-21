@@ -40,9 +40,7 @@ export default function WelcomePage() {
     <div 
       className={classes.navigation}
       style={{ 
-        backgroundImage: "url(" + image + ")",
-        backgroundSize: "100% 100vh",
-        backgroundRepeat: "no-repeat"
+        backgroundImage: `url("https://vaultimages.thersshub.com/static/media/background.63c7684a.png")` 
       }}
     >
       <Header 
