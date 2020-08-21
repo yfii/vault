@@ -31,7 +31,8 @@ export const pools = [
     payout: 0,
     depositedTime: 0,
     isCrv: true
-  },{
+  },
+  {
     id: 'weth',
     name: 'WETH',  
     token: 'WETH',

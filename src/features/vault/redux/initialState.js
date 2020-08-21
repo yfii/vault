@@ -27,7 +27,7 @@ const initialState = {
     "yfii-finance":{
       usd: 250
     },
-    spaghetti: {
+    "spaghetti": {
       usd: 1.11
     }
   },
