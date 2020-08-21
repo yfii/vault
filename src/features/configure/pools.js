@@ -6,9 +6,33 @@
 // earnedToken: '奖励代币',
 // earnedTokenAddress: '奖励代币ERC20地址',
 // earnContractAddress: '池子合约地址',
+// price ： 挖的代币的价格！
 import BigNumber from "bignumber.js";
 export const pools = [
   {
+    id: 'yfii',
+    name: 'YFII',  
+    token: 'YFII',
+    tokenDescription: 'YFII',
+    tokenAddress: '0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83',
+    earnedToken: 'YFII',
+    earnedTokenAddress: '0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83',
+    earnContractAddress: '0xf5a232b1325769E09B303D7292589a2C7AEe2Aa4',
+    strategyContractAddress: '0x4c73974c33d540485bbf53da7c05b9859d63d3dd',
+    price: 'grap.finance',
+    depositedBalance: 0,
+    claimAbleBalance: 0,
+    claimPendingBalance: 0,
+    claimAbleTokens: 0,
+    magnitude: new BigNumber(10).exponentiatedBy(40).toNumber(),
+    totalStake: 0,
+    earningsPerShare: 0,
+    idle: 0,
+    allowance: 0,
+    payout: 0,
+    depositedTime: 0,
+    isCrv: false
+  },{
     id: 'ycrv',
     name: 'YCRV',  
     token: 'yCRV',
