@@ -354,7 +354,7 @@ export default function SectionPools() {
                           }}
                           // onClick={e=>e.stopPropagation()}
                         />
-                        {depositedBalance>pool.allowance ? (
+                        {depositedBalance[index]>pool.allowance ? (
                           <Button
                             color="primary"
                             onClick={onApproval.bind(this, pool, index)}
