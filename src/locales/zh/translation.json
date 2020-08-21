@@ -27,7 +27,7 @@
   "Vault-Idle": "闲置",
   "Vault-FarmING": "农耕中…",
   "Vault-FarmButton": "农耕",
-  "Vault-FarmButtonDescription": "手动把合约内的钱送进去挖矿。",
+  "Vault-FarmButtonDescription": "手动把合约内的钱送进去挖矿,触发者无收益。给所有用户做贡献。",
   "Vault-Yield": "收成",
   "Vault-HarvestING": "收获中…",
   "Vault-HarvestButton": "收获",
