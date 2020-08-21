@@ -35,8 +35,7 @@ import { useAccount } from '../../common/redux/hooks';
 import { useFetchBalances, useFetchPoolBalances, useFetchPrice, useFetchApproval, useFetchDeposit, useFetchClaim, useFetchWithdraw, useFetchFarm, useFetchHarvest } from '../redux/hooks';
 
 import SectionModal from "./SectionModal";
-
-import logo from 'images/SNX-logo.png'
+import SectionConfirmModal from "./SectionConfirmModal";
 
 import sectionPoolsStyle from "../jss/sections/sectionPoolsStyle";
 
@@ -60,7 +59,9 @@ export default function SectionPools() {
 
   const [ modalOpen, setModalOpen ] = useState({ isOpen: false, depositedTime: 0,func: null });
 
-  const [depositedBalance, setDepositedBalance] = useState();
+  const [ confirmModalOpen, setConfirmModalOpen ] = useState({ isOpen: false, description: '', func: null });
+
+  const [ depositedBalance, setDepositedBalance ] = useState();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -177,28 +178,45 @@ export default function SectionPools() {
     }    
   }
 
-  const onFarm = (pool) => {
-    fetchFarm({
-      account,
-      provider,
-      contractAddress: pool.earnContractAddress,
-    }).then(
-      () => enqueueSnackbar(`Farm success`, {variant: 'success'})
-    ).catch(
-      error => enqueueSnackbar(`Farm error: ${error}`, {variant: 'error'})
-    )
+  const onFarm = (pool, event) => {
+    event.stopPropagation();
+    const func = () => {
+      fetchFarm({
+        account,
+        provider,
+        contractAddress: pool.earnContractAddress,
+      }).then(
+        () => enqueueSnackbar(`Farm success`, {variant: 'success'})
+      ).catch(
+        error => enqueueSnackbar(`Farm error: ${error}`, {variant: 'error'})
+      )
+    }
+    console.log(t('Vault-FarmButtonDescription'))
+    setConfirmModalOpen({
+      isOpen: true,
+      description: t('Vault-FarmButtonDescription'),
+      func
+    })
   }
 
-  const onHarvest = (pool) => {
-    fetchHarvest({
-      account,
-      provider,
-      contractAddress: pool.strategyContractAddress,
-    }).then(
-      () => enqueueSnackbar(`Harvest success`, {variant: 'success'})
-    ).catch(
-      error => enqueueSnackbar(`Harvest error: ${error}`, {variant: 'error'})
-    )
+  const onHarvest = (pool, event) => {
+    event.stopPropagation();
+    const func = () => {
+      fetchHarvest({
+        account,
+        provider,
+        contractAddress: pool.strategyContractAddress,
+      }).then(
+        () => enqueueSnackbar(`Harvest success`, {variant: 'success'})
+      ).catch(
+        error => enqueueSnackbar(`Harvest error: ${error}`, {variant: 'error'})
+      )
+    }
+    setConfirmModalOpen({
+      isOpen: true,
+      description: t('Vault-HarvestButtonDescription'),
+      func
+    })
   }
 
   const openCard = id => {
@@ -222,6 +240,10 @@ export default function SectionPools() {
   }, [account, provider, price, fetchPoolBalances]);
 
   useEffect(() => {
+    fetchPrice();
+  }, [account, provider,fetchPoolBalances]);
+
+  useEffect(() => {
     const id = setInterval(() => {
       fetchBalances({account, provider, tokens});
     }, 10000);
@@ -234,10 +256,6 @@ export default function SectionPools() {
     }, 10000);
     return () => clearInterval(id);
   }, [account, provider, price, fetchPoolBalances]);
-  
-  useEffect(() => {
-    fetchPrice();
-  }, [account, provider,fetchPoolBalances]);
 
   return (
     <GridContainer justify="center">
@@ -257,6 +275,7 @@ export default function SectionPools() {
               <GridItem xs={12}>
                 <GridContainer>
                   <SectionModal pool={pool} modalOpen={modalOpen} setModalOpen={setModalOpen}/>
+                  <SectionConfirmModal modalOpen={confirmModalOpen} setModalOpen={setConfirmModalOpen}/>
                   <GridItem xs={12} sm={4} style={{
                     display: "flex",
                     justifyContent : "space-around",
@@ -330,7 +349,6 @@ export default function SectionPools() {
                             {fetchDepositPending ? `${t('Vault-DepositING')}` : `${t('Vault-DepositButton')}`}
                           </Button>
                         )}
-                        {/* </FormControl> */}
                       </GridItem>
                     ) : (
                       <GridItem xs={12} sm={8}
@@ -357,28 +375,6 @@ export default function SectionPools() {
                     )}
                 </GridContainer>
               </GridItem>
-              {/* <Card key={index}
-                style={{
-                borderRadius: "50rem",
-                borderStyle: "solid",
-                borderWidth: "2px",
-                backgroudColor: "#f2f2f2",
-                // borderColor: "rgb(233, 30, 99)",
-                boxShadow: "0 0",
-                // opacity: 0.5
-
-                }}
-                >
-                <CardBody style={{
-                display: "flex",
-                justifyContent : "space-around",
-                alignItems : "center",
-                alignContent: "space-around",
-                backgroudColor: "#f2f2f2",
-              }}> */}
-
-
-
             </AccordionSummary>
             <AccordionDetails>
               <GridItem xs={12}>
@@ -430,15 +426,15 @@ export default function SectionPools() {
                       <CardBody>
                         <h4 className={classes.cardTitle}>{t('Vault-Idle')}</h4>
                         <h5 className={classes.textCenter}>{byDecimals(pool.idle).toFormat(4)} {pool.token}</h5>
-                        <Tooltip title={t('Vault-FarmButtonDescription')}  aria-label="add">
+                        {/* <Tooltip title={t('Vault-FarmButtonDescription')}  aria-label="add"> */}
                           <Button color="primary" round block
                             onClick={onFarm.bind(this, pool)} 
-                            disabled
-                            // disabled={fetchFarmPending}
+                            // disabled
+                            disabled={fetchFarmPending}
                           >
                             {fetchFarmPending?`${t('Vault-FarmING')}`:`${t('Vault-FarmButton')}`}
                           </Button>
-                        </Tooltip>
+                        {/* </Tooltip> */}
                       </CardBody>
                     </Card>
                   </GridItem>
@@ -447,31 +443,23 @@ export default function SectionPools() {
                       <CardBody>
                         <h4 className={classes.cardTitle}>{t('Vault-Yield')}</h4>
                         <h5 className={classes.textCenter}>{byDecimals(pool.yield).toFormat(4)} {pool.earnedToken}</h5>
-                        <Tooltip title={t('Vault-HarvestButtonDescription')} aria-label="add">
+                        {/* <Tooltip title={t('Vault-HarvestButtonDescription')} aria-label="add"> */}
                           <Button color="primary" round block
-                            disabled 
+                            // disabled 
                             onClick={onHarvest.bind(this, pool)}
-                            // disabled={fetchHarvestPending}
+                            disabled={fetchHarvestPending}
                           >
                           {fetchHarvestPending?`${t('Vault-HarvestING')}`:`${t('Vault-HarvestButton')}`}
                           </Button>
-                        </Tooltip>
+                        {/* </Tooltip> */}
                       </CardBody>
                     </Card>
                   </GridItem>
                 </GridContainer>
               </GridItem>
-                    {/* <Asset asset={ asset } startLoading={ this.startLoading } /> */}
-                    {/* <SectionOpenedPool closeCard={openCard.bind(this, index)} pool={pool} index={index} key={index}/> */}
-
-              </AccordionDetails>
-              </Accordion>})}
-                {/* <div><ArrowDropDownIcon onClick={openCard.bind(this, index)} fontSize="large"/></div> */}
-              {/* </CardBody>
-            </Card>
-          )
-          
-        })} */}
+            </AccordionDetails>
+          </Accordion>
+        })}
       </GridItem>
     </GridContainer>
   )
