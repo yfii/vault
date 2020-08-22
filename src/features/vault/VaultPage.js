@@ -28,13 +28,14 @@ function VaultPage(props) {
   const classes = useStyles();
   const { account } = useAccount();
 
+  window.scrollTo(0, 0);
+  document.body.scrollTop = 0;
+
   useEffect(() => {
     if (!account) { 
       return props.history.push('/')
     }
-    window.scrollTo(0, 0);
-    document.body.scrollTop = 0;
-  });
+  }, [account]);
   return (
     <div className={classes.page}>
       <Header

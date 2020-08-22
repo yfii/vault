@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import BigNumber from "bignumber.js";
 import { withRouter } from "react-router";
@@ -33,25 +33,31 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const useStyles = makeStyles(sectionModalStyle);
 
 function SectionModal(props) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const classes = useStyles();
-  const { enqueueSnackbar } = useSnackbar();
+
+  const {setModal, modal, pool, index} = useContext(props.context)
 
   const handleClick = () => {
-    const func = props.modalOpen.func;
-    func()
-    props.setModalOpen({
-      isOpen: false,
-      depositedTime: 0,
-      func: null
+    modal[index].func()
+    setModal({
+      ...modal,
+      [index]: {
+        isOpen: false,
+        depositedTime: 0,
+        func: (() => {})
+      }
     })
   }
 
   const handleClose = () =>{
-    props.setModalOpen({
-      isOpen: false,
-      depositedTime: 0,
-      func: null
+    setModal({
+      ...modal,
+      [index]: {
+        isOpen: false,
+        depositedTime: 0,
+        func: (() => {})
+      }
     })
   }
 
@@ -63,18 +69,20 @@ function SectionModal(props) {
     return hours + " hours " + minutes + " minutes";
   }
 
-  const byDecimals = number => {
-    const decimals = new BigNumber(10).exponentiatedBy(18);
-    return new BigNumber(number).dividedBy(decimals).toFormat(4);
-  }
-  
+  // console.log('')
+  // console.log(props.pool.claimAbleBalance)
+  // console.log(props.modal.depositedTime)
+  // console.log(new BigNumber(props.modal.depositedTime).dividedBy(
+  //   new BigNumber(1000*60*60*24)
+  // ).multipliedBy(
+  //   new BigNumber(props.pool.claimAbleBalance).dividedBy(
+  //     new BigNumber(10).exponentiatedBy(18)
+  //   )
+  // ).toFormat(4))
+  const depositedTime = modal[index] ? modal[index].depositedTime : 0
   return (
-    <Dialog
-      classes={{
-        root: classes.modalRoot,
-        paper: classes.modal
-      }}
-      open={props.modalOpen.isOpen}
+    <Dialog classes={{root: classes.modalRoot, paper: classes.modal}}
+      open={Boolean(modal[index] && modal[index].open)}
       TransitionComponent={Transition}
       keepMounted
       onClose={handleClose}
@@ -106,17 +114,17 @@ function SectionModal(props) {
       >
         <p>{t('Vault-Modal-Content')}</p>
         <p style={{color: "red"}}>{t('Vault-Modal-Amount')} {
-            new BigNumber(props.modalOpen.depositedTime).dividedBy(
+            new BigNumber(depositedTime).dividedBy(
               new BigNumber(1000*60*60*24)
             ).multipliedBy(
-              new BigNumber(props.pool.claimAbleBalance).dividedBy(
+              new BigNumber(pool.claimAbleBalance).dividedBy(
                 new BigNumber(10).exponentiatedBy(18)
               )
             ).toFormat(4)
         }</p>
         <p>
-          {t('Vault-Modal-Ratio')}{Number(props.modalOpen.depositedTime*100/(1000*60*60*24)).toFixed(1)}%<br/>
-          {t('Vault-Modal-TIme')}{formatDuring((1000*60*60*24)-props.modalOpen.depositedTime)}
+          {t('Vault-Modal-Ratio')}{Number(depositedTime*100/(1000*60*60*24)).toFixed(1)}%<br/>
+          {t('Vault-Modal-TIme')}{formatDuring((1000*60*60*24)-depositedTime)}
         </p>
       </DialogContent>
       <DialogActions className={classes.modalFooter}>

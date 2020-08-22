@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import BigNumber from "bignumber.js";
 import { withRouter } from "react-router";
@@ -32,32 +32,38 @@ const useStyles = makeStyles(sectionModalStyle);
 function SectionConfirmModal(props) {
   const classes = useStyles();
   const { t, i18n } = useTranslation();
+  const { confirmModal, setConfirmModal, index } = useContext(props.context)
 
   const handleClick = () => {
-    const func = props.modalOpen.func;
-    func()
-    props.setModalOpen({
-      isOpen: false,
-      description: '',
-      func: null
+    confirmModal[index].func()
+    setConfirmModal({
+      ...confirmModal,
+      [index]: {
+        isOpen: false,
+        description: '',
+        func: (() => {})
+      }
     })
   }
 
   const handleClose = () =>{
-    props.setModalOpen({
-      isOpen: false,
-      description: '',
-      func: null
+    setConfirmModal({
+      ...confirmModal,
+      [index]: {
+        isOpen: false,
+        description: '',
+        func: (() => {})
+      }
     })
   }
-  
+  const description = confirmModal[index] ? confirmModal[index].description : ''
   return (
     <Dialog
       classes={{
         root: classes.modalRoot,
         paper: classes.modal
       }}
-      open={props.modalOpen.isOpen}
+      open={Boolean(confirmModal[index] && confirmModal[index].open)}
       TransitionComponent={Transition}
       keepMounted
       onClose={handleClose}
@@ -70,7 +76,7 @@ function SectionConfirmModal(props) {
         id="classic-modal-slide-description"
         className={classes.modalBody}
       >
-        <p>{props.modalOpen.description}</p>
+        <p>{description}</p>
       </DialogContent>
       <DialogActions className={classes.modalFooter}>
         <Button onClick={handleClose} color="secondary">

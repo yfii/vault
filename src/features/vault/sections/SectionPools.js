@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import BigNumber from "bignumber.js";
@@ -42,6 +42,9 @@ import sectionPoolsStyle from "../jss/sections/sectionPoolsStyle";
 
 const useStyles = makeStyles(sectionPoolsStyle);
 
+const modalContext = createContext('modal');
+const confirmModalContext = createContext('confirmModal');
+
 export default function SectionPools() {
   const { t, i18n } = useTranslation();
   const { account, provider } = useAccount();
@@ -59,9 +62,9 @@ export default function SectionPools() {
   const { fetchFarm, fetchFarmPending } = useFetchFarm();
   const { fetchHarvest, fetchHarvestPending } = useFetchHarvest();
 
-  const [ modalOpen, setModalOpen ] = useState({ isOpen: false, depositedTime: 0,func: null });
+  const [ modal, setModal ] = useState({});
 
-  const [ confirmModalOpen, setConfirmModalOpen ] = useState({ isOpen: false, description: '', func: null });
+  const [ confirmModal, setConfirmModal ] = useState({});
 
   const [ depositedBalance, setDepositedBalance ] = useState({});
 
@@ -83,7 +86,8 @@ export default function SectionPools() {
     return new BigNumber(number).dividedBy(decimals);
   }
 
-  const onApproval = (pool, index) => {
+  const onApproval = (pool, index, event) => {
+    event.stopPropagation();
     fetchApproval({
       account,
       provider,
@@ -98,13 +102,13 @@ export default function SectionPools() {
   }
 
   const onDeposit = (pool, index, event) => {
-    // alert(`onDeposit: ${depositedBalance}`)
     event.stopPropagation();
     fetchDeposit({
       account,
       provider,
       amount: new BigNumber(depositedBalance[index]).toString(),
       contractAddress: pool.earnContractAddress,
+      index
     }).then(
       () => enqueueSnackbar(`Deposit success`, {variant: 'success'})
     ).catch(
@@ -112,15 +116,20 @@ export default function SectionPools() {
     )
   }
 
-  const onClaim = (pool) => {
+  const onClaim = (pool, index, event) => {
+    event.stopPropagation();
+    console.log('claim')
     const time = new BigNumber(pool.depositedTime).multipliedBy(1000).toNumber();
     const nowTime = new Date().getTime();
     const depositedTime = new BigNumber(nowTime).minus(time).toNumber();
+    console.log(depositedTime)
+    console.log(depositedTime)
     const func = () => {
       fetchClaim({
         account,
         provider,
         contractAddress: pool.earnContractAddress,
+        index
       }).then(
         () => enqueueSnackbar(`Claim success`, {variant: 'success'})
       ).catch(
@@ -128,16 +137,21 @@ export default function SectionPools() {
       )
     }
     if (depositedTime < 1000*60*60*24) {
-      setModalOpen({
-        isOpen: true,
-        depositedTime,
-        func
+      console.log('setModal')
+      setModal({
+        ...modal,
+        [index]: {
+          open: true,
+          depositedTime,
+          func
+        }
       })
     } else {
       fetchClaim({
         account,
         provider,
         contractAddress: pool.earnContractAddress,
+        index
       }).then(
         () => enqueueSnackbar(`Claim success`, {variant: 'success'})
       ).catch(
@@ -146,8 +160,8 @@ export default function SectionPools() {
     }    
   }
 
-  const onWithdraw = (pool) => {
-    // alert('Withdraw')
+  const onWithdraw = (pool, index, event) => {
+    event.stopPropagation();
     const time = new BigNumber(pool.depositedTime).multipliedBy(1000).toNumber();
     const nowTime = new Date().getTime();
     const depositedTime = new BigNumber(nowTime).minus(time).toNumber();
@@ -157,6 +171,7 @@ export default function SectionPools() {
         provider,
         amount: pool.depositedBalance,
         contractAddress: pool.earnContractAddress,
+        index
       }).then(
         () => enqueueSnackbar(`Withdraw success`, {variant: 'success'})
       ).catch(
@@ -164,10 +179,13 @@ export default function SectionPools() {
       )
     }
     if (depositedTime < 1000*60*60*24) {
-      setModalOpen({
-        isOpen: true,
-        depositedTime,
-        func
+      setModal({
+        ...modal,
+        [index]: {
+          open: true,
+          depositedTime,
+          func
+        }
       })
     } else {
       fetchWithdraw({
@@ -175,52 +193,60 @@ export default function SectionPools() {
         provider,
         amount: pool.depositedBalance,
         contractAddress: pool.earnContractAddress,
+        index
       }).then(
         () => enqueueSnackbar(`Withdraw success`, {variant: 'success'})
       ).catch(
         error => enqueueSnackbar(`Withdraw error: ${error}`, {variant: 'error'})
       )
-    }    
+    }   
   }
 
-  const onFarm = (pool, event) => {
+  const onFarm = (pool, index, event) => {
     event.stopPropagation();
     const func = () => {
       fetchFarm({
         account,
         provider,
         contractAddress: pool.earnContractAddress,
+        index
       }).then(
         () => enqueueSnackbar(`Farm success`, {variant: 'success'})
       ).catch(
         error => enqueueSnackbar(`Farm error: ${error}`, {variant: 'error'})
       )
     }
-    console.log(t('Vault-FarmButtonDescription'))
-    setConfirmModalOpen({
-      isOpen: true,
-      description: t('Vault-FarmButtonDescription'),
-      func
+    setConfirmModal({
+      ...confirmModal,
+      [index]: {
+        open: true,
+        description: t('Vault-FarmButtonDescription'),
+        func
+      }
     })
   }
 
-  const onHarvest = (pool, event) => {
+  const onHarvest = (pool, index, event) => {
     event.stopPropagation();
     const func = () => {
       fetchHarvest({
         account,
         provider,
         contractAddress: pool.strategyContractAddress,
+        index
       }).then(
         () => enqueueSnackbar(`Harvest success`, {variant: 'success'})
       ).catch(
         error => enqueueSnackbar(`Harvest error: ${error}`, {variant: 'error'})
       )
     }
-    setConfirmModalOpen({
-      isOpen: true,
-      description: t('Vault-HarvestButtonDescription'),
-      func
+    setConfirmModal({
+      ...confirmModal,
+      [index]: {
+        open: true,
+        description: t('Vault-HarvestButtonDescription'),
+        func
+      }
     })
   }
 
@@ -267,233 +293,237 @@ export default function SectionPools() {
     <GridContainer justify="center">
       <GridItem xs={12} sm={10}>
         {pools.map((pool, index) => {
-          return <Accordion
-            key={ index }
-            expanded={ Boolean(openedCardList.includes(index))}
-            onChange={ () => openCard(index) }
-                 >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1bh-content"
-              id="panel1bh-header"
-              className={classes.details}
+          return (
+            <Accordion
+              key={index}
+              expanded={Boolean(openedCardList.includes(index))}
+              onChange={() => openCard(index)}
             >
-              <GridItem xs={12}>
-                <GridContainer>
-                  <SectionModal pool={pool} modalOpen={modalOpen} setModalOpen={setModalOpen}/>
-                  <SectionConfirmModal modalOpen={confirmModalOpen} setModalOpen={setConfirmModalOpen}/>
-                  <GridItem xs={12} sm={4} style={{
-                    display: "flex",
-                    justifyContent : "space-around",
-                    alignItems : "center",
-                    alignContent: "space-around",
-                  }}>
-                    <Avatar alt={pool.token} src={require(`../../../images/${pool.token}-logo.png`)} />
-                    <div
-                      style={{
-                        fontSize: "1.5rem"
-                      }}
-                    >{
-                      new BigNumber(
-                        byDecimals(tokens[pool.token].tokenBalance)
-                      ).multipliedBy(
-                        new BigNumber(10000)
-                      ).dividedToIntegerBy(
-                        new BigNumber(1)
-                      ).dividedBy(
-                        new BigNumber(10000)
-                      ).toString()
-                    }</div>
-                    <div>
-                      <h5>{pool.token}</h5>
-                  <h6>{t('Vault-Balance')}</h6>
-                    </div>
-                  </GridItem>
-                  {
-                    openedCardList.includes(index) ? (
-                      <GridItem xs={12} sm={8}
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                className={classes.details}
+              >
+                <GridItem xs={12}>
+                  <GridContainer>
+                    <modalContext.Provider value={{setModal, modal, index, pool}}>
+                      <SectionModal context={modalContext} />
+                    </modalContext.Provider>
+                    <confirmModalContext.Provider value={{confirmModal, setConfirmModal, index}}>
+                      <SectionConfirmModal context={confirmModalContext}/>
+                    </confirmModalContext.Provider>
+                    <GridItem xs={12} sm={4} style={{
+                      display: "flex",
+                      justifyContent : "space-around",
+                      alignItems : "center",
+                      alignContent: "space-around",
+                    }}>
+                      <Avatar alt={pool.token} src={require(`../../../images/${pool.token}-logo.png`)} />
+                      <div
                         style={{
-                          display: "flex",
-                          justifyContent : "space-around",
-                          alignItems : "center",
-                          alignContent: "space-around"
+                          fontSize: "1.5rem"
                         }}
-                      >
-                        <CustomInput
-                          inputProps={{
-                            placeholder: `${t('Vault-Input-1')}${pool.token}${t('Vault-Input-2')}`,
-                            type: "number",
-                            autoComplete: "off",
-                            value: depositedBalance[index] == null ? '' : depositedBalance[index],
-                            onChange: handleDepositedBalance.bind(this, index),
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                <Button 
-                                  variant="outlined"
-                                  round
-                                  type="button"
-                                  color="transparent"
-                                  size="sm"
-                                  style={{
-                                    color: '#9c27b0',
-                                    border: "1px solid #9c27b0"
-                                  }}
-                                  onClick={()=>{
-                                    setDepositedBalance({
-                                      ...depositedBalance,
-                                      [index]: new BigNumber(
-                        byDecimals(tokens[pool.token].tokenBalance)
-                      ).multipliedBy(
-                        new BigNumber(10000)
-                      ).dividedToIntegerBy(
-                        new BigNumber(1)
-                      ).dividedBy(
-                        new BigNumber(10000)
-                      ).toString()
-                                    })
-                                  }}
-                                >Max</Button>
-                              </InputAdornment>)
-                            }}
-                          formControlProps={{
-                            onClick: (event) => event.stopPropagation(),
-                            onFocus: (event) => event.stopPropagation(),
-                            fullWidth: true,
-                            className: classes.formControl,
-                            // onChange: handleDepositedBalance.bind(this, index),
+                      >{
+                        new BigNumber(
+                          byDecimals(tokens[pool.token].tokenBalance)
+                        ).multipliedBy(
+                          new BigNumber(10000)
+                        ).dividedToIntegerBy(
+                          new BigNumber(1)
+                        ).dividedBy(
+                          new BigNumber(10000)
+                        ).toString()
+                      }</div>
+                      <div>
+                        <h5>{pool.token}</h5>
+                    <h6>{t('Vault-Balance')}</h6>
+                      </div>
+                    </GridItem>
+                    {
+                      openedCardList.includes(index) ? (
+                        <GridItem xs={12} sm={8}
+                          style={{
+                            display: "flex",
+                            justifyContent : "space-around",
+                            alignItems : "center",
+                            alignContent: "space-around"
                           }}
-                          // onClick={e=>e.stopPropagation()}
-                        />
-                        {depositedBalance[index]>pool.allowance ? (
-                          <Button
-                            color="primary"
-                            onClick={onApproval.bind(this, pool, index)}
-                            disabled={fetchApprovalPending }
-                          >
-                            {fetchApprovalPending ? `${t('Vault-ApproveING')}` : `${t('Vault-ApproveButton')}`}
-                          </Button>
-                        ) : (
-                          <Button
-                            color="primary"
-                            onClick={onDeposit.bind(this, pool, index)}
-                            onFocus={(event) => event.stopPropagation()}
-                            disabled={
-                              !Boolean(depositedBalance[index]) || fetchDepositPending || (new BigNumber(depositedBalance[index]).toNumber() > byDecimals(tokens[pool.token].tokenBalance).toNumber())
-                            }
-                          >
-                            {fetchDepositPending ? `${t('Vault-DepositING')}` : `${t('Vault-DepositButton')}`}
-                          </Button>
-                        )}
-                      </GridItem>
-                    ) : (
-                      <GridItem xs={12} sm={8}
-                        style={{
-                          display: "flex",
-                          justifyContent : "space-around",
-                          alignItems : "center",
-                          alignContent: "space-around",
-                        }}
-                      >
-                        <div>
-                          <h5>{byDecimals(pool.depositedBalance).toFormat(4)}</h5>
-                          <h6>{t('Vault-ListDeposited')} { pool.token }</h6>
-                        </div>
-                        <div>
-                          <h5>{byDecimals(pool.claimAbleBalance).toFormat(4)}</h5>
-                          <h6>{t('Vault-ListEarned')} { pool.earnedToken }</h6>
-                        </div>
-                        <div>
-                          <h5>{byDecimals(pool.claimPendingBalance).toFormat(4)}</h5>
-                          <h6>{t('Vault-ListPending')} { pool.earnedToken }</h6>
-                        </div>
-                      </GridItem>
-                    )}
-                </GridContainer>
-              </GridItem>
-            </AccordionSummary>
-            <AccordionDetails>
-              <GridItem xs={12}>
-                <GridContainer>
-                  <GridItem xs={12} md={4} style={{
-                    display: "flex",
-                    justifyContent : "space-between",
-                    alignItems : "center",
-                    alignContent: "space-around"
-                  }}>
-                    <Card className={classes.cardWrap}>
-                      <CardBody>
-                        <h4 className={classes.cardTitle}>{t('Vault-Deposited')}</h4>
-                        <h5 className={classes.textCenter}>{byDecimals(pool.depositedBalance).toFormat(4)} {pool.token}</h5>
-                        <Button
-                          color="primary"
-                          round
-                          block
-                          onClick={onWithdraw.bind(this, pool)}
-                          disabled={fetchWithdrawPending}
                         >
-                          {fetchWithdrawPending ? `${t('Vault-WithdrawING')}`: `${t('Vault-WithdrawButton')}`}
-                        </Button>
-                      </CardBody>
-                    </Card>
-                  </GridItem>
-                  <GridItem xs={12} md={4}>
-                    <Card className={classes.cardWrap}>
-                      <CardBody>
-                        <h4 className={classes.cardTitle}>{t('Vault-Earned')}</h4>
-                        <h5 className={classes.textCenter}>{byDecimals(pool.claimAbleBalance).toFormat(4)} {pool.earnedToken}</h5>
-                        <Button color="primary" round block onClick={onClaim.bind(this, pool)} disabled={fetchClaimPending}>
-                          {fetchClaimPending ? `${t('Vault-ClaimING')}` : `${t('Vault-ClaimButton')}`}
-                        </Button>
-                      </CardBody>
-                    </Card>
-                  </GridItem>
-                  <GridItem xs={12} md={4}>
-                    <Card className={classes.cardWrap}>
-                      <CardBody>
-                        <h4 className={classes.cardTitle}>{t('Vault-Pending')}</h4>
-                        <h5>{byDecimals(pool.claimPendingBalance).toFormat(4)} {pool.earnedToken}</h5>
-                        <p>{t('Vault-PendingDescription')}<br/>{t('Vault-PendingContent')}</p>
-                      </CardBody>
-                    </Card>
-                  </GridItem>
-                  <GridItem xs={6} sm={6}>
-                    <Card>
-                      <CardBody>
-                        <h4 className={classes.cardTitle}>{t('Vault-Idle')}</h4>
-                        <h5 className={classes.textCenter}>{byDecimals(pool.idle).toFormat(4)} {pool.token}</h5>
-                        {/* <Tooltip title={t('Vault-FarmButtonDescription')}  aria-label="add"> */}
-                          <Button color="primary" round block
-                            onClick={onFarm.bind(this, pool)} 
-                            // disabled
-                            disabled={fetchFarmPending}
+                          <CustomInput
+                            inputProps={{
+                              placeholder: `${t('Vault-Input-1')}${pool.token}${t('Vault-Input-2')}`,
+                              type: "number",
+                              autoComplete: "off",
+                              value: depositedBalance[index] == null ? '' : depositedBalance[index],
+                              onChange: handleDepositedBalance.bind(this, index),
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <Button 
+                                    variant="outlined"
+                                    round
+                                    type="button"
+                                    color="transparent"
+                                    size="sm"
+                                    style={{
+                                      color: '#9c27b0',
+                                      border: "1px solid #9c27b0"
+                                    }}
+                                    onClick={()=>{
+                                      setDepositedBalance({
+                                        ...depositedBalance,
+                                        [index]: new BigNumber(
+                          byDecimals(tokens[pool.token].tokenBalance)
+                        ).multipliedBy(
+                          new BigNumber(10000)
+                        ).dividedToIntegerBy(
+                          new BigNumber(1)
+                        ).dividedBy(
+                          new BigNumber(10000)
+                        ).toString()
+                                      })
+                                    }}
+                                  >Max</Button>
+                                </InputAdornment>)
+                              }}
+                            formControlProps={{
+                              onClick: (event) => event.stopPropagation(),
+                              onFocus: (event) => event.stopPropagation(),
+                              fullWidth: true,
+                              className: classes.formControl,
+                              // onChange: handleDepositedBalance.bind(this, index),
+                            }}
+                            // onClick={e=>e.stopPropagation()}
+                          />
+                          {depositedBalance[index]>pool.allowance ? (
+                            <Button
+                              color="primary"
+                              onClick={onApproval.bind(this, pool, index)}
+                              disabled={fetchApprovalPending }
+                            >
+                              {fetchApprovalPending ? `${t('Vault-ApproveING')}` : `${t('Vault-ApproveButton')}`}
+                            </Button>
+                          ) : (
+                            <Button
+                              color="primary"
+                              onClick={onDeposit.bind(this, pool, index)}
+                              onFocus={(event) => event.stopPropagation()}
+                              disabled={
+                                !Boolean(depositedBalance[index]) || fetchDepositPending || (new BigNumber(depositedBalance[index]).toNumber() > byDecimals(tokens[pool.token].tokenBalance).toNumber())
+                              }
+                            >
+                              {fetchDepositPending ? `${t('Vault-DepositING')}` : `${t('Vault-DepositButton')}`}
+                            </Button>
+                          )}
+                        </GridItem>
+                      ) : (
+                        <GridItem xs={12} sm={8}
+                          style={{
+                            display: "flex",
+                            justifyContent : "space-around",
+                            alignItems : "center",
+                            alignContent: "space-around",
+                          }}
+                        >
+                          <div>
+                            <h5>{byDecimals(pool.depositedBalance).toFormat(4)}</h5>
+                            <h6>{t('Vault-ListDeposited')} { pool.token }</h6>
+                          </div>
+                          <div>
+                            <h5>{byDecimals(pool.claimAbleBalance).toFormat(4)}</h5>
+                            <h6>{t('Vault-ListEarned')} { pool.earnedToken }</h6>
+                          </div>
+                          <div>
+                            <h5>{byDecimals(pool.claimPendingBalance).toFormat(4)}</h5>
+                            <h6>{t('Vault-ListPending')} { pool.earnedToken }</h6>
+                          </div>
+                        </GridItem>
+                      )}
+                  </GridContainer>
+                </GridItem>
+              </AccordionSummary>
+              <AccordionDetails>
+                <GridItem xs={12}>
+                  <GridContainer>
+                    <GridItem xs={12} md={4} style={{
+                      display: "flex",
+                      justifyContent : "space-between",
+                      alignItems : "center",
+                      alignContent: "space-around"
+                    }}>
+                      <Card className={classes.cardWrap}>
+                        <CardBody>
+                          <h4 className={classes.cardTitle}>{t('Vault-Deposited')}</h4>
+                          <h5 className={classes.textCenter}>{byDecimals(pool.depositedBalance).toFormat(4)} {pool.token}</h5>
+                          <Button
+                            color="primary"
+                            round
+                            block
+                            onClick={onWithdraw.bind(this, pool, index)}
+                            disabled={fetchWithdrawPending}
                           >
-                            {fetchFarmPending?`${t('Vault-FarmING')}`:`${t('Vault-FarmButton')}`}
+                            {fetchWithdrawPending ? `${t('Vault-WithdrawING')}`: `${t('Vault-WithdrawButton')}`}
                           </Button>
-                        {/* </Tooltip> */}
-                      </CardBody>
-                    </Card>
-                  </GridItem>
-                  <GridItem xs={6} sm={6}>
-                    <Card>
-                      <CardBody>
-                        <h4 className={classes.cardTitle}>{t('Vault-Yield')}</h4>
-                        <h5 className={classes.textCenter}>{byDecimals(pool.yield).toFormat(4)} {pool.earnedToken}</h5>
-                        {/* <Tooltip title={t('Vault-HarvestButtonDescription')} aria-label="add"> */}
-                          <Button color="primary" round block
-                            // disabled 
-                            onClick={onHarvest.bind(this, pool)}
-                            disabled={fetchHarvestPending}
-                          >
-                          {fetchHarvestPending?`${t('Vault-HarvestING')}`:`${t('Vault-HarvestButton')}`}
+                        </CardBody>
+                      </Card>
+                    </GridItem>
+                    <GridItem xs={12} md={4}>
+                      <Card className={classes.cardWrap}>
+                        <CardBody>
+                          <h4 className={classes.cardTitle}>{t('Vault-Earned')}</h4>
+                          <h5 className={classes.textCenter}>{byDecimals(pool.claimAbleBalance).toFormat(4)} {pool.earnedToken}</h5>
+                          <Button color="primary" round block onClick={onClaim.bind(this, pool, index)} disabled={fetchClaimPending}>
+                            {fetchClaimPending ? `${t('Vault-ClaimING')}` : `${t('Vault-ClaimButton')}`}
                           </Button>
-                        {/* </Tooltip> */}
-                      </CardBody>
-                    </Card>
-                  </GridItem>
-                </GridContainer>
-              </GridItem>
-            </AccordionDetails>
-          </Accordion>
+                        </CardBody>
+                      </Card>
+                    </GridItem>
+                    <GridItem xs={12} md={4}>
+                      <Card className={classes.cardWrap}>
+                        <CardBody>
+                          <h4 className={classes.cardTitle}>{t('Vault-Pending')}</h4>
+                          <h5>{byDecimals(pool.claimPendingBalance).toFormat(4)} {pool.earnedToken}</h5>
+                          <p>{t('Vault-PendingDescription')}<br/>{t('Vault-PendingContent')}</p>
+                        </CardBody>
+                      </Card>
+                    </GridItem>
+                    <GridItem xs={6} sm={6}>
+                      <Card>
+                        <CardBody>
+                          <h4 className={classes.cardTitle}>{t('Vault-Idle')}</h4>
+                          <h5 className={classes.textCenter}>{byDecimals(pool.idle).toFormat(4)} {pool.token}</h5>
+                          {/* <Tooltip title={t('Vault-FarmButtonDescription')}  aria-label="add"> */}
+                            <Button color="primary" round block
+                              onClick={onFarm.bind(this, pool, index)} 
+                              // disabled
+                              disabled={fetchFarmPending}
+                            >
+                              {fetchFarmPending?`${t('Vault-FarmING')}`:`${t('Vault-FarmButton')}`}
+                            </Button>
+                          {/* </Tooltip> */}
+                        </CardBody>
+                      </Card>
+                    </GridItem>
+                    <GridItem xs={6} sm={6}>
+                      <Card>
+                        <CardBody>
+                          <h4 className={classes.cardTitle}>{t('Vault-Yield')}</h4>
+                          <h5 className={classes.textCenter}>{byDecimals(pool.yield).toFormat(4)} {pool.earnedToken}</h5>
+                          {/* <Tooltip title={t('Vault-HarvestButtonDescription')} aria-label="add"> */}
+                            <Button color="primary" round block
+                              // disabled 
+                              onClick={onHarvest.bind(this, pool, index)}
+                              disabled={fetchHarvestPending}
+                            >
+                            {fetchHarvestPending?`${t('Vault-HarvestING')}`:`${t('Vault-HarvestButton')}`}
+                            </Button>
+                          {/* </Tooltip> */}
+                        </CardBody>
+                      </Card>
+                    </GridItem>
+                  </GridContainer>
+                </GridItem>
+              </AccordionDetails>
+            </Accordion>
+          )
         })}
       </GridItem>
     </GridContainer>
