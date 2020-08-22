@@ -328,11 +328,13 @@ export default function SectionPools() {
                             onChange: handleDepositedBalance.bind(this, index),
                             endAdornment: (
                               <InputAdornment position="end">
-                                <Button variant="outlined" round color="primary"
+                                <Button 
+                                  variant="outlined"
+                                  round
+                                  type="button"
+                                  color="transparent"
+                                  size="sm"
                                   style={{
-                                    width: "1em",
-                                    height:"1em", 
-                                    backgroundColor: "transparent",
                                     color: '#9c27b0',
                                     border: "1px solid #9c27b0"
                                   }}
