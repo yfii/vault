@@ -43,17 +43,17 @@ import {
 
 const connectorsByName = {
   MetaMask: injected,
-  TrustWallet: injected,
+  // TrustWallet: injected,
   WalletConnect: walletconnect,
-  WalletLink: walletlink,
-  Ledger: ledger,
-  Trezor: trezor,
+  // WalletLink: walletlink,
+  // Ledger: ledger,
+  // Trezor: trezor,
   // Frame: frame,
-  Fortmatic: fortmatic,
-  Portis: portis,
-  Squarelink: squarelink,
-  Torus: torus,
-  Authereum: authereum,
+  // Fortmatic: fortmatic,
+  // Portis: portis,
+  // Squarelink: squarelink,
+  // Torus: torus,
+  // Authereum: authereum,
 };
 
 function getErrorMessage(error) {

@@ -56,7 +56,7 @@ export default function HeaderLinks(props) {
       case 'th':
         return 'ไทย'
       default:
-        return 'English'
+        return '中文'
     }
   }
 
