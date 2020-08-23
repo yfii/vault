@@ -177,7 +177,7 @@ export default function SectionPools() {
       fetchWithdraw({
         account,
         provider,
-        amount,
+        amount: new BigNumber(withdrawAmount[index]).toString(),
         contractAddress: pool.earnContractAddress,
         index
       }).then(
