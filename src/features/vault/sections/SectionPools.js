@@ -114,7 +114,7 @@ export default function SectionPools() {
     fetchDeposit({
       account,
       provider,
-      amount: new BigNumber(depositedBalance[index]).toString(),
+      amount: new BigNumber(depositedBalance[index]).multipliedBy(new BigNumber(10).exponentiatedBy(pool.tokenDecimals)).toString(10),
       contractAddress: pool.earnContractAddress,
       index
     }).then(
@@ -177,7 +177,7 @@ export default function SectionPools() {
       fetchWithdraw({
         account,
         provider,
-        amount: new BigNumber(withdrawAmount[index]).toString(),
+        amount: new BigNumber(withdrawAmount[index]).multipliedBy(new BigNumber(10).exponentiatedBy(pool.tokenDecimals)).toString(10),
         contractAddress: pool.earnContractAddress,
         index
       }).then(
@@ -199,7 +199,7 @@ export default function SectionPools() {
       fetchWithdraw({
         account,
         provider,
-        amount: new BigNumber(withdrawAmount[index]).toString(),
+        amount: new BigNumber(withdrawAmount[index]).multipliedBy(new BigNumber(10).exponentiatedBy(pool.tokenDecimals)).toString(10),
         contractAddress: pool.earnContractAddress,
         index
       }).then(
