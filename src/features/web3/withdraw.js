@@ -11,10 +11,11 @@ export const withdraw = async ({web3, account, amount, contractAddress}) => {
     account:${account}\n
     contractAddress:${contractAddress}\n
     gasPrice:${gasPrice}\n
+    amount:${web3.utils.toWei(amount, "ether")}
   `)
   
   console.log(`=====================================withdraw=====================================`)
-  const data = await _withdraw({web3, contract, amount: new BigNumber(amount).toString(10), account, gasPrice});
+  const data = await _withdraw({web3, contract, amount: web3.utils.toWei(amount, "ether"), account, gasPrice});
   console.log(`=====================================withdraw success=====================================`)
   return data;
 }

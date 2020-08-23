@@ -7,6 +7,8 @@
   "Vault-Balance": "จำนวนเงิน ",
   "Vault-Input-1": "กรุณากรอกที่คุณต้องการฝาก ",
   "Vault-Input-2": " จำนวน",
+  "Vault-Input-3": "Input the number of ",
+  "Vault-Input-4": " you want to withdraw",
   "Vault-ApproveING": "กำลังอนุญาต…",
   "Vault-ApproveButton": "การอนุญาต",
   "Vault-DepositING": "กำลังฝาก…",

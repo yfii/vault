@@ -8,6 +8,8 @@
   "Vault-Balance": "残高",
   "Vault-Input-1": "入金したい金額を入力してください ",
   "Vault-Input-2": " の額",
+  "Vault-Input-3": "Input the number of ",
+  "Vault-Input-4": " you want to withdraw",
   "Vault-ApproveING": "承認中…",
   "Vault-ApproveButton": "承認",
   "Vault-DepositING": "入金中…",

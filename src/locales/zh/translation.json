@@ -8,6 +8,8 @@
   "Vault-Balance": "余额",
   "Vault-Input-1": "请输入你想存入 ",
   "Vault-Input-2": " 的数额",
+  "Vault-Input-3": "请输入你想取出 ",
+  "Vault-Input-4": " 的数额",
   "Vault-ApproveING": "授权中…",
   "Vault-ApproveButton": "授权",
   "Vault-DepositING": "存入中…",

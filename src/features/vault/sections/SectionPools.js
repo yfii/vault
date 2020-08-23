@@ -67,6 +67,7 @@ export default function SectionPools() {
   const [ confirmModal, setConfirmModal ] = useState({});
 
   const [ depositedBalance, setDepositedBalance ] = useState({});
+  const [ withdrawAmount, setWithdrawAmount ] = useState({});
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -77,6 +78,13 @@ export default function SectionPools() {
   const handleDepositedBalance = (index, event) => {
     setDepositedBalance({
       ...depositedBalance,
+      [index]: event.target.value == '' ? '': Number(event.target.value)
+    });
+  };
+
+  const handleWithdrawAmount = (index, event) => {
+    setWithdrawAmount({
+      ...withdrawAmount,
       [index]: event.target.value == '' ? '': Number(event.target.value)
     });
   };
@@ -160,7 +168,7 @@ export default function SectionPools() {
     }    
   }
 
-  const onWithdraw = (pool, index, event) => {
+  const onWithdraw = (pool, index, amount, event) => {
     event.stopPropagation();
     const time = new BigNumber(pool.depositedTime).multipliedBy(1000).toNumber();
     const nowTime = new Date().getTime();
@@ -169,7 +177,7 @@ export default function SectionPools() {
       fetchWithdraw({
         account,
         provider,
-        amount: pool.depositedBalance,
+        amount,
         contractAddress: pool.earnContractAddress,
         index
       }).then(
@@ -191,7 +199,7 @@ export default function SectionPools() {
       fetchWithdraw({
         account,
         provider,
-        amount: pool.depositedBalance,
+        amount: new BigNumber(withdrawAmount[index]).toString(),
         contractAddress: pool.earnContractAddress,
         index
       }).then(
@@ -318,24 +326,22 @@ export default function SectionPools() {
                       alignContent: "space-around",
                     }}>
                       <Avatar alt={pool.token} src={require(`../../../images/${pool.token}-logo.png`)} />
-                      <div
-                        style={{
-                          fontSize: "1.5rem"
-                        }}
-                      >{
-                        new BigNumber(
-                          byDecimals(tokens[pool.token].tokenBalance)
-                        ).multipliedBy(
-                          new BigNumber(10000)
-                        ).dividedToIntegerBy(
-                          new BigNumber(1)
-                        ).dividedBy(
-                          new BigNumber(10000)
-                        ).toString()
-                      }</div>
+                      <div style={{fontSize: "1.5rem"}}>
+                        {
+                          new BigNumber(
+                            byDecimals(tokens[pool.token].tokenBalance)
+                          ).multipliedBy(
+                            new BigNumber(10000)
+                          ).dividedToIntegerBy(
+                            new BigNumber(1)
+                          ).dividedBy(
+                            new BigNumber(10000)
+                          ).toString()
+                        }
+                      </div>
                       <div>
                         <h5>{pool.token}</h5>
-                    <h6>{t('Vault-Balance')}</h6>
+                        <h6>{t('Vault-Balance')}</h6>
                       </div>
                     </GridItem>
                     {
@@ -371,27 +377,23 @@ export default function SectionPools() {
                                       setDepositedBalance({
                                         ...depositedBalance,
                                         [index]: new BigNumber(
-                          byDecimals(tokens[pool.token].tokenBalance)
-                        ).multipliedBy(
-                          new BigNumber(10000)
-                        ).dividedToIntegerBy(
-                          new BigNumber(1)
-                        ).dividedBy(
-                          new BigNumber(10000)
-                        ).toString()
+                                          byDecimals(tokens[pool.token].tokenBalance)).multipliedBy(
+                                            new BigNumber(10000)
+                                          ).dividedToIntegerBy(new BigNumber(1)).dividedBy(
+                                            new BigNumber(10000)
+                                          ).toNumber()
                                       })
                                     }}
                                   >Max</Button>
-                                </InputAdornment>)
-                              }}
+                                </InputAdornment>
+                              )
+                            }}
                             formControlProps={{
                               onClick: (event) => event.stopPropagation(),
                               onFocus: (event) => event.stopPropagation(),
                               fullWidth: true,
                               className: classes.formControl,
-                              // onChange: handleDepositedBalance.bind(this, index),
                             }}
-                            // onClick={e=>e.stopPropagation()}
                           />
                           {depositedBalance[index]>pool.allowance ? (
                             <Button
@@ -450,15 +452,60 @@ export default function SectionPools() {
                       alignContent: "space-around"
                     }}>
                       <Card className={classes.cardWrap}>
-                        <CardBody>
-                          <h4 className={classes.cardTitle}>{t('Vault-Deposited')}</h4>
-                          <h5 className={classes.textCenter}>{byDecimals(pool.depositedBalance).toFormat(4)} {pool.token}</h5>
+                        <CardBody style={{display: "flex", alignContent: "space-between", flexDirection:"column"}}>
+                          <div style={{display: "flex", justifyContent: "space-between"}}>
+                            <h4 className={classes.cardTitle}>{t('Vault-Deposited')}</h4>
+                            <h4 className={classes.textRight}>{byDecimals(pool.depositedBalance).toFormat(4)} {pool.token}
+                            </h4>
+                          </div>
+                          <div>
+                          <CustomInput
+                            inputProps={{
+                              placeholder: `${t('Vault-Input-3')}${pool.token}${t('Vault-Input-4')}`,
+                              type: "number",
+                              autoComplete: "off",
+                              value: withdrawAmount[index] == null ? '' : withdrawAmount[index],
+                              onChange: handleWithdrawAmount.bind(this, index),
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <Button 
+                                    variant="outlined"
+                                    round
+                                    type="button"
+                                    color="transparent"
+                                    size="sm"
+                                    style={{
+                                      color: '#9c27b0',
+                                      border: "1px solid #9c27b0"
+                                    }}
+                                    onClick={()=>{
+                                      setWithdrawAmount({
+                                        ...withdrawAmount,
+                                        [index]: byDecimals(pool.depositedBalance).toNumber()
+
+                                      })
+                                    }}
+                                  >Max</Button>
+                                </InputAdornment>)
+                              }}
+                            formControlProps={{
+                              onClick: (event) => event.stopPropagation(),
+                              onFocus: (event) => event.stopPropagation(),
+                              fullWidth: true,
+                              className: classes.formControl,
+                              style: {
+                                paddingTop: 0
+                              }
+                            }}
+                          />
+                          </div>
+                          
                           <Button
                             color="primary"
                             round
                             block
-                            onClick={onWithdraw.bind(this, pool, index)}
-                            disabled={fetchWithdrawPending}
+                            onClick={onWithdraw.bind(this, pool, index, withdrawAmount[index])}
+                            disabled={fetchWithdrawPending || !Boolean(withdrawAmount[index])}
                           >
                             {fetchWithdrawPending ? `${t('Vault-WithdrawING')}`: `${t('Vault-WithdrawButton')}`}
                           </Button>
@@ -467,9 +514,12 @@ export default function SectionPools() {
                     </GridItem>
                     <GridItem xs={12} md={4}>
                       <Card className={classes.cardWrap}>
-                        <CardBody>
-                          <h4 className={classes.cardTitle}>{t('Vault-Earned')}</h4>
-                          <h5 className={classes.textCenter}>{byDecimals(pool.claimAbleBalance).toFormat(4)} {pool.earnedToken}</h5>
+                        <CardBody style={{display: "flex", alignContent: "space-between", flexDirection:"column"}}>
+                          <div style={{display: "flex", justifyContent: "space-between"}}>
+                            <h4 className={classes.cardTitle}>{t('Vault-Earned')}</h4>
+                            <h5 className={classes.textCenter}>{byDecimals(pool.claimAbleBalance).toFormat(4)} {pool.earnedToken}</h5>
+                          </div>
+                          <div style={{height:"49px"}}></div>
                           <Button color="primary" round block onClick={onClaim.bind(this, pool, index)} disabled={fetchClaimPending}>
                             {fetchClaimPending ? `${t('Vault-ClaimING')}` : `${t('Vault-ClaimButton')}`}
                           </Button>
@@ -478,9 +528,12 @@ export default function SectionPools() {
                     </GridItem>
                     <GridItem xs={12} md={4}>
                       <Card className={classes.cardWrap}>
-                        <CardBody>
-                          <h4 className={classes.cardTitle}>{t('Vault-Pending')}</h4>
-                          <h5>{byDecimals(pool.claimPendingBalance).toFormat(4)} {pool.earnedToken}</h5>
+                        <CardBody style={{display: "flex", alignContent: "space-between", flexDirection:"column"}}>
+                          <div style={{display: "flex", justifyContent: "space-between"}}>
+                            <h4 className={classes.cardTitle}>{t('Vault-Pending')}</h4>
+                            <h5>{byDecimals(pool.claimPendingBalance).toFormat(4)} {pool.earnedToken}</h5>
+                          </div>
+                          <div style={{height:"49px"}}></div>
                           <p>{t('Vault-PendingDescription')}<br/>{t('Vault-PendingContent')}</p>
                         </CardBody>
                       </Card>
