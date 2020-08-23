@@ -271,7 +271,7 @@ export default function SectionPools() {
   }, [fetchPoolBalances]);
 
   useEffect(() => {
-    fetchCoingeckoPrice();
+    // fetchCoingeckoPrice();
     fetchUniswapPrices({provider, uniswapList: price.uniswapList})
   }, [fetchCoingeckoPrice]);
 
