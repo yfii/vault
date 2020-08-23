@@ -89,8 +89,8 @@ export default function SectionPools() {
     });
   };
 
-  const byDecimals = number => {
-    const decimals = new BigNumber(10).exponentiatedBy(18);
+  const byDecimals = (number, tokenDecimals = 18) => {
+    const decimals = new BigNumber(10).exponentiatedBy(tokenDecimals);
     return new BigNumber(number).dividedBy(decimals);
   }
 
@@ -126,12 +126,12 @@ export default function SectionPools() {
 
   const onClaim = (pool, index, event) => {
     event.stopPropagation();
-    console.log('claim')
+    // console.log('claim')
     const time = new BigNumber(pool.depositedTime).multipliedBy(1000).toNumber();
     const nowTime = new Date().getTime();
     const depositedTime = new BigNumber(nowTime).minus(time).toNumber();
-    console.log(depositedTime)
-    console.log(depositedTime)
+    // console.log(depositedTime)
+    // console.log(depositedTime)
     const func = () => {
       fetchClaim({
         account,
@@ -283,19 +283,31 @@ export default function SectionPools() {
     fetchUniswapPrices({provider, uniswapList: price.uniswapList})
   }, [fetchCoingeckoPrice]);
 
-  useEffect(() => {
-    const id = setInterval(() => {
-      fetchBalances({account, provider, tokens});
-    }, 10000);
-    return () => clearInterval(id);
-  }, [fetchBalances]);
+  // useEffect(() => {
+  //   const id = setInterval(() => {
+  //     fetchBalances({account, provider, tokens});
+  //   }, 10000);
+  //   return () => clearInterval(id);
+  // }, [fetchBalances]);
 
-  useEffect(() => {
-    const id = setInterval(() => {
-      fetchPoolBalances({account, provider, pools, price});
-    }, 10000);
-    return () => clearInterval(id);
-  }, [fetchPoolBalances]);
+  // useEffect(() => {
+  //   const id = setInterval(() => {
+  //     fetchPoolBalances({account, provider, pools, price});
+  //   }, 10000);
+  //   return () => clearInterval(id);
+  // }, [fetchPoolBalances]);
+
+  const forMat = number => {
+    return new BigNumber(
+      number
+    ).multipliedBy(
+      new BigNumber(10000)
+    ).dividedToIntegerBy(
+      new BigNumber(1)
+    ).dividedBy(
+      new BigNumber(10000)
+    ).toNumber()
+  }
 
   return (
     <GridContainer justify="center">
@@ -328,15 +340,9 @@ export default function SectionPools() {
                       <Avatar alt={pool.token} src={require(`../../../images/${pool.token}-logo.png`)} />
                       <div style={{fontSize: "1.5rem"}}>
                         {
-                          new BigNumber(
-                            byDecimals(tokens[pool.token].tokenBalance)
-                          ).multipliedBy(
-                            new BigNumber(10000)
-                          ).dividedToIntegerBy(
-                            new BigNumber(1)
-                          ).dividedBy(
-                            new BigNumber(10000)
-                          ).toString()
+                          forMat(
+                            byDecimals(tokens[pool.token].tokenBalance, pool.tokenDecimals)
+                          )
                         }
                       </div>
                       <div>
@@ -376,12 +382,7 @@ export default function SectionPools() {
                                     onClick={()=>{
                                       setDepositedBalance({
                                         ...depositedBalance,
-                                        [index]: new BigNumber(
-                                          byDecimals(tokens[pool.token].tokenBalance)).multipliedBy(
-                                            new BigNumber(10000)
-                                          ).dividedToIntegerBy(new BigNumber(1)).dividedBy(
-                                            new BigNumber(10000)
-                                          ).toNumber()
+                                        [index]: forMat(byDecimals(tokens[pool.token].tokenBalance, pool.tokenDecimals))
                                       })
                                     }}
                                   >Max</Button>
@@ -409,7 +410,7 @@ export default function SectionPools() {
                               onClick={onDeposit.bind(this, pool, index)}
                               onFocus={(event) => event.stopPropagation()}
                               disabled={
-                                !Boolean(depositedBalance[index]) || fetchDepositPending || (new BigNumber(depositedBalance[index]).toNumber() > byDecimals(tokens[pool.token].tokenBalance).toNumber())
+                                !Boolean(depositedBalance[index]) || fetchDepositPending || (new BigNumber(depositedBalance[index]).toNumber() > byDecimals(tokens[pool.token].tokenBalance, pool.tokenDecimals).toNumber())
                               }
                             >
                               {fetchDepositPending ? `${t('Vault-DepositING')}` : `${t('Vault-DepositButton')}`}
@@ -426,7 +427,7 @@ export default function SectionPools() {
                           }}
                         >
                           <div>
-                            <h5>{byDecimals(pool.depositedBalance).toFormat(4)}</h5>
+                            <h5>{byDecimals(pool.depositedBalance, pool.tokenDecimals).toFormat(4)}</h5>
                             <h6>{t('Vault-ListDeposited')} { pool.token }</h6>
                           </div>
                           <div>
@@ -455,7 +456,7 @@ export default function SectionPools() {
                         <CardBody style={{display: "flex", alignContent: "space-between", flexDirection:"column"}}>
                           <div style={{display: "flex", justifyContent: "space-between"}}>
                             <h4 className={classes.cardTitle}>{t('Vault-Deposited')}</h4>
-                            <h4 className={classes.textRight}>{byDecimals(pool.depositedBalance).toFormat(4)} {pool.token}
+                            <h4 className={classes.textRight}>{byDecimals(pool.depositedBalance, pool.byDecimals).toFormat(4)} {pool.token}
                             </h4>
                           </div>
                           <div>
@@ -481,7 +482,7 @@ export default function SectionPools() {
                                     onClick={()=>{
                                       setWithdrawAmount({
                                         ...withdrawAmount,
-                                        [index]: byDecimals(pool.depositedBalance).toNumber()
+                                        [index]: byDecimals(pool.depositedBalance, pool.byDecimals).toNumber()
 
                                       })
                                     }}
@@ -542,7 +543,7 @@ export default function SectionPools() {
                       <Card>
                         <CardBody>
                           <h4 className={classes.cardTitle}>{t('Vault-Idle')}</h4>
-                          <h5 className={classes.textCenter}>{byDecimals(pool.idle).toFormat(4)} {pool.token}</h5>
+                          <h5 className={classes.textCenter}>{byDecimals(pool.idle, pool.byDecimals).toFormat(4)} {pool.token}</h5>
                           {/* <Tooltip title={t('Vault-FarmButtonDescription')}  aria-label="add"> */}
                             <Button color="primary" round block
                               onClick={onFarm.bind(this, pool, index)} 
