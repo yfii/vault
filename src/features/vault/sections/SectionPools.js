@@ -456,7 +456,7 @@ export default function SectionPools() {
                         <CardBody style={{display: "flex", alignContent: "space-between", flexDirection:"column"}}>
                           <div style={{display: "flex", justifyContent: "space-between"}}>
                             <h4 className={classes.cardTitle}>{t('Vault-Deposited')}</h4>
-                            <h4 className={classes.textRight}>{byDecimals(pool.depositedBalance, pool.byDecimals).toFormat(4)} {pool.token}
+                            <h4 className={classes.textRight}>{byDecimals(pool.depositedBalance, pool.tokenDecimals).toFormat(4)} {pool.token}
                             </h4>
                           </div>
                           <div>
@@ -482,7 +482,7 @@ export default function SectionPools() {
                                     onClick={()=>{
                                       setWithdrawAmount({
                                         ...withdrawAmount,
-                                        [index]: byDecimals(pool.depositedBalance, pool.byDecimals).toNumber()
+                                        [index]: byDecimals(pool.depositedBalance, pool.tokenDecimals).toNumber()
 
                                       })
                                     }}
@@ -543,7 +543,7 @@ export default function SectionPools() {
                       <Card>
                         <CardBody>
                           <h4 className={classes.cardTitle}>{t('Vault-Idle')}</h4>
-                          <h5 className={classes.textCenter}>{byDecimals(pool.idle, pool.byDecimals).toFormat(4)} {pool.token}</h5>
+                          <h5 className={classes.textCenter}>{byDecimals(pool.idle, pool.tokenDecimals).toFormat(4)} {pool.token}</h5>
                           {/* <Tooltip title={t('Vault-FarmButtonDescription')}  aria-label="add"> */}
                             <Button color="primary" round block
                               onClick={onFarm.bind(this, pool, index)} 
