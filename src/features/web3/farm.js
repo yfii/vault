@@ -2,16 +2,16 @@ import { earnContractABI } from "../configure";
 import { fetchGasPrice } from '.';
 
 export const farm = async ({web3, account, contractAddress}) => {
-  console.log(`=====================================farm begin=====================================`)
+  // console.log(`=====================================farm begin=====================================`)
   const gasPrice = await fetchGasPrice();
-  console.log(`
-    account:${account}\n
-    contractAddress:${contractAddress}\n
-    gasPrice:${gasPrice}\n
-  `)
+  // console.log(`
+  //   account:${account}\n
+  //   contractAddress:${contractAddress}\n
+  //   gasPrice:${gasPrice}\n
+  // `)
   const contract = new web3.eth.Contract(earnContractABI, contractAddress);
   const data = await _farm({web3, contract, account, gasPrice});
-  console.log(`=====================================farm success=====================================`)
+  // console.log(`=====================================farm success=====================================`)
   return data;
 }
 

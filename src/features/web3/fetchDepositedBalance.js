@@ -12,7 +12,7 @@ export const fetchDepositedBalance = async ({web3, account, contractAddress}) =>
   const depositedBalance = new BigNumber(data.stake).toNumber();
   const payout = new BigNumber(data.payout).toNumber();
 
-  console.log(`=====================================fetchDepositedBalance success=====================================`)
+  // console.log(`=====================================fetchDepositedBalance success=====================================`)
 
   return { depositedBalance, payout };
 }

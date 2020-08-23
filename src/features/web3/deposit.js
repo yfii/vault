@@ -2,17 +2,17 @@ import { earnContractABI } from "../configure";
 import { fetchGasPrice } from '.';
 
 export const deposit = async ({web3, account, amount, contractAddress}) => {
-  console.log(`=====================================deposit begin=====================================`)
+  // console.log(`=====================================deposit begin=====================================`)
   const gasPrice = await fetchGasPrice();
-  console.log(`
-    account:${account}\n
-    contractAddress:${contractAddress}\n
-    gasPrice:${gasPrice}\n
-    amount:${web3.utils.toWei(amount, "ether")}
-  `)
+  // console.log(`
+  //   account:${account}\n
+  //   contractAddress:${contractAddress}\n
+  //   gasPrice:${gasPrice}\n
+  //   amount:${web3.utils.toWei(amount, "ether")}
+  // `)
   const contract = new web3.eth.Contract(earnContractABI, contractAddress);
   const data = await _deposit({web3, contract, amount: web3.utils.toWei(amount, "ether"),  account, gasPrice});
-  console.log(`=====================================deposit success=====================================`)
+  // console.log(`=====================================deposit success=====================================`)
   return data;
 }
 

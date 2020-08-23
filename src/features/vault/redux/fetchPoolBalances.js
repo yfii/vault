@@ -82,7 +82,7 @@ export function fetchPoolBalances(data) {
                 account,
               }).then(
                 data => {
-                  console.log(data)
+                  // console.log(data)
                   return callbackInner(null, data)
                 }
               ).catch(
@@ -140,8 +140,11 @@ export function fetchPoolBalances(data) {
           //   ) 
           // },
         ], (error, data) => {
-          console.log(error)
-          console.log(data[3])
+          // console.log(error)
+          // console.log(data[3])
+          if (error) {
+            return callback(null, pool)
+          }
           pool.depositedBalance = data[0].depositedBalance || 0;
           pool.payout = data[0].payout || 0;
           pool.claimAbleBalance = data[1] || 0
@@ -153,7 +156,7 @@ export function fetchPoolBalances(data) {
           // pool.claimAbleTokens = data[5] || 0;
           pool.depositedTime = data[5] || 0;
           pool.claimAbleTokens = data[6] || 0;
-          console.log(price[pool.price].usd)
+          // console.log(price[pool.price].usd)
           pool.yield = new BigNumber(price[pool.price].usd).multipliedBy(
             new BigNumber(pool.claimAbleTokens)
           ).dividedBy(

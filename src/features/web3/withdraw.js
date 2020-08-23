@@ -3,20 +3,20 @@ import { fetchGasPrice } from '.';
 import BigNumber from "bignumber.js";
 
 export const withdraw = async ({web3, account, amount, contractAddress}) => {
-  console.log(`=====================================withdraw begin=====================================`)
-  console.log(amount)
+  // console.log(`=====================================withdraw begin=====================================`)
+  // console.log(amount)
   const contract = new web3.eth.Contract(earnContractABI, contractAddress);
   const gasPrice = await fetchGasPrice();
-  console.log(`
-    account:${account}\n
-    contractAddress:${contractAddress}\n
-    gasPrice:${gasPrice}\n
-    amount:${web3.utils.toWei(amount, "ether")}
-  `)
+  // console.log(`
+  //   account:${account}\n
+  //   contractAddress:${contractAddress}\n
+  //   gasPrice:${gasPrice}\n
+  //   amount:${web3.utils.toWei(amount, "ether")}
+  // `)
   
-  console.log(`=====================================withdraw=====================================`)
+  // console.log(`=====================================withdraw=====================================`)
   const data = await _withdraw({web3, contract, amount: web3.utils.toWei(amount, "ether"), account, gasPrice});
-  console.log(`=====================================withdraw success=====================================`)
+  // console.log(`=====================================withdraw success=====================================`)
   return data;
 }
 
