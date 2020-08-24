@@ -2,13 +2,13 @@ export const coingeckoApi = "https://api.coingecko.com/api/v3/simple/price?ids=b
 
 export const price = {
   "curve-dao-token": {
-    usd: 4
+    usd: 3
   },
   "yfii-finance":{
-    usd: 250
+    usd: 1000
   },
   "grap.finance": {
-    usd: 1.38
+    usd: 0.1
   },  
   "dforce-token": {
     usd: 0.6
