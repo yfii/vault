@@ -272,30 +272,15 @@ export default function SectionPools() {
 
   useEffect(() => {
     fetchBalances({account, provider, tokens});
-  }, [fetchBalances]);
-
-  useEffect(() => {
     fetchPoolBalances({account, provider, pools, price});
-  }, [fetchPoolBalances]);
-
-  useEffect(() => {
-    // fetchCoingeckoPrice();
     fetchUniswapPrices({provider, uniswapList: price.uniswapList})
-  }, [fetchCoingeckoPrice]);
-
-  useEffect(() => {
     const id = setInterval(() => {
       fetchBalances({account, provider, tokens});
-    }, 10000);
-    return () => clearInterval(id);
-  }, [fetchBalances]);
-
-  useEffect(() => {
-    const id = setInterval(() => {
       fetchPoolBalances({account, provider, pools, price});
+      fetchUniswapPrices({provider, uniswapList: price.uniswapList})
     }, 10000);
     return () => clearInterval(id);
-  }, [fetchPoolBalances]);
+  }, []);
 
   const forMat = number => {
     return new BigNumber(
