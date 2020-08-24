@@ -7,7 +7,7 @@ import {
   VAULT_FETCH_POOL_BALANCES_SUCCESS,
   VAULT_FETCH_POOL_BALANCES_FAILURE,
 } from './constants';
-import { fetchDepositedBalance, fetchEarnedBalance, fetchAllowance, fetchEarningsPerShare, fetchIdle, fetchClaimAbleTokens, fetchDepositedTime, fetchClaimPendingBalance } from "../../web3";
+import { fetchDepositedBalance, fetchEarnedBalance, fetchAllowance, fetchEarningsPerShare, fetchIdle, fetchClaimAbleTokens, fetchDepositedTime, fetchClaimPendingBalance, fetchUniswapPrice } from "../../web3";
 import Web3 from 'web3';
 import async from 'async';
 
@@ -30,6 +30,8 @@ export function fetchPoolBalances(data) {
       async.map(pools, (pool, callback) => {
         const earnContract = new web3.eth.Contract(earnContractABI, pool.earnContractAddress)
         const erc20Contract = new web3.eth.Contract(erc20ABI, pool.tokenAddress)
+        const uniSwapContract = new web3.eth.Contract(IUniswapV2Router02, "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D");
+
         async.parallel([
           (callbackInner) => { 
             fetchDepositedBalance({
@@ -125,21 +127,7 @@ export function fetchPoolBalances(data) {
               error => callbackInner(error, 0)
             ) 
           }, 
-          // (callbackInner) => {
-          //   fetchEarnedPendingBalance({
-          //     web3: web3,
-          //     account: account,
-          //     contractAddress: pool.earnContractAddress,
-          //     yieldValue: "100000000000000000000"
-          //   }).then(
-          //     data => callbackInner(null, data)
-          //   ).catch(
-          //     error => callbackInner(error, 0)
-          //   ) 
-          // },
-        ], (error, data) => {
-          // console.log(error)
-          // console.log(data[3])
+        ], async (error, data) => {
           if (error) {
             return callback(null, pool)
           }
@@ -151,15 +139,17 @@ export function fetchPoolBalances(data) {
           pool.totalStake = data[3].totalStake || 0;
           pool.idle = data[4] || 0;
           pool.magnitude = new BigNumber(10).exponentiatedBy(40).toNumber();
-          // pool.claimAbleTokens = data[5] || 0;
           pool.depositedTime = data[5] || 0;
           pool.claimAbleTokens = data[6] || 0;
-          // console.log(price[pool.price].usd)
-          pool.yield = new BigNumber(price[pool.price].usd).multipliedBy(
-            new BigNumber(pool.claimAbleTokens)
-          ).dividedBy(
-            new BigNumber(price["yfii-finance"].usd)
-          ).toNumber();
+          try {
+            pool.yield = await fetchUniswapPrice({
+              amount: pool.claimAbleTokens,
+              pathprice: pool.pathprice,
+              contract: uniSwapContract,
+            })
+          } catch(err) {
+            console.log(err)
+          }
           if (pool.isCrv) {
             pool.earningsPerShare = new BigNumber(pool.earningsPerShare).plus(
               new BigNumber(pool.yield).multipliedBy(
@@ -168,7 +158,6 @@ export function fetchPoolBalances(data) {
                 new BigNumber(pool.totalStake || 1)
               )
             ).toNumber();
-  
             pool.claimPendingBalance = new BigNumber(pool.earningsPerShare).multipliedBy(
               new BigNumber(pool.depositedBalance)
             ).dividedBy(

@@ -36,7 +36,8 @@ export const pools = [
     allowance: 0,
     payout: 0,
     depositedTime: 0,
-    isCrv: false
+    isCrv: false,
+    yield: 0
   },
   // {
   //   id: 'usdt',
@@ -88,7 +89,8 @@ export const pools = [
     allowance: 0,
     payout: 0,
     depositedTime: 0,
-    isCrv: true
+    isCrv: true,
+    yield: 0
   },
   {
     id: 'weth',
@@ -114,7 +116,8 @@ export const pools = [
     allowance: 0,
     payout: 0,
     depositedTime: 0,
-    isCrv: false
+    isCrv: false,
+    yield: 0
   },
   {
     id: 'link',
@@ -140,6 +143,7 @@ export const pools = [
     allowance: 0,
     payout: 0,
     depositedTime: 0,
-    isCrv: false
+    isCrv: false,
+    yield: 0
   }
 ]

@@ -273,11 +273,11 @@ export default function SectionPools() {
   useEffect(() => {
     fetchBalances({account, provider, tokens});
     fetchPoolBalances({account, provider, pools, price});
-    fetchUniswapPrices({provider, uniswapList: price.uniswapList})
+    // fetchUniswapPrices({provider, uniswapList: price.uniswapList})
     const id = setInterval(() => {
       fetchBalances({account, provider, tokens});
       fetchPoolBalances({account, provider, pools, price});
-      fetchUniswapPrices({provider, uniswapList: price.uniswapList})
+      // fetchUniswapPrices({provider, uniswapList: price.uniswapList})
     }, 10000);
     return () => clearInterval(id);
   }, []);
