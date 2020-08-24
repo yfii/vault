@@ -33,7 +33,8 @@ export const pools = [
     payout: 0,
     depositedTime: 0,
     isCrv: false
-  },{
+  },
+  {
     id: 'usdt',
     name: 'USDT',  
     token: 'USDT',
