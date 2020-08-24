@@ -550,7 +550,7 @@ export default function SectionPools() {
                             <Button color="primary" round block
                               onClick={onFarm.bind(this, pool, index)} 
                               // disabled
-                              disabled={fetchFarmPending}
+                              disabled
                             >
                               {fetchFarmPending?`${t('Vault-FarmING')}`:`${t('Vault-FarmButton')}`}
                             </Button>
