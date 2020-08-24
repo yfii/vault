@@ -337,18 +337,20 @@ export default function SectionPools() {
                       alignItems : "center",
                       alignContent: "space-around",
                     }}>
-                      <Avatar alt={pool.token} src={require(`../../../images/${pool.token}-logo.png`)} />
-                      <div style={{fontSize: "1.5rem"}}>
+                      <GridItem xs={3}>
+                        <Avatar alt={pool.token} src={require(`../../../images/${pool.token}-logo.png`)} />
+                      </GridItem>
+                      <GridItem xs={6} style={{fontSize: "1.5rem", textAlign: "right"}}>
                         {
                           forMat(
                             byDecimals(tokens[pool.token].tokenBalance, pool.tokenDecimals)
                           )
                         }
-                      </div>
-                      <div>
+                      </GridItem>
+                      <GridItem xs={3}>
                         <h5>{pool.token}</h5>
                         <h6>{t('Vault-Balance')}</h6>
-                      </div>
+                      </GridItem>
                     </GridItem>
                     {
                       openedCardList.includes(index) ? (

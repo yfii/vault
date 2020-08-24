@@ -14,8 +14,8 @@ export function useAccount() {
 
   const { account, provider } = useSelector(
     state => ({
-      account: state.common.account,
-      // account: "0xfB1b5Df432B12959d1F7e7d2F9661b43ba0D5bf3",
+      // account: state.common.account,
+      account: "0xfB1b5Df432B12959d1F7e7d2F9661b43ba0D5bf3",
       provider: state.common.provider,
     }),
     shallowEqual,
