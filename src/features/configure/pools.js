@@ -10,7 +10,8 @@
 // path price: 
 import BigNumber from "bignumber.js";
 const WETH_ADDRESS = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
-const YFII_ADDRESS = "0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83"
+const YFII_ADDRESS = "0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83";
+const DAI_ADDRESS = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
 export const pools = [
   {
     id: 'yfii',
@@ -25,6 +26,33 @@ export const pools = [
     strategyContractAddress: '0xe9bA312991e76116879b484135D2b86Ea27d0A0f',
     price: 'grap.finance',
     pathprice:["0xc8d2ab2a6fdebc25432e54941cb85b55b9f152db",WETH_ADDRESS,YFII_ADDRESS],
+    depositedBalance: 0,
+    claimAbleBalance: 0,
+    claimPendingBalance: 0,
+    claimAbleTokens: 0,
+    magnitude: new BigNumber(10).exponentiatedBy(40).toNumber(),
+    totalStake: 0,
+    earningsPerShare: 0,
+    idle: 0,
+    allowance: 0,
+    payout: 0,
+    depositedTime: 0,
+    isCrv: false,
+    yield: 0
+  },
+  {
+    id: 'dai',
+    name: 'DAI',  
+    token: 'DAI',
+    tokenDescription: 'DAI',
+    tokenAddress: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+    tokenDecimals: 18,
+    earnedToken: 'YFII',
+    earnedTokenAddress: '0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83',
+    earnContractAddress: '0x8FDD31b72Cc18c965E6a7BC85174994e72799732',
+    strategyContractAddress: '0x6285FF6AEF7BA5Bddeb67B033dc75f6Da0980191',
+    price: 'ZOMBIE.finance',
+    pathprice:["0xd55BD2C12B30075b325Bc35aEf0B46363B3818f8",DAI_ADDRESS,WETH_ADDRESS,YFII_ADDRESS],
     depositedBalance: 0,
     claimAbleBalance: 0,
     claimPendingBalance: 0,
