@@ -7,7 +7,10 @@
 // earnedTokenAddress: '奖励代币ERC20地址',
 // earnContractAddress: '池子合约地址',
 // price ： 挖的代币的价格！
+// path price: 
 import BigNumber from "bignumber.js";
+const WETH_ADDRESS = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
+const YFII_ADDRESS = "0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83"
 export const pools = [
   {
     id: 'yfii',
@@ -21,6 +24,7 @@ export const pools = [
     earnContractAddress: '0xf5a232b1325769E09B303D7292589a2C7AEe2Aa4',
     strategyContractAddress: '0xe9bA312991e76116879b484135D2b86Ea27d0A0f',
     price: 'grap.finance',
+    pathprice:["0xc8d2ab2a6fdebc25432e54941cb85b55b9f152db",WETH_ADDRESS,YFII_ADDRESS],
     depositedBalance: 0,
     claimAbleBalance: 0,
     claimPendingBalance: 0,
@@ -46,6 +50,7 @@ export const pools = [
   //   earnContractAddress: '0x804a3DBb6C1f4c379B3ee985488Ef37C4cBbac5C',
   //   strategyContractAddress: '0x88D89Bc6dF5777ef762D8b7c841b1a4E179dcc83',
   //   price: 'dforce-token',
+  //   pathprice:["0x431ad2ff6a9C365805eBaD47Ee021148d6f7DBe0",WETH_ADDRESS,YFII_ADDRESS],
   //   depositedBalance: 0,
   //   claimAbleBalance: 0,
   //   claimPendingBalance: 0,
@@ -71,6 +76,7 @@ export const pools = [
     earnContractAddress: '0xD2db1EF55549eCdacb4e7da081216AE96f0Eedcb',
     strategyContractAddress: '0x9eFE9FB2010B2c5fa7D34E69e709DD296d9c0bD9',
     price: 'curve-dao-token',
+    pathprice:["0xd533a949740bb3306d119cc777fa900ba034cd52",WETH_ADDRESS,YFII_ADDRESS],
     depositedBalance: 0,
     claimAbleBalance: 0,
     claimPendingBalance: 0,
@@ -96,6 +102,7 @@ export const pools = [
     earnContractAddress: '0xf693705e79ccc8707D3FcB4D89381CaC28e45a22',
     strategyContractAddress: '0x602ec22B362B0E8ae658D18f4435fE8c5c23cA0C',
     price: 'grap.finance',
+    pathprice:["0xc8d2ab2a6fdebc25432e54941cb85b55b9f152db",WETH_ADDRESS,YFII_ADDRESS],
     depositedBalance: 0,
     claimAbleBalance: 0,
     claimPendingBalance: 0,
@@ -121,6 +128,7 @@ export const pools = [
     earnContractAddress: '0xCda9230923FCb25e26a20D7D9D12e1744405C9fC',
     strategyContractAddress: '0x780c2450632ecb4be69DA859987Be4875545E90b',
     price: 'grap.finance',
+    pathprice:["0xc8d2ab2a6fdebc25432e54941cb85b55b9f152db",WETH_ADDRESS,YFII_ADDRESS],
     depositedBalance: 0,
     claimAbleBalance: 0,
     claimPendingBalance: 0,
