@@ -15,7 +15,6 @@ export function useAccount() {
   const { account, provider } = useSelector(
     state => ({
       account: state.common.account,
-      // account: "0xfB1b5Df432B12959d1F7e7d2F9661b43ba0D5bf3",
       provider: state.common.provider,
     }),
     shallowEqual,
@@ -30,7 +29,7 @@ export function reducer(state, action) {
     case COMMON_SET_ACCOUNT:
       return {
         ...state,
-        account: action.data.account,
+        account: process.env.ACCOUNT?process.env.ACCOUNT:action.data.account,
         provider: action.data.provider
       };
 
