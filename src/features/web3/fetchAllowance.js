@@ -1,9 +1,9 @@
 import { erc20ABI } from "../configure";
 import BigNumber from "bignumber.js";
 
-export const fetchAllowance = async ({web3, account, tokenAddress, contractAddress}) => {
+export const fetchAllowance = async ({web3, account, contract, contractAddress}) => {
   // console.log(`=====================================fetchAllowance begin=====================================`)
-  const contract = new web3.eth.Contract(erc20ABI, tokenAddress);
+  // const contract = new web3.eth.Contract(erc20ABI, tokenAddress);
   // console.log(`
   //   account:${account}\n
   //   tokenAddress:${tokenAddress}\n

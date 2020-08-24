@@ -1,9 +1,9 @@
 import { earnContractABI } from "../configure";
 import BigNumber from "bignumber.js";
 
-export const fetchEarnedBalance = async ({web3, account, contractAddress}) => {
+export const fetchEarnedBalance = async ({contract, account}) => {
   // console.log(`=====================================fetchEarnedBalance begin=====================================`)
-  const contract = new web3.eth.Contract(earnContractABI, contractAddress)
+  // const contract = new web3.eth.Contract(earnContractABI, contractAddress)
   // console.log(`
   //   account:${account}\n
   //   contractAddress:${contractAddress}\n

@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { earnContractABI, strategyContractABI, erc20ABI, crvDepositContractABI, IUniswapV2Router02 } from "../../configure";
 import BigNumber from "bignumber.js";
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import {
@@ -27,11 +28,12 @@ export function fetchPoolBalances(data) {
       const { account, provider, pools, price } = data;
       const web3 = new Web3(provider);
       async.map(pools, (pool, callback) => {
+        const earnContract = new web3.eth.Contract(earnContractABI, pool.earnContractAddress)
+        const erc20Contract = new web3.eth.Contract(erc20ABI, pool.tokenAddress)
         async.parallel([
           (callbackInner) => { 
             fetchDepositedBalance({
-              web3,
-              contractAddress: pool.earnContractAddress,
+              contract: earnContract,
               account,
             }).then(
               data => {
@@ -47,8 +49,7 @@ export function fetchPoolBalances(data) {
           },
           (callbackInner) => {
             fetchEarnedBalance({
-              web3,
-              contractAddress: pool.earnContractAddress,
+              contract: earnContract,
               account,
             }).then(
               data => callbackInner(null, data)
@@ -60,7 +61,7 @@ export function fetchPoolBalances(data) {
             fetchAllowance({
               web3,
               contractAddress: pool.earnContractAddress,
-              tokenAddress: pool.tokenAddress,
+              contract: erc20Contract,
               account,
             }).then(
               data => {
@@ -77,8 +78,7 @@ export function fetchPoolBalances(data) {
           (callbackInner) => {
             if (pool.isCrv) {
               fetchEarningsPerShare({
-                web3,
-                contractAddress:pool.earnContractAddress,
+                contract: earnContract,
                 account,
               }).then(
                 data => {
@@ -94,8 +94,7 @@ export function fetchPoolBalances(data) {
           },
           (callbackInner) => {
             fetchIdle({
-              web3,
-              tokenAddress: pool.tokenAddress,
+              contract: erc20Contract,
               contractAddress:pool.earnContractAddress,
               account,
             }).then(
@@ -106,8 +105,7 @@ export function fetchPoolBalances(data) {
           },
           (callbackInner) => {
             fetchDepositedTime({
-              web3,
-              contractAddress:pool.earnContractAddress,
+              contract: earnContract,
               account,
             }).then(
               data => callbackInner(null, data)
@@ -184,8 +182,7 @@ export function fetchPoolBalances(data) {
           } else {
             fetchClaimPendingBalance({
               amount: pool.yield,
-              web3,
-              contractAddress:pool.earnContractAddress,
+              contract: earnContract,
               account
             }).then(
               data => {
@@ -199,23 +196,6 @@ export function fetchPoolBalances(data) {
               }
             ) 
           }
-          
-          // fetchClaimPendingBalance({
-          //   amount: pool.yield,
-          //   web3,
-          //   contractAddress:pool.earnContractAddress,
-          //   account
-          // }).then(
-          //   data => {
-          //     pool.claimPendingBalance = data
-          //     return callback(null, pool)
-          //   }
-          // ).catch(
-          //   error => callback(null, pool)
-          // ) 
-          // callback(null, pool)
-          // pool.depositedTime = 1597839811;
-          // pool.claimPendingBalance = earningsPerShare*pool.depositedBalance/magnitude - payout;
         })
       }, (error, pools) => {
         if(error) {
