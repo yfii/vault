@@ -432,11 +432,11 @@ export default function SectionPools() {
               </AccordionSummary>
               <AccordionDetails>
                 <GridItem xs={12}>
-                  <GridContainer>
+                  <GridContainer style={{alignItems:"flex-start"}}>
                     <GridItem xs={12} md={4} style={{
                       display: "flex",
-                      justifyContent : "space-between",
-                      alignItems : "center",
+                      justifyContent: "space-between",
+                      alignItems: "center",
                       alignContent: "space-around"
                     }}>
                       <Card className={classes.cardWrap}>
@@ -521,7 +521,7 @@ export default function SectionPools() {
                             <h4 className={classes.cardTitle}>{t('Vault-Pending')}</h4>
                             <h5>{byDecimals(pool.claimPendingBalance).toFormat(4)} {pool.earnedToken}</h5>
                           </div>
-                          <div style={{height:"49px"}}></div>
+                          <div style={{height:"43px"}}></div>
                           <p>{t('Vault-PendingDescription')}<br/>{t('Vault-PendingContent')}</p>
                         </CardBody>
                       </Card>
