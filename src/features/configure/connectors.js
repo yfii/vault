@@ -12,11 +12,13 @@ import { SquarelinkConnector } from '@web3-react/squarelink-connector'
 import { TorusConnector } from '@web3-react/torus-connector'
 
 const POLLING_INTERVAL = 12000
+const url = parseInt(Math.random() * 2, 10)
 const RPC_URLS = {
-  1: process.env.RPC_URL_1,
-  4: process.env.RPC_URL_4
+  1: process.env["RPC_URL_1_" + url],
+  4: process.env["RPC_URL_4_" + url]
 }
 
+console.log(RPC_URLS)
 export const injected = new InjectedConnector({ supportedChainIds: [1, 3, 4, 5, 42] })
 
 export const network = new NetworkConnector({
