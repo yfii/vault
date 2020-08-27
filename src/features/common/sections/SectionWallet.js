@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from 'react-i18next';
 // @material-ui/core components
 import DialogContent from "@material-ui/core/DialogContent";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -87,8 +88,8 @@ export default function SectionWallet() {
   } = context;
 
   const { setAccount } = useAccount();
-
   const { closeModal } = useCloseModal();
+  const { t, i18n } = useTranslation();
 
   // handle logic to recognize the connector currently being activated
   const [activatingConnector, setActivatingConnector] = useState();
@@ -139,6 +140,7 @@ export default function SectionWallet() {
           let displayName = name;
           switch (name) {
             case "MetaMask":
+              displayName = t('Home-BrowserWallet')
               url = require("../../../images/icn-metamask.svg");
               break;
             case "WalletConnect":
@@ -202,12 +204,8 @@ export default function SectionWallet() {
                 color="primary"
                 disabled={disabled}
                 onClick={() => {
-                  console.log("begin");
                   setActivatingConnector(currentConnector);
-                  console.log(name);
-                  console.log(connectorsByName[name]);
                   activate(connectorsByName[name]);
-                  console.log("close");
                 }}
               >
                 <Typography
