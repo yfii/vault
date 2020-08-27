@@ -16,7 +16,7 @@ import AccordionDetails from '@material-ui/core/AccordionActions'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Tooltip from '@material-ui/core/Tooltip';
-
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 // core components
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
@@ -323,17 +323,34 @@ export default function SectionPools() {
                       alignContent: "space-around",
                     }}>
                       <GridItem xs={3}>
-                        <Avatar alt={pool.token} src={require(`../../../images/${pool.token}-logo.png`)} />
+                        <Avatar 
+                          alt={pool.token}
+                          src={require(`../../../images/${pool.token}-logo.png`)}
+                          style={{}}
+                        />
                       </GridItem>
-                      <GridItem xs={6} style={{fontSize: "1.5rem", textAlign: "right"}}>
-                        {
+                      <GridItem xs={6} style={{display: "flex",alignItems : "center"}}>
+                        <h2 style={{fontSize: "1.5rem", margin: 0, fontWeight: "300"}}>{pool.token}</h2>
+                        {(!tokens[pool.token].tokenBalance && !pool.depositedBalance) && (
+                          <HelpOutlineIcon
+                            color="primary"
+                            fontSize="small"
+                            style={{marginLeft: "5px"}}
+                            onClick={
+                              event => {
+                                event.stopPropagation();
+                                window.open(pool.tokenDescriptionUrl)
+                              }
+                            }
+                          />
+                        )}
+                      </GridItem>
+                      <GridItem xs={3}>
+                        <h5>{
                           forMat(
                             byDecimals(tokens[pool.token].tokenBalance, pool.tokenDecimals)
                           )
-                        }
-                      </GridItem>
-                      <GridItem xs={3}>
-                        <h5>{pool.token}</h5>
+                        }</h5>
                         <h6>{t('Vault-Balance')}</h6>
                       </GridItem>
                     </GridItem>
