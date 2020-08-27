@@ -294,6 +294,8 @@ export default function SectionPools() {
     ).toNumber()
   }
 
+  const isZh = Boolean((i18n.language == 'zh') || (i18n.language == 'zh-CN'));
+
   return (
     <GridContainer justify="center">
       <GridItem xs={12} sm={10}>
@@ -339,7 +341,7 @@ export default function SectionPools() {
                             onClick={
                               event => {
                                 event.stopPropagation();
-                                window.open(pool.tokenDescriptionUrl)
+                                window.open(isZh?pool.tokenDescriptionUrl2:pool.tokenDescriptionUrl)
                               }
                             }
                           />
