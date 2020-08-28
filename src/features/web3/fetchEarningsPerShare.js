@@ -1,6 +1,3 @@
-import { earnContractABI } from "../configure";
-import BigNumber from "bignumber.js";
-
 export const fetchEarningsPerShare = async ({account, contract}) => {
   // console.log(`=====================================fetchEarningsPerShare begin=====================================`)
   // const contract = new web3.eth.Contract(earnContractABI, contractAddress);

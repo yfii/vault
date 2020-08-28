@@ -1,4 +1,3 @@
-import { erc20ABI } from "../configure";
 import BigNumber from "bignumber.js";
 
 export const fetchIdle = async ({account, contract, contractAddress}) => {

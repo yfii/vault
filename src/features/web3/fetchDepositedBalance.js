@@ -1,4 +1,3 @@
-import { earnContractABI } from "../configure";
 import BigNumber from "bignumber.js";
 
 export const fetchDepositedBalance = async ({account, contract}) => {

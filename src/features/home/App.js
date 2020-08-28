@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { hot } from 'react-hot-loader'
 //  hooks
-import { useAccount } from '../common/redux/hooks';
 import { useInitialApp } from './redux/hooks';
 //  walletConnect
 import { injected } from "../configure";
@@ -9,7 +9,7 @@ import { LoadingPage } from "../common";
 
 import { SnackbarProvider } from 'notistack';
 
-export default function App({ children }) {
+function App({ children }) {
   const { isInit, initialApp } = useInitialApp();
 
   useEffect(() => {
@@ -36,3 +36,5 @@ export default function App({ children }) {
     </SnackbarProvider>
   );
 }
+
+export default hot(module)(App)

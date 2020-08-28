@@ -1,12 +1,5 @@
 import {
-  container,
-  title,
-  main,
-  whiteColor,
   mlAuto,
-  grayColor,
-  mainRaised,
-  hexToRgb
 } from "assets/jss/material-kit-pro-react.js";
 
 const sectionWalletStyle = theme => ({

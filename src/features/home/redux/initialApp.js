@@ -12,7 +12,7 @@ export function initialApp(data) {
 
 export function useInitialApp() {
   const dispatch = useDispatch();
-  const isInit = useSelector(state => state.home.isInit);
+  const isInit = useSelector(state => state.home.isInit, shallowEqual);
   const boundAction = useCallback((data) => dispatch(initialApp(data)), [dispatch]);
 
   return { isInit, initialApp: boundAction };

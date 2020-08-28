@@ -44,7 +44,6 @@ export default function HeaderLinks(props) {
   const open = Boolean(anchorEl);
 
   const switchLanguage = () => {
-    console.log('switchLanguage')
     switch(i18n.language) {
       case 'zh':
       case 'zh-CN':
