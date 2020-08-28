@@ -70,7 +70,7 @@ export default function SectionWallet() {
       setAccount(data);
       closeModal();
     }
-  }, [account, active, context, library]);
+  }, [account, active, context, library, closeModal, setAccount]);
 
   // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
   const triedEager = useEagerConnect();
@@ -138,9 +138,9 @@ export default function SectionWallet() {
               break;
             case "Frame":
               url = "";
+              break;
             default:
               url= "";
-              break;
           }
 
           return (

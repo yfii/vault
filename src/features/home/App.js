@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { hot } from 'react-hot-loader'
 //  hooks
 import { useInitialApp } from './redux/hooks';
 //  walletConnect
@@ -9,7 +8,7 @@ import { LoadingPage } from "../common";
 
 import { SnackbarProvider } from 'notistack';
 
-function App({ children }) {
+export default function App({ children }) {
   const { isInit, initialApp } = useInitialApp();
 
   useEffect(() => {
@@ -36,5 +35,3 @@ function App({ children }) {
     </SnackbarProvider>
   );
 }
-
-export default hot(module)(App)

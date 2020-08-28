@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect, createContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import BigNumber from "bignumber.js";
@@ -265,7 +266,7 @@ export default function SectionPools() {
       fetchPoolBalances({account, provider, pools});
     }, 10000);
     return () => clearInterval(id);
-  }, []);
+  }, [fetchBalances, fetchPoolBalances]);
 
   const forMat = number => {
     return new BigNumber(

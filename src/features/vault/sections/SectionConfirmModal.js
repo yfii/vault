@@ -6,12 +6,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Slide from "@material-ui/core/Slide";
 import Dialog from "@material-ui/core/Dialog";
 import Button from "@material-ui/core/Button";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 // @material-ui/icons
-import Close from "@material-ui/icons/Close";
-import PieChartIcon from '@material-ui/icons/PieChart';
 // sections for this page
 // style for this page
 import sectionModalStyle from "../jss/sections/sectionModalStyle.js";
@@ -25,7 +22,7 @@ const useStyles = makeStyles(sectionModalStyle);
 
 function SectionConfirmModal(props) {
   const classes = useStyles();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { confirmModal, setConfirmModal, index } = useContext(props.context)
 
   const handleClick = () => {

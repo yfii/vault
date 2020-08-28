@@ -11,6 +11,7 @@ pools.map(({token, tokenAddress, earnedToken, earnedTokenAddress})=> {
     tokenAddress: earnedTokenAddress,
     tokenBalance: 0
   }
+  return '';
 })
 
 // console.log(tokens)
