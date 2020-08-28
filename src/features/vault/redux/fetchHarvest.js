@@ -8,11 +8,12 @@ import {
 import { harvest } from "../../web3";
 import Web3 from 'web3';
 
-export function fetchHarvest(data) {
+export function fetchHarvest({ account, provider, contractAddress, index }) {
   return dispatch => {
     // optionally you can have getState as the second argument
     dispatch({
       type: VAULT_FETCH_HARVEST_BEGIN,
+      index
     });
 
     // Return a promise so that you could control UI flow without states in the store.
@@ -23,7 +24,6 @@ export function fetchHarvest(data) {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/vault/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
-      const { account, provider, contractAddress } = data;
       const web3 = new Web3(provider);
 
       harvest({
@@ -34,6 +34,7 @@ export function fetchHarvest(data) {
         () => {
           dispatch({
             type: VAULT_FETCH_HARVEST_SUCCESS,
+            index
           })
           resolve();
         }
@@ -41,6 +42,7 @@ export function fetchHarvest(data) {
         error => {
           dispatch({
             type: VAULT_FETCH_HARVEST_FAILURE,
+            index
           })
           reject(error.message || error);
         }
@@ -77,21 +79,30 @@ export function reducer(state, action) {
       // Just after a request is sent
       return {
         ...state,
-        fetchHarvestPending: true,
+        fetchHarvestPending: {
+          ...state.fetchHarvestPending,
+          [action.index]: true
+        },
       };
 
     case VAULT_FETCH_HARVEST_SUCCESS:
       // The request is success
       return {
         ...state,
-        fetchHarvestPending: false,
+        fetchHarvestPending: {
+          ...state.fetchHarvestPending,
+          [action.index]: false
+        },
       };
 
     case VAULT_FETCH_HARVEST_FAILURE:
       // The request is failed
       return {
         ...state,
-        fetchHarvestPending: false,
+        fetchHarvestPending: {
+          ...state.fetchHarvestPending,
+          [action.index]: false
+        },
       };
 
     default:

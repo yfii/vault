@@ -155,7 +155,7 @@ export default function SectionPools() {
     }    
   }
 
-  const onWithdraw = (pool, index, amount, event) => {
+  const onWithdraw = (pool, index, event) => {
     event.stopPropagation();
     const time = new BigNumber(pool.depositedTime).multipliedBy(1000).toNumber();
     const nowTime = new Date().getTime();
@@ -391,9 +391,9 @@ export default function SectionPools() {
                             <Button
                               color="primary"
                               onClick={onApproval.bind(this, pool, index)}
-                              disabled={fetchApprovalPending }
+                              disabled={fetchApprovalPending[index] }
                             >
-                              {fetchApprovalPending ? `${t('Vault-ApproveING')}` : `${t('Vault-ApproveButton')}`}
+                              {fetchApprovalPending[index] ? `${t('Vault-ApproveING')}` : `${t('Vault-ApproveButton')}`}
                             </Button>
                           ) : (
                             <Button
@@ -401,10 +401,10 @@ export default function SectionPools() {
                               onClick={onDeposit.bind(this, pool, index)}
                               onFocus={(event) => event.stopPropagation()}
                               disabled={
-                                !Boolean(depositedBalance[index]) || fetchDepositPending || (new BigNumber(depositedBalance[index]).toNumber() > byDecimals(tokens[pool.token].tokenBalance, pool.tokenDecimals).toNumber())
+                                !Boolean(depositedBalance[index]) || fetchDepositPending[index] || (new BigNumber(depositedBalance[index]).toNumber() > byDecimals(tokens[pool.token].tokenBalance, pool.tokenDecimals).toNumber())
                               }
                             >
-                              {fetchDepositPending ? `${t('Vault-DepositING')}` : `${t('Vault-DepositButton')}`}
+                              {fetchDepositPending[index] ? `${t('Vault-DepositING')}` : `${t('Vault-DepositButton')}`}
                             </Button>
                           )}
                         </GridItem>
@@ -496,10 +496,10 @@ export default function SectionPools() {
                             color="primary"
                             round
                             block
-                            onClick={onWithdraw.bind(this, pool, index, withdrawAmount[index])}
-                            disabled={fetchWithdrawPending || !Boolean(withdrawAmount[index])}
+                            onClick={onWithdraw.bind(this, pool, index)}
+                            disabled={fetchWithdrawPending[index] || !Boolean(withdrawAmount[index])}
                           >
-                            {fetchWithdrawPending ? `${t('Vault-WithdrawING')}`: `${t('Vault-WithdrawButton')}`}
+                            {fetchWithdrawPending[index] ? `${t('Vault-WithdrawING')}`: `${t('Vault-WithdrawButton')}`}
                           </Button>
                         </CardBody>
                       </Card>
@@ -512,8 +512,8 @@ export default function SectionPools() {
                             <h5 className={classes.textCenter}>{byDecimals(pool.claimAbleBalance).toFormat(4)} {pool.earnedToken}</h5>
                           </div>
                           <div style={{height:"49px"}}></div>
-                          <Button color="primary" round block onClick={onClaim.bind(this, pool, index)} disabled={fetchClaimPending}>
-                            {fetchClaimPending ? `${t('Vault-ClaimING')}` : `${t('Vault-ClaimButton')}`}
+                          <Button color="primary" round block onClick={onClaim.bind(this, pool, index)} disabled={fetchClaimPending[index]}>
+                            {fetchClaimPending[index] ? `${t('Vault-ClaimING')}` : `${t('Vault-ClaimButton')}`}
                           </Button>
                         </CardBody>
                       </Card>
@@ -541,7 +541,7 @@ export default function SectionPools() {
                               // disabled
                               disabled
                             >
-                              {fetchFarmPending?`${t('Vault-FarmING')}`:`${t('Vault-FarmButton')}`}
+                              {fetchFarmPending[index]?`${t('Vault-FarmING')}`:`${t('Vault-FarmButton')}`}
                             </Button>
                           {/* </Tooltip> */}
                         </CardBody>
@@ -556,9 +556,9 @@ export default function SectionPools() {
                             <Button color="primary" round block
                               // disabled 
                               onClick={onHarvest.bind(this, pool, index)}
-                              disabled={fetchHarvestPending}
+                              disabled={fetchHarvestPending[index]}
                             >
-                            {fetchHarvestPending?`${t('Vault-HarvestING')}`:`${t('Vault-HarvestButton')}`}
+                            {fetchHarvestPending[index]?`${t('Vault-HarvestING')}`:`${t('Vault-HarvestButton')}`}
                             </Button>
                           {/* </Tooltip> */}
                         </CardBody>
