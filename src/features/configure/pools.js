@@ -124,6 +124,7 @@ export const pools = [
     payout: 0,
     depositedTime: 0,
     isCrv: true,
+    crvGauge:"0xFA712EE4788C042e2B7BB55E6cb8ec569C4530c1",//只有是crv的才需要
     yield: 0
   },
   {
@@ -153,6 +154,7 @@ export const pools = [
     payout: 0,
     depositedTime: 0,
     isCrv: true,
+    crvGauge:"0x7ca5b0a2910B33e9759DC7dDB0413949071D7575",
     yield: 0
   },
   {

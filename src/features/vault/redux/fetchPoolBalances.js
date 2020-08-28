@@ -120,7 +120,8 @@ export function fetchPoolBalances(data) {
               web3,
               contractAddress:pool.strategyContractAddress,
               account,
-              isCrv: Boolean(pool.isCrv)
+              isCrv: Boolean(pool.isCrv),
+              crvGauge: pool.crvGauge,
             }).then(
               data => callbackInner(null, data)
             ).catch(
