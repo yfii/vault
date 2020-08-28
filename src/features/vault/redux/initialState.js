@@ -21,12 +21,12 @@ const initialState = {
   tokens,
   fetchPoolBalancesPending: false,
   fetchBalancesPending: false,
-  fetchApprovalPending: {},
-  fetchDepositPending: {},
-  fetchClaimPending: {},
-  fetchWithdrawPending: {},
-  fetchFarmPending: {},
-  fetchHarvestPending: {},
+  fetchApprovalPending:false,
+  fetchDepositPending:false,
+  fetchClaimPending:false,
+  fetchWithdrawPending:false,
+  fetchFarmPending:false,
+  fetchHarvestPending:false,
   fetchCoingekoPricePending: false,
   fetchUniswapPricesPending: false
 };

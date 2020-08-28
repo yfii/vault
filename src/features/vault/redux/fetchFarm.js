@@ -8,12 +8,11 @@ import {
 import { farm } from "../../web3";
 import Web3 from 'web3';
 
-export function fetchFarm({ account, provider, contractAddress, index }) {
+export function fetchFarm(data) {
   return dispatch => {
     // optionally you can have getState as the second argument
     dispatch({
       type: VAULT_FETCH_FARM_BEGIN,
-      index
     });
 
     // Return a promise so that you could control UI flow without states in the store.
@@ -24,6 +23,7 @@ export function fetchFarm({ account, provider, contractAddress, index }) {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/vault/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
+      const { account, provider, contractAddress } = data;
       const web3 = new Web3(provider);
 
       farm({
@@ -34,7 +34,6 @@ export function fetchFarm({ account, provider, contractAddress, index }) {
         () => {
           dispatch({
             type: VAULT_FETCH_FARM_SUCCESS,
-            index
           })
           resolve();
         }
@@ -42,7 +41,6 @@ export function fetchFarm({ account, provider, contractAddress, index }) {
         error => {
           dispatch({
             type: VAULT_FETCH_FARM_FAILURE,
-            index
           })
           reject(error.message || error);
         }
@@ -79,30 +77,21 @@ export function reducer(state, action) {
       // Just after a request is sent
       return {
         ...state,
-        fetchFarmPending: {
-          ...state.fetchFarmPending,
-          [action.index]: true
-        },
+        fetchFarmPending: true,
       };
 
     case VAULT_FETCH_FARM_SUCCESS:
       // The request is success
       return {
         ...state,
-        fetchFarmPending: {
-          ...state.fetchFarmPending,
-          [action.index]: false
-        },
+        fetchFarmPending: false,
       };
 
     case VAULT_FETCH_FARM_FAILURE:
       // The request is failed
       return {
         ...state,
-        fetchFarmPending: {
-          ...state.fetchFarmPending,
-          [action.index]: false
-        },
+        fetchFarmPending: false,
       };
 
     default:

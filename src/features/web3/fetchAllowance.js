@@ -11,7 +11,6 @@ export const fetchAllowance = async ({web3, account, contract, contractAddress})
   // `)
   const balance = await contract.methods.allowance(account, contractAddress).call({ from: account });
   const allowance = web3.utils.fromWei(balance, "ether");
-  // console.log(allowance)
   // console.log(`=====================================fetchAllowance success=====================================`)
   return new BigNumber(allowance).toNumber();
 }

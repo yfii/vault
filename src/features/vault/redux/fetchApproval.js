@@ -8,12 +8,11 @@ import {
 import { approval } from "../../web3";
 import Web3 from 'web3';
 
-export function fetchApproval({ account, provider, tokenAddress, contractAddress, index }) {
+export function fetchApproval(data) {
   return dispatch => {
     // optionally you can have getState as the second argument
     dispatch({
       type: VAULT_FETCH_APPROVAL_BEGIN,
-      index
     });
 
     // Return a promise so that you could control UI flow without states in the store.
@@ -24,6 +23,7 @@ export function fetchApproval({ account, provider, tokenAddress, contractAddress
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/vault/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
+      const { account, provider, tokenAddress, contractAddress, index } = data;
       const web3 = new Web3(provider);
 
       approval({
@@ -35,7 +35,7 @@ export function fetchApproval({ account, provider, tokenAddress, contractAddress
         data => {
           dispatch({
             type: VAULT_FETCH_APPROVAL_SUCCESS,
-            data: {index, allowance: data},index
+            data: {index, allowance: data}
           })
           resolve();
         }
@@ -43,7 +43,6 @@ export function fetchApproval({ account, provider, tokenAddress, contractAddress
         error => {
           dispatch({
             type: VAULT_FETCH_APPROVAL_FAILURE,
-            index
           })
           reject(error.message || error);
         }
@@ -80,33 +79,24 @@ export function reducer(state, action) {
       // Just after a request is sent
       return {
         ...state,
-        fetchApprovalPending: {
-          ...state.fetchApprovalPending,
-          [action.index]: true
-        },
+        fetchApprovalPending: true,
       };
 
     case VAULT_FETCH_APPROVAL_SUCCESS:
       // The request is success
       const { pools } = state;
-      pools[action.index].allowance = action.data.allowance;
+      pools[action.data.index].allowance = action.data.allowance;
       return {
         ...state,
         pools,
-        fetchApprovalPending: {
-          ...state.fetchApprovalPending,
-          [action.index]: false
-        },
+        fetchApprovalPending: false,
       };
 
     case VAULT_FETCH_APPROVAL_FAILURE:
       // The request is failed
       return {
         ...state,
-        fetchApprovalPending: {
-          ...state.fetchApprovalPending,
-          [action.index]: false
-        },
+        fetchApprovalPending: false,
       };
 
     default:

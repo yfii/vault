@@ -11,7 +11,7 @@ import sectionTitleStyle from "../jss/sections/sectionTitleStyle";
 
 const useStyles = makeStyles(sectionTitleStyle);
 export default function SectionTitle() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const classes = useStyles();
 
   return (
