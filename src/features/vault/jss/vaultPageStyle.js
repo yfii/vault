@@ -1,6 +1,5 @@
 import {
   container,
-  main,
   whiteColor,
 } from "assets/jss/material-kit-pro-react.js";
 

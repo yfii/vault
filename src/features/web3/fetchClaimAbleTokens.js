@@ -1,4 +1,4 @@
-import { crvDepositContractABI, earnContractABI, strategyContractABI } from "../configure";
+import { crvDepositContractABI, strategyContractABI } from "../configure";
 import BigNumber from "bignumber.js";
 
 export const fetchClaimAbleTokens = async ({web3, account, contractAddress, isCrv}) => {

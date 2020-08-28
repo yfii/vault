@@ -1,4 +1,3 @@
-import { erc20ABI } from "../configure";
 import BigNumber from "bignumber.js";
 
 export const fetchAllowance = async ({web3, account, contract, contractAddress}) => {

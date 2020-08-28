@@ -1,4 +1,3 @@
-import { IUniswapV2Router02 } from "../configure";
 import BigNumber from "bignumber.js";
 
 export const fetchUniswapPrice = async ({contract, amount, pathprice}) => {

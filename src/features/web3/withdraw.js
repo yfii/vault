@@ -1,10 +1,9 @@
 import { earnContractABI } from "../configure";
 import { fetchGasPrice } from '.';
-import BigNumber from "bignumber.js";
 
 export const withdraw = async ({web3, account, amount, contractAddress}) => {
   // console.log(`=====================================withdraw begin=====================================`)
-  console.log(amount)
+  // console.log(amount)
   const contract = new web3.eth.Contract(earnContractABI, contractAddress);
   const gasPrice = await fetchGasPrice();
   // console.log(`

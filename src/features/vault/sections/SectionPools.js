@@ -1,39 +1,28 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
 import BigNumber from "bignumber.js";
 // @material-ui/core components
-import Grid from '@material-ui/core/Grid';
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
 import AccordionDetails from '@material-ui/core/AccordionActions'
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Tooltip from '@material-ui/core/Tooltip';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 // core components
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import Button from "components/CustomButtons/Button.js";
 import Avatar from '@material-ui/core/Avatar';
 import CustomInput from "components/CustomInput/CustomInput.js";
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
 // sections for this section
 // import SectionOpenedPool from "./SectionOpenedPool";
 import { useSnackbar } from 'notistack';
 //  hooks
 import { useAccount } from '../../common/redux/hooks';
-import { useFetchBalances, useFetchPoolBalances, useFetchCoingeckoPrice, useFetchUniswapPrices,useFetchApproval, useFetchDeposit, useFetchClaim, useFetchWithdraw, useFetchFarm, useFetchHarvest } from '../redux/hooks';
+import { useFetchBalances, useFetchPoolBalances, useFetchApproval, useFetchDeposit, useFetchClaim, useFetchWithdraw, useFetchFarm, useFetchHarvest } from '../redux/hooks';
 
 import SectionModal from "./SectionModal";
 import SectionConfirmModal from "./SectionConfirmModal";
@@ -50,8 +39,6 @@ export default function SectionPools() {
   const { account, provider } = useAccount();
   const { pools, fetchPoolBalances } = useFetchPoolBalances();
   const { tokens, fetchBalances } = useFetchBalances();
-  const { price, fetchCoingeckoPrice } = useFetchCoingeckoPrice();
-  const { fetchUniswapPrices } = useFetchUniswapPrices();
   const [ openedCardList, setOpenCardList ] = useState([]);
   const classes = useStyles();
 
@@ -272,12 +259,10 @@ export default function SectionPools() {
 
   useEffect(() => {
     fetchBalances({account, provider, tokens});
-    fetchPoolBalances({account, provider, pools, price});
-    // fetchUniswapPrices({provider, uniswapList: price.uniswapList})
+    fetchPoolBalances({account, provider, pools});
     const id = setInterval(() => {
       fetchBalances({account, provider, tokens});
-      fetchPoolBalances({account, provider, pools, price});
-      // fetchUniswapPrices({provider, uniswapList: price.uniswapList})
+      fetchPoolBalances({account, provider, pools});
     }, 10000);
     return () => clearInterval(id);
   }, []);

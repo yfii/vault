@@ -13,7 +13,7 @@ pools.map(({token, tokenAddress, earnedToken, earnedTokenAddress})=> {
   }
 })
 
-console.log(tokens)
+// console.log(tokens)
 
 const initialState = {
   pools,
