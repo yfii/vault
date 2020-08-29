@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { earnContractABI, strategyContractABI, erc20ABI, crvDepositContractABI, IUniswapV2Router02 } from "../../configure";
+import { earnContractABI, erc20ABI, IUniswapV2Router02 } from "../../configure";
 import BigNumber from "bignumber.js";
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import {
@@ -25,7 +25,7 @@ export function fetchPoolBalances(data) {
     const promise = new Promise((resolve, reject) => {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // args.error here is only for test coverage purpose.
-      const { account, provider, pools, price } = data;
+      const { account, provider, pools } = data;
       const web3 = new Web3(provider);
       async.map(pools, (pool, callback) => {
         const earnContract = new web3.eth.Contract(earnContractABI, pool.earnContractAddress)
@@ -120,7 +120,8 @@ export function fetchPoolBalances(data) {
               web3,
               contractAddress:pool.strategyContractAddress,
               account,
-              isCrv: Boolean(pool.isCrv)
+              isCrv: Boolean(pool.isCrv),
+              crvGauge: pool.crvGauge,
             }).then(
               data => callbackInner(null, data)
             ).catch(

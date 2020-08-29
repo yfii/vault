@@ -1,4 +1,4 @@
-import { container, title, whiteColor, grayColor } from "assets/jss/material-kit-pro-react.js";
+import { whiteColor, grayColor } from "assets/jss/material-kit-pro-react.js";
 
 const sectionSelectStyle = theme => ({
   modalRoot: {

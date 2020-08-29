@@ -2,14 +2,9 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import Slide from "@material-ui/core/Slide";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Grid from "@material-ui/core/Grid";
 // core components
 import Header from "components/Header/Header.js";
 import HeaderLinks from "components/Header/HeaderLinks.js";
-import Parallax from "components/Parallax/Parallax.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Button from "components/CustomButtons/Button.js";
@@ -19,16 +14,14 @@ import SectionSelect from "./sections/SectionSelect.js";
 // style for this page
 import welcomePageStyle from "./jss/welcomePageStyle.js";
 // resource file
-import image from "images/background.png";
 // hooks
-import { useOpenModal, useAccount } from 'features/common/redux/hooks';
+import { useOpenModal } from 'features/common/redux/hooks';
 
 const useStyles = makeStyles(welcomePageStyle);
 
 export default function WelcomePage() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { openModal } = useOpenModal();
-  const { account } = useAccount();
   const classes = useStyles();
 
   useEffect(() => {
@@ -40,7 +33,7 @@ export default function WelcomePage() {
     <div 
       className={classes.navigation}
       style={{ 
-        backgroundImage: `url("https://vaultimages.thersshub.com/static/media/background.63c7684a.png")` 
+        backgroundImage: 'url(' + require('images/background.png') + ')',
       }}
     >
       <Header 

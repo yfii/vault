@@ -7,13 +7,13 @@ import Typography from "@material-ui/core/Typography";
 // core components
 import Button from "components/CustomButtons/Button.js";
 
-import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
-import {
-  NoEthereumProviderError,
-  UserRejectedRequestError as UserRejectedRequestErrorInjected,
-} from "@web3-react/injected-connector";
-import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect } from "@web3-react/walletconnect-connector";
-import { UserRejectedRequestError as UserRejectedRequestErrorFrame } from "@web3-react/frame-connector";
+import { useWeb3React } from "@web3-react/core";
+// import {
+//   NoEthereumProviderError,
+//   UserRejectedRequestError as UserRejectedRequestErrorInjected,
+// } from "@web3-react/injected-connector";
+// import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect } from "@web3-react/walletconnect-connector";
+// import { UserRejectedRequestError as UserRejectedRequestErrorFrame } from "@web3-react/frame-connector";
 
 import TrezorPng from "../../../images/trezor.png";
 import FortmaticPng from "../../../images/fortmaticIcon.png";
@@ -29,57 +29,19 @@ import {
 
 import {
   injected,
-  network,
   walletconnect,
-  walletlink,
-  ledger,
-  trezor,
-  frame,
-  authereum,
-  fortmatic,
-  portis,
-  squarelink,
-  torus,
 } from "../../configure";
 
 const connectorsByName = {
   MetaMask: injected,
-  // TrustWallet: injected,
   WalletConnect: walletconnect,
-  // WalletLink: walletlink,
-  // Ledger: ledger,
-  // Trezor: trezor,
-  // Frame: frame,
-  // Fortmatic: fortmatic,
-  // Portis: portis,
-  // Squarelink: squarelink,
-  // Torus: torus,
-  // Authereum: authereum,
 };
-
-function getErrorMessage(error) {
-  if (error instanceof NoEthereumProviderError) {
-    return "No Ethereum browser extension detected, install MetaMask on desktop or visit from a dApp browser on mobile.";
-  } else if (error instanceof UnsupportedChainIdError) {
-    return "You're connected to an unsupported network.";
-  } else if (
-    error instanceof UserRejectedRequestErrorInjected ||
-    error instanceof UserRejectedRequestErrorWalletConnect ||
-    error instanceof UserRejectedRequestErrorFrame
-  ) {
-    return "Please authorize this website to access your Ethereum account.";
-  } else {
-    console.error(error);
-    return "An unknown error occurred. Check the console for more details.";
-  }
-}
 
 export default function SectionWallet() {
   const context = useWeb3React();
   const {
     connector,
     library,
-    chainId,
     account,
     activate,
     deactivate,
@@ -89,7 +51,7 @@ export default function SectionWallet() {
 
   const { setAccount } = useAccount();
   const { closeModal } = useCloseModal();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   // handle logic to recognize the connector currently being activated
   const [activatingConnector, setActivatingConnector] = useState();
@@ -108,7 +70,7 @@ export default function SectionWallet() {
       setAccount(data);
       closeModal();
     }
-  }, [account, active, context, library]);
+  }, [account, active, context, library, closeModal, setAccount]);
 
   // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
   const triedEager = useEagerConnect();
@@ -177,6 +139,8 @@ export default function SectionWallet() {
             case "Frame":
               url = "";
               break;
+            default:
+              url= "";
           }
 
           return (

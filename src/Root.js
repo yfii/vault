@@ -5,8 +5,6 @@ import { Provider } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
 import { hot, setConfig } from 'react-hot-loader';
-import { Web3ReactProvider } from '@web3-react/core'
-import { Web3Provider } from '@ethersproject/providers'
 import store from './common/store';
 import routeConfig from './common/routeConfig';
 import history from './common/history';

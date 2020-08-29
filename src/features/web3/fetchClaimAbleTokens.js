@@ -1,10 +1,10 @@
-import { crvDepositContractABI, earnContractABI, strategyContractABI } from "../configure";
+import { crvDepositContractABI, strategyContractABI } from "../configure";
 import BigNumber from "bignumber.js";
 
-export const fetchClaimAbleTokens = async ({web3, account, contractAddress, isCrv}) => {
+export const fetchClaimAbleTokens = async ({web3, account, contractAddress, isCrv,crvGauge}) => {
   // console.log(`=====================================fetchClaimAbleTokens begin=====================================`)
   // if (isCrv){
-  const contract = isCrv ? new web3.eth.Contract(crvDepositContractABI, "0xFA712EE4788C042e2B7BB55E6cb8ec569C4530c1") : new web3.eth.Contract(strategyContractABI, contractAddress);
+  const contract = isCrv ? new web3.eth.Contract(crvDepositContractABI, crvGauge) : new web3.eth.Contract(strategyContractABI, contractAddress);
   const data = isCrv ? await contract.methods.claimable_tokens(contractAddress).call({ from: account }) : await contract.methods.balanceOfPendingReward().call({ from: account });
   
   // console.log(`

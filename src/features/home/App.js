@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 //  hooks
-import { useAccount } from '../common/redux/hooks';
 import { useInitialApp } from './redux/hooks';
 //  walletConnect
 import { injected } from "../configure";

@@ -1,11 +1,6 @@
 import {
-  container,
   title,
-  main,
-  whiteColor,
-  grayColor,
-  mainRaised,
-  hexToRgb
+  grayColor
 } from "assets/jss/material-kit-pro-react.js";
 
 const sectionTitleStyle = theme => ({

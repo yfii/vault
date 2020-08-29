@@ -1,39 +1,29 @@
+/* eslint-disable */
 import React, { useState, useEffect, createContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
 import BigNumber from "bignumber.js";
 // @material-ui/core components
-import Grid from '@material-ui/core/Grid';
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
 import AccordionDetails from '@material-ui/core/AccordionActions'
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Tooltip from '@material-ui/core/Tooltip';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 // core components
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import Button from "components/CustomButtons/Button.js";
 import Avatar from '@material-ui/core/Avatar';
 import CustomInput from "components/CustomInput/CustomInput.js";
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
 // sections for this section
 // import SectionOpenedPool from "./SectionOpenedPool";
 import { useSnackbar } from 'notistack';
 //  hooks
 import { useAccount } from '../../common/redux/hooks';
-import { useFetchBalances, useFetchPoolBalances, useFetchCoingeckoPrice, useFetchUniswapPrices,useFetchApproval, useFetchDeposit, useFetchClaim, useFetchWithdraw, useFetchFarm, useFetchHarvest } from '../redux/hooks';
+import { useFetchBalances, useFetchPoolBalances, useFetchApproval, useFetchDeposit, useFetchClaim, useFetchWithdraw, useFetchFarm, useFetchHarvest } from '../redux/hooks';
 
 import SectionModal from "./SectionModal";
 import SectionConfirmModal from "./SectionConfirmModal";
@@ -50,8 +40,6 @@ export default function SectionPools() {
   const { account, provider } = useAccount();
   const { pools, fetchPoolBalances } = useFetchPoolBalances();
   const { tokens, fetchBalances } = useFetchBalances();
-  const { price, fetchCoingeckoPrice } = useFetchCoingeckoPrice();
-  const { fetchUniswapPrices } = useFetchUniswapPrices();
   const [ openedCardList, setOpenCardList ] = useState([]);
   const classes = useStyles();
 
@@ -168,7 +156,7 @@ export default function SectionPools() {
     }    
   }
 
-  const onWithdraw = (pool, index, amount, event) => {
+  const onWithdraw = (pool, index, event) => {
     event.stopPropagation();
     const time = new BigNumber(pool.depositedTime).multipliedBy(1000).toNumber();
     const nowTime = new Date().getTime();
@@ -272,15 +260,13 @@ export default function SectionPools() {
 
   useEffect(() => {
     fetchBalances({account, provider, tokens});
-    fetchPoolBalances({account, provider, pools, price});
-    // fetchUniswapPrices({provider, uniswapList: price.uniswapList})
+    fetchPoolBalances({account, provider, pools});
     const id = setInterval(() => {
       fetchBalances({account, provider, tokens});
-      fetchPoolBalances({account, provider, pools, price});
-      // fetchUniswapPrices({provider, uniswapList: price.uniswapList})
+      fetchPoolBalances({account, provider, pools});
     }, 10000);
     return () => clearInterval(id);
-  }, []);
+  }, [fetchBalances, fetchPoolBalances]);
 
   const forMat = number => {
     return new BigNumber(
@@ -406,9 +392,9 @@ export default function SectionPools() {
                             <Button
                               color="primary"
                               onClick={onApproval.bind(this, pool, index)}
-                              disabled={fetchApprovalPending }
+                              disabled={fetchApprovalPending[index] }
                             >
-                              {fetchApprovalPending ? `${t('Vault-ApproveING')}` : `${t('Vault-ApproveButton')}`}
+                              {fetchApprovalPending[index] ? `${t('Vault-ApproveING')}` : `${t('Vault-ApproveButton')}`}
                             </Button>
                           ) : (
                             <Button
@@ -416,10 +402,10 @@ export default function SectionPools() {
                               onClick={onDeposit.bind(this, pool, index)}
                               onFocus={(event) => event.stopPropagation()}
                               disabled={
-                                !Boolean(depositedBalance[index]) || fetchDepositPending || (new BigNumber(depositedBalance[index]).toNumber() > byDecimals(tokens[pool.token].tokenBalance, pool.tokenDecimals).toNumber())
+                                !Boolean(depositedBalance[index]) || fetchDepositPending[index] || (new BigNumber(depositedBalance[index]).toNumber() > byDecimals(tokens[pool.token].tokenBalance, pool.tokenDecimals).toNumber())
                               }
                             >
-                              {fetchDepositPending ? `${t('Vault-DepositING')}` : `${t('Vault-DepositButton')}`}
+                              {fetchDepositPending[index] ? `${t('Vault-DepositING')}` : `${t('Vault-DepositButton')}`}
                             </Button>
                           )}
                         </GridItem>
@@ -511,10 +497,10 @@ export default function SectionPools() {
                             color="primary"
                             round
                             block
-                            onClick={onWithdraw.bind(this, pool, index, withdrawAmount[index])}
-                            disabled={fetchWithdrawPending || !Boolean(withdrawAmount[index])}
+                            onClick={onWithdraw.bind(this, pool, index)}
+                            disabled={fetchWithdrawPending[index] || !Boolean(withdrawAmount[index])}
                           >
-                            {fetchWithdrawPending ? `${t('Vault-WithdrawING')}`: `${t('Vault-WithdrawButton')}`}
+                            {fetchWithdrawPending[index] ? `${t('Vault-WithdrawING')}`: `${t('Vault-WithdrawButton')}`}
                           </Button>
                         </CardBody>
                       </Card>
@@ -527,8 +513,8 @@ export default function SectionPools() {
                             <h5 className={classes.textCenter}>{byDecimals(pool.claimAbleBalance).toFormat(4)} {pool.earnedToken}</h5>
                           </div>
                           <div style={{height:"49px"}}></div>
-                          <Button color="primary" round block onClick={onClaim.bind(this, pool, index)} disabled={fetchClaimPending}>
-                            {fetchClaimPending ? `${t('Vault-ClaimING')}` : `${t('Vault-ClaimButton')}`}
+                          <Button color="primary" round block onClick={onClaim.bind(this, pool, index)} disabled={fetchClaimPending[index]}>
+                            {fetchClaimPending[index] ? `${t('Vault-ClaimING')}` : `${t('Vault-ClaimButton')}`}
                           </Button>
                         </CardBody>
                       </Card>
@@ -556,7 +542,7 @@ export default function SectionPools() {
                               // disabled
                               disabled
                             >
-                              {fetchFarmPending?`${t('Vault-FarmING')}`:`${t('Vault-FarmButton')}`}
+                              {fetchFarmPending[index]?`${t('Vault-FarmING')}`:`${t('Vault-FarmButton')}`}
                             </Button>
                           {/* </Tooltip> */}
                         </CardBody>
@@ -571,9 +557,9 @@ export default function SectionPools() {
                             <Button color="primary" round block
                               // disabled 
                               onClick={onHarvest.bind(this, pool, index)}
-                              disabled={fetchHarvestPending}
+                              disabled={fetchHarvestPending[index]}
                             >
-                            {fetchHarvestPending?`${t('Vault-HarvestING')}`:`${t('Vault-HarvestButton')}`}
+                            {fetchHarvestPending[index]?`${t('Vault-HarvestING')}`:`${t('Vault-HarvestButton')}`}
                             </Button>
                           {/* </Tooltip> */}
                         </CardBody>

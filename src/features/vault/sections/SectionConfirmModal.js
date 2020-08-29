@@ -1,23 +1,14 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import BigNumber from "bignumber.js";
 import { withRouter } from "react-router";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import Slide from "@material-ui/core/Slide";
 import Dialog from "@material-ui/core/Dialog";
 import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
-
-import FlashOnIcon from '@material-ui/icons/FlashOn';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import BarChartIcon from '@material-ui/icons/BarChart';
-import PieChartIcon from '@material-ui/icons/PieChart';
 // @material-ui/icons
-import Close from "@material-ui/icons/Close";
 // sections for this page
 // style for this page
 import sectionModalStyle from "../jss/sections/sectionModalStyle.js";
@@ -31,7 +22,7 @@ const useStyles = makeStyles(sectionModalStyle);
 
 function SectionConfirmModal(props) {
   const classes = useStyles();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { confirmModal, setConfirmModal, index } = useContext(props.context)
 
   const handleClick = () => {

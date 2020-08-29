@@ -11,9 +11,10 @@ pools.map(({token, tokenAddress, earnedToken, earnedTokenAddress})=> {
     tokenAddress: earnedTokenAddress,
     tokenBalance: 0
   }
+  return '';
 })
 
-console.log(tokens)
+// console.log(tokens)
 
 const initialState = {
   pools,
@@ -21,12 +22,12 @@ const initialState = {
   tokens,
   fetchPoolBalancesPending: false,
   fetchBalancesPending: false,
-  fetchApprovalPending:false,
-  fetchDepositPending:false,
-  fetchClaimPending:false,
-  fetchWithdrawPending:false,
-  fetchFarmPending:false,
-  fetchHarvestPending:false,
+  fetchApprovalPending: {},
+  fetchDepositPending: {},
+  fetchClaimPending: {},
+  fetchWithdrawPending: {},
+  fetchFarmPending: {},
+  fetchHarvestPending: {},
   fetchCoingekoPricePending: false,
   fetchUniswapPricesPending: false
 };

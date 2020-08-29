@@ -297,6 +297,7 @@ module.exports = function(webpackEnv) {
           'react-dom$': 'react-dom/profiling',
           'scheduler/tracing': 'scheduler/tracing-profiling',
         }),
+        'react-dom': '@hot-loader/react-dom',
         ...(modules.webpackAliases || {}),
       },
       plugins: [
