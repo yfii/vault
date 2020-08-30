@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 // core components
 import Header from "components/Header/Header.js";
 import HeaderLinks from "components/Header/HeaderLinks.js";
+import FooterLinks from 'components/Footer/FooterLinks.js'
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Button from "components/CustomButtons/Button.js";
@@ -70,6 +71,7 @@ export default function WelcomePage() {
           <SectionSelect />
         </GridItem>
       </GridContainer>
+      <FooterLinks fixed color='transparent'/>
     </div>
   );
 }
