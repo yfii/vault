@@ -54,6 +54,8 @@ export default function HeaderLinks(props) {
         return '日本語'
       case 'th':
         return 'ไทย'
+      case 'ko':
+        return '한글'
       default:
         return '中文'
     }
@@ -70,6 +72,8 @@ export default function HeaderLinks(props) {
         return i18n.changeLanguage('ja').then(()=>setLanguage(event))
       case 'ไทย':
         return i18n.changeLanguage('th').then(()=>setLanguage(event))
+      case '한글':
+        return i18n.changeLanguage('ko').then(()=>setLanguage(event))
       default:
         return
     }
@@ -97,6 +101,7 @@ export default function HeaderLinks(props) {
             "English",
             "中文",
             "日本語",
+            "한글",
             "ไทย",
             { divider: true },
             <a
