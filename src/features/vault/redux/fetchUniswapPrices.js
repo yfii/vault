@@ -6,7 +6,6 @@ import {
   VAULT_FETCH_UNISWAP_PRICES_FAILURE,
 } from './constants';
 import { fetchUniswapPrice } from "../../web3";
-import Web3 from 'web3';
 import async from 'async';
 
 export function fetchUniswapPrices(data) {
@@ -23,8 +22,7 @@ export function fetchUniswapPrices(data) {
     const promise = new Promise((resolve, reject) => {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // args.error here is only for test coverage purpose.
-      const { uniswapList, provider } = data;
-      const web3 = new Web3(provider);
+      const { uniswapList, web3 } = data;
       async.map(uniswapList, (token, callback) => {
         fetchUniswapPrice({
           web3,

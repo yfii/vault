@@ -6,5 +6,4 @@ export { useFetchClaim } from './fetchClaim';
 export { useFetchWithdraw } from './fetchWithdraw';
 export { useFetchFarm } from './fetchFarm';
 export { useFetchHarvest } from './fetchHarvest';
-export { useFetchCoingeckoPrice } from './fetchCoingeckoPrice';
 export { useFetchUniswapPrices } from './fetchUniswapPrices';

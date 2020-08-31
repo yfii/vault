@@ -6,7 +6,6 @@ import {
   VAULT_FETCH_BALANCES_FAILURE,
 } from './constants';
 import { fetchBalance } from "../../web3";
-import Web3 from 'web3';
 import async from 'async';
 
 export function fetchBalances(data) {
@@ -24,8 +23,7 @@ export function fetchBalances(data) {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/vault/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
-      const { account, provider, tokens } = data;
-      const web3 = new Web3(provider);
+      const { address, web3, tokens } = data;
 
       const newTokens = [];
       for (let key in tokens) {
@@ -40,7 +38,7 @@ export function fetchBalances(data) {
           (callbackInner) => { 
             fetchBalance({
               web3,
-              account,
+              address,
               tokenAddress: token.tokenAddress
             }).then(
               data => callbackInner(null, data)
