@@ -1,37 +1,53 @@
 import React, { useEffect } from 'react';
-//  hooks
-import { useInitialApp } from './redux/hooks';
-//  walletConnect
-import { injected } from "../configure";
-//  core pages
-import { LoadingPage } from "../common";
-
+//  notistack
 import { SnackbarProvider } from 'notistack';
+//  core components
+import Header from "components/Header/Header.js";
+import HeaderLinks from "components/Header/HeaderLinks.js";
+import FooterLinks from 'components/Footer/FooterLinks.js'
+//  @material-ui/core components
+import { makeStyles } from "@material-ui/core/styles";
+//  hooks
+import { useWeb3Modal, useConnectWallet, useDisconnectWallet } from './redux/hooks';
+//  core pages
+//  style for this page
+import appStyle from "./jss/appStyle.js";
+
+const useStyles = makeStyles(appStyle);
 
 export default function App({ children }) {
-  const { isInit, initialApp } = useInitialApp();
+  const classes = useStyles();
+  const { web3Modal, createWeb3Modal } = useWeb3Modal();
+  const { connectWallet, connectWalletPending } = useConnectWallet();
+  const { disconnectWallet } = useDisconnectWallet();
 
   useEffect(() => {
-    const data = {account: '', provider: null}
-    async function fetchData(){
-      try {
-        const isAuthorized = await injected.isAuthorized();
-        if (isAuthorized) {
-          const {account, provider} = await injected.activate();
-          data.account = account || '';
-          data.provider = provider;
-        }
-        initialApp(data);
-      } catch {
-        initialApp(data);
-      }
+    createWeb3Modal()
+  }, [createWeb3Modal])
+
+  useEffect(() => {
+    if (web3Modal) {
+      connectWallet(web3Modal)
     }
-    fetchData();
-  }, [initialApp])
+  }, [web3Modal, connectWallet])
 
   return (
     <SnackbarProvider>
-      { isInit ? children : <LoadingPage /> }
+      <div className={classes.page}>
+        <Header
+          brand="YFII"
+          links={<HeaderLinks dropdownHoverColor="primary"/>}
+          color="primary"
+          action={
+            connectWallet,
+            disconnectWallet
+          }
+        />
+        <div className={classes.container}>
+          { connectWalletPending ? children : children }
+        </div>
+        <FooterLinks/>
+      </div>
     </SnackbarProvider>
   );
 }
