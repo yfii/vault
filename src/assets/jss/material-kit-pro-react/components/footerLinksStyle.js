@@ -1,8 +1,5 @@
 import {
-    grayColor,
-    whiteColor,
     mlAuto,
-    hexToRgb,
     container
   } from "assets/jss/material-kit-pro-react.js";
   
