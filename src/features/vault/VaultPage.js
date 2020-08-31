@@ -7,6 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 // core components
 import Header from "components/Header/Header.js";
 import HeaderLinks from "components/Header/HeaderLinks.js";
+import FooterLinks from 'components/Footer/FooterLinks.js'
 // sections for this page
 import SectionTitle from './sections/SectionTitle';
 import SectionWallet from './sections/SectionWallet';
@@ -43,6 +44,7 @@ function VaultPage(props) {
         <SectionWallet />
         <SectionPools />
       </div>
+      <FooterLinks/>
     </div>
   );
 }
