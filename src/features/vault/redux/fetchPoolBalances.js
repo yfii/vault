@@ -78,7 +78,7 @@ export function fetchPoolBalances(data) {
             )
           },
           (callbackInner) => {
-            if (pool.isCrv) {
+            if (pool.isCrv || pool.isYFII) {
               fetchEarningsPerShare({
                 contract: earnContract,
                 account,
@@ -156,7 +156,7 @@ export function fetchPoolBalances(data) {
           } catch(err) {
             console.log(err)
           }
-          if (pool.isCrv) {
+          if (pool.isCrv || pool.isYFII) {
             pool.earningsPerShare = new BigNumber(pool.earningsPerShare).plus(
               new BigNumber(pool.yield).multipliedBy(
                 new BigNumber(pool.magnitude)
