@@ -43,12 +43,6 @@ export function createWeb3Modal() {
       cacheProvider: true,
       providerOptions
     })
-    console.log(web3Modal)
-    console.log("web3Modal.cachedProvider: "+web3Modal.cachedProvider)
-    // if (web3Modal.cachedProvider) {
-    //   onConnect(web3Modal);
-    // }
-    // onConnect(web3Modal);
     dispatch({ type: HOME_CREATE_WEB3MODAL, data: web3Modal })
   };
 }

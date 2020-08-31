@@ -18,7 +18,7 @@ const useStyles = makeStyles(appStyle);
 export default function App({ children }) {
   const classes = useStyles();
   const { web3Modal, createWeb3Modal } = useWeb3Modal();
-  const { connectWallet, connectWalletPending } = useConnectWallet();
+  const { web3, address, connectWallet, connectWalletPending } = useConnectWallet();
   const { disconnectWallet } = useDisconnectWallet();
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function App({ children }) {
   }, [createWeb3Modal])
 
   useEffect(() => {
-    if (web3Modal) {
+    if (web3Modal && web3Modal.cachedProvider) {
       connectWallet(web3Modal)
     }
   }, [web3Modal, connectWallet])
@@ -36,12 +36,17 @@ export default function App({ children }) {
       <div className={classes.page}>
         <Header
           brand="YFII"
-          links={<HeaderLinks dropdownHoverColor="primary"/>}
-          color="primary"
-          action={
-            connectWallet,
-            disconnectWallet
+          links={
+            <HeaderLinks
+              dropdownHoverColor="primary"
+              address={address}
+              action={{
+                connectWallet: () => connectWallet(web3Modal),
+                disconnectWallet: () => disconnectWallet({web3, web3Modal})
+              }}
+            />
           }
+          color="primary"
         />
         <div className={classes.container}>
           { connectWalletPending ? children : children }
