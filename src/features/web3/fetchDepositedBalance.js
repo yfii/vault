@@ -1,12 +1,12 @@
 import BigNumber from "bignumber.js";
 
-export const fetchDepositedBalance = async ({account, contract}) => {
+export const fetchDepositedBalance = async ({address, contract}) => {
   // console.log(`=====================================fetchDepositedBalance begin=====================================`)
   // console.log(`
-  //   account:${account}\n
+  //   address:${address}\n
   //   contractAddress:${contractAddress}\n
   // `)
-  const data = await contract.methods.plyr_(account).call({ from: account });
+  const data = await contract.methods.plyr_(address).call({ from: address });
   const depositedBalance = new BigNumber(data.stake).toNumber();
   const payout = new BigNumber(data.payout).toNumber();
 

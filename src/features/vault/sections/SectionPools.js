@@ -22,7 +22,7 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 // import SectionOpenedPool from "./SectionOpenedPool";
 import { useSnackbar } from 'notistack';
 //  hooks
-import { useAccount } from '../../common/redux/hooks';
+import { useConnectWallet } from '../../home/redux/hooks';
 import { useFetchBalances, useFetchPoolBalances, useFetchApproval, useFetchDeposit, useFetchClaim, useFetchWithdraw, useFetchFarm, useFetchHarvest } from '../redux/hooks';
 
 import SectionModal from "./SectionModal";
@@ -37,7 +37,7 @@ const confirmModalContext = createContext('confirmModal');
 
 export default function SectionPools() {
   const { t, i18n } = useTranslation();
-  const { account, provider } = useAccount();
+  const { web3, address } = useConnectWallet();
   const { pools, fetchPoolBalances } = useFetchPoolBalances();
   const { tokens, fetchBalances } = useFetchBalances();
   const [ openedCardList, setOpenCardList ] = useState([]);
@@ -85,8 +85,8 @@ export default function SectionPools() {
   const onApproval = (pool, index, event) => {
     event.stopPropagation();
     fetchApproval({
-      account,
-      provider,
+      address,
+      web3,
       tokenAddress: pool.tokenAddress,
       contractAddress: pool.earnContractAddress,
       index
@@ -100,8 +100,8 @@ export default function SectionPools() {
   const onDeposit = (pool, index, event) => {
     event.stopPropagation();
     fetchDeposit({
-      account,
-      provider,
+      address,
+      web3,
       amount: new BigNumber(depositedBalance[index]).multipliedBy(new BigNumber(10).exponentiatedBy(pool.tokenDecimals)).toString(10),
       contractAddress: pool.earnContractAddress,
       index
@@ -122,8 +122,8 @@ export default function SectionPools() {
     // console.log(depositedTime)
     const func = () => {
       fetchClaim({
-        account,
-        provider,
+        address,
+        web3,
         contractAddress: pool.earnContractAddress,
         index
       }).then(
@@ -144,8 +144,8 @@ export default function SectionPools() {
       })
     } else {
       fetchClaim({
-        account,
-        provider,
+        address,
+        web3,
         contractAddress: pool.earnContractAddress,
         index
       }).then(
@@ -163,8 +163,8 @@ export default function SectionPools() {
     const depositedTime = new BigNumber(nowTime).minus(time).toNumber();
     const func = () => {
       fetchWithdraw({
-        account,
-        provider,
+        address,
+        web3,
         amount: new BigNumber(withdrawAmount[index]).multipliedBy(new BigNumber(10).exponentiatedBy(pool.tokenDecimals)).toString(10),
         contractAddress: pool.earnContractAddress,
         index
@@ -185,8 +185,8 @@ export default function SectionPools() {
       })
     } else {
       fetchWithdraw({
-        account,
-        provider,
+        address,
+        web3,
         amount: new BigNumber(withdrawAmount[index]).multipliedBy(new BigNumber(10).exponentiatedBy(pool.tokenDecimals)).toString(10),
         contractAddress: pool.earnContractAddress,
         index
@@ -202,8 +202,8 @@ export default function SectionPools() {
     event.stopPropagation();
     const func = () => {
       fetchFarm({
-        account,
-        provider,
+        address,
+        web3,
         contractAddress: pool.earnContractAddress,
         index
       }).then(
@@ -226,8 +226,8 @@ export default function SectionPools() {
     event.stopPropagation();
     const func = () => {
       fetchHarvest({
-        account,
-        provider,
+        address,
+        web3,
         contractAddress: pool.strategyContractAddress,
         index
       }).then(
@@ -258,15 +258,17 @@ export default function SectionPools() {
     )
   } 
 
-  // useEffect(() => {
-  //   fetchBalances({account, provider, tokens});
-  //   fetchPoolBalances({account, provider, pools});
-  //   const id = setInterval(() => {
-  //     fetchBalances({account, provider, tokens});
-  //     fetchPoolBalances({account, provider, pools});
-  //   }, 10000);
-  //   return () => clearInterval(id);
-  // }, [fetchBalances, fetchPoolBalances]);
+  useEffect(() => {
+    if (address && web3) {
+      fetchBalances({address, web3, tokens});
+      fetchPoolBalances({address, web3, pools});
+      const id = setInterval(() => {
+        fetchBalances({address, web3, tokens});
+        fetchPoolBalances({address, web3, pools});
+      }, 10000);
+      return () => clearInterval(id);
+    }
+  }, [address, web3, fetchBalances, fetchPoolBalances]);
 
   const forMat = number => {
     return new BigNumber(

@@ -1,6 +1,5 @@
 import React from 'react';
 // @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
 // import Close from "@material-ui/icons/Close";
 // core components

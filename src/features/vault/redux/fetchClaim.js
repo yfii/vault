@@ -6,9 +6,8 @@ import {
   VAULT_FETCH_CLAIM_FAILURE,
 } from './constants';
 import { claim } from "../../web3";
-import Web3 from 'web3';
 
-export function fetchClaim({ account, provider, contractAddress, index }) {
+export function fetchClaim({ address, web3, contractAddress, index }) {
   return dispatch => {
     // optionally you can have getState as the second argument
     dispatch({
@@ -24,10 +23,9 @@ export function fetchClaim({ account, provider, contractAddress, index }) {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/home/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
-      const web3 = new Web3(provider);
       claim({
         web3,
-        account,
+        address,
         contractAddress
       }).then(
           data => {
