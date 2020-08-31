@@ -13,6 +13,30 @@ import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/material-kit-pro-react/components/footerLinksStyle.js";
 import classNames from "classnames";
+import {
+    grayColor,
+    roseColor,
+    primaryColor,
+    secondaryColor,
+    infoColor,
+    successColor,
+    warningColor,
+    dangerColor,
+    blackColor,
+    whiteColor,
+    twitterColor,
+    facebookColor,
+    googleColor,
+    linkedinColor,
+    pinterestColor,
+    youtubeColor,
+    tumblrColor,
+    behanceColor,
+    dribbbleColor,
+    redditColor,
+    instagramColor,
+    hexToRgb
+  } from "assets/jss/material-kit-pro-react.js";
 const useStyles = makeStyles(styles);
 
 export default function FooterLinks(props) {
@@ -33,6 +57,24 @@ export default function FooterLinks(props) {
         [classes.fixed]: props.fixed,
     });
 
+    //留着控制底部联系方式的颜色
+    const iconGroundStyle={
+        width:'40px',
+        height:'40px',
+        display:'flex',
+        justifyContent:'center',
+        alignItems:'center',
+        fontSize: "1.25rem",
+        borderRadius: "1.25rem",
+        color:'white',
+        backgroundColor:primaryColor[0],
+    }
+
+    const iconColorStyle={
+        fontSize: "40px",
+        color:primaryColor[0],
+    }
+
     return (
         <div className={badgeClasses}>
             <List className={classes.list}>
@@ -46,11 +88,12 @@ export default function FooterLinks(props) {
                     target="_blank"
                     >
                     <i
+                        style={iconGroundStyle}
                         className={
                         classes.socialIcons +
                         " " +
                         classes.marginRight5 +
-                        " fab fa fa-twitter"
+                        " fab fa-twitter"
                         }
                     />{" "}
                     </Button>
@@ -65,12 +108,28 @@ export default function FooterLinks(props) {
                     target="_blank"
                     >
                     <i
+                        style={iconColorStyle}
                         className={
                         classes.socialIcons +
                         " " +
                         classes.marginRight5 +
-                        " fab fa fa-telegram"
+                        " fab fa-telegram"
                         }
+                    />
+                    </Button>
+                </ListItem>
+                <ListItem className={classes.listItem}>
+                    <Button
+                    color={color}
+                    className={
+                        classes.navLink + " " + classes.socialIconsButton
+                    }
+                    href="https://discord.com/"
+                    target="_blank"
+                    >
+                    <i
+                        style={iconGroundStyle}
+                        className={" fab fa-discord"}
                     />{" "}
                     </Button>
                 </ListItem>
@@ -84,11 +143,12 @@ export default function FooterLinks(props) {
                     target="_blank"
                     >
                     <i
+                        style={iconColorStyle}
                         className={
                         classes.socialIcons +
                         " " +
                         classes.marginRight5 +
-                        " fab fa fa-github"
+                        " fab fa-github"
                         }
                     />{" "}
                     </Button>
@@ -105,11 +165,12 @@ export default function FooterLinks(props) {
                     onMouseLeave={handlePopoverClose}
                     >
                     <i
+                        style={iconGroundStyle}
                         className={
                         classes.socialIcons +
                         " " +
                         classes.marginRight5 +
-                        " fab fa fa-wechat"
+                        " fab fa-weixin"
                         }
                     />{" "}
                     </Button>
@@ -122,11 +183,11 @@ export default function FooterLinks(props) {
                     open={open}
                     anchorEl={anchorEl}
                     anchorOrigin={{
-                        vertical: 'bottom',
+                        vertical: 'top',
                         horizontal: 'left',
                     }}
                     transformOrigin={{
-                        vertical: 'top',
+                        vertical: 'bottom',
                         horizontal: 'left',
                     }}
                     onClose={handlePopoverClose}

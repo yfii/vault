@@ -7,7 +7,8 @@ import {
 
 const footerLinksStyle = theme => ({
     container:{
-        ...container
+        ...container,
+        marginTop:'10px',
     },
     fixed:{
         position:'fixed',
@@ -55,14 +56,6 @@ const footerLinksStyle = theme => ({
         "&:hover,&:focus": {
           color: "inherit"
         },
-        "& .fab,& .far,& .fal,& .fas,& .material-icons": {
-          position: "relative",
-          top: "2px",
-          marginTop: "-4px",
-          marginRight: "4px",
-          marginBottom: "0px",
-          fontSize: "1.25rem"
-        },
         [theme.breakpoints.down("sm")]: {
           width: "calc(100% - 30px)",
           marginLeft: "15px",
@@ -90,7 +83,7 @@ const footerLinksStyle = theme => ({
     socialIcons: {
         position: "relative",
         fontSize: "1.25rem",
-        maxWidth: "24px"
+        // maxWidth: "44px"
     },
     ...tooltip,
     marginRight5: {
