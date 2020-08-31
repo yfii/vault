@@ -143,11 +143,16 @@ export function fetchPoolBalances(data) {
           pool.depositedTime = data[5] || 0;
           pool.claimAbleTokens = data[6] || 0;
           try {
-            pool.yield = await fetchUniswapPrice({
-              amount: pool.claimAbleTokens,
-              pathprice: pool.pathprice,
-              contract: uniSwapContract,
-            })
+            if (pool.isYFII){
+              pool.yield = pool.claimAbleTokens;
+            }else{
+              pool.yield = await fetchUniswapPrice({
+                amount: pool.claimAbleTokens,
+                pathprice: pool.pathprice,
+                contract: uniSwapContract,
+              })
+            }
+            
           } catch(err) {
             console.log(err)
           }
