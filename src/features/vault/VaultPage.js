@@ -33,19 +33,11 @@ function VaultPage(props) {
     }
   }, [account, props.history]);
   return (
-    <div className={classes.page}>
-      <Header
-        brand="YFII"
-        links={<HeaderLinks dropdownHoverColor="primary"/>}
-        color="primary"
-      />
-      <div className={classes.container}>
-        <SectionTitle />
-        <SectionWallet />
-        <SectionPools />
-      </div>
-      <FooterLinks/>
-    </div>
+    <>
+      <SectionTitle />
+      <SectionWallet />
+      <SectionPools />
+    </>
   );
 }
 

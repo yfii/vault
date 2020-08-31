@@ -258,15 +258,15 @@ export default function SectionPools() {
     )
   } 
 
-  useEffect(() => {
-    fetchBalances({account, provider, tokens});
-    fetchPoolBalances({account, provider, pools});
-    const id = setInterval(() => {
-      fetchBalances({account, provider, tokens});
-      fetchPoolBalances({account, provider, pools});
-    }, 10000);
-    return () => clearInterval(id);
-  }, [fetchBalances, fetchPoolBalances]);
+  // useEffect(() => {
+  //   fetchBalances({account, provider, tokens});
+  //   fetchPoolBalances({account, provider, pools});
+  //   const id = setInterval(() => {
+  //     fetchBalances({account, provider, tokens});
+  //     fetchPoolBalances({account, provider, pools});
+  //   }, 10000);
+  //   return () => clearInterval(id);
+  // }, [fetchBalances, fetchPoolBalances]);
 
   const forMat = number => {
     return new BigNumber(

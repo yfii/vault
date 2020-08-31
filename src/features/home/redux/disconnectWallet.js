@@ -2,16 +2,12 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { HOME_DISCONNECT_WALLET_BEGIN, HOME_DISCONNECT_WALLET_SUCCESS, HOME_DISCONNECT_WALLET_FAILURE } from './constants';
 
-export function disconnectWallet() {
+export function disconnectWallet({web3, web3Modal}) {
   return dispatch => {
     dispatch({ type: HOME_DISCONNECT_WALLET_BEGIN });
 
     const promise = new Promise(async (resolve, reject) => {
       try {
-        const { web3, web3Modal } = useSelector(state => ({
-          web3: state.home.web3,
-          web3Modal: state.home.web3Modal
-        }));
         if (web3 && web3.currentProvider && web3.currentProvider.close) {
           await web3.currentProvider.close();
         }
@@ -30,7 +26,7 @@ export function disconnectWallet() {
 export function useDisconnectWallet() {
   const dispatch = useDispatch();
   const disconnectWalletPending = useSelector(state => (state.home.disconnectWalletPending), shallowEqual);
-  const boundAction = useCallback(() => dispatch(disconnectWallet()), [dispatch]);
+  const boundAction = useCallback(data => dispatch(disconnectWallet(data)), [dispatch]);
 
   return { disconnectWalletPending, disconnectWallet: boundAction };
 }
