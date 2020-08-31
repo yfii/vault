@@ -109,7 +109,7 @@ export const pools = [
     earnedToken: 'YFII',
     earnedTokenAddress: '0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83',
     earnContractAddress: '0xD2db1EF55549eCdacb4e7da081216AE96f0Eedcb',
-    strategyContractAddress: '0x9eFE9FB2010B2c5fa7D34E69e709DD296d9c0bD9',
+    strategyContractAddress: '0x83612eAc340b967aD380feC9a2D50Ea3FcA1A2cb',
     price: 'curve-dao-token',
     pathprice:["0xd533a949740bb3306d119cc777fa900ba034cd52",WETH_ADDRESS,YFII_ADDRESS],
     depositedBalance: 0,
@@ -123,7 +123,8 @@ export const pools = [
     allowance: 0,
     payout: 0,
     depositedTime: 0,
-    isCrv: true,
+    isCrv: false,
+    isYFII: true,
     crvGauge:"0xFA712EE4788C042e2B7BB55E6cb8ec569C4530c1",//只有是crv的才需要
     yield: 0
   },
