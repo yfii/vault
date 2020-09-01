@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-// import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
@@ -8,29 +8,27 @@ import { HOME_CREATE_WEB3MODAL } from './constants';
 const random = parseInt(Math.random() * Number(process.env.INFURA_RANDOM), 10)
 const INFURA_ID = process.env["INFURA_ID_" + random] ? process.env["INFURA_ID_" + random] : process.env.INFURA_ID_0;
 
-const providerOptions = {
-  injected: {
-    display: {
-      name: "Injected",
-      // description: t('Home-BrowserWallet')
-    },
-    package: null
-  },
-  walletconnect: {
-    package: WalletConnectProvider,
-    options: {
-      infuraId: INFURA_ID
-    }
-  }
-};
-
 
 export function createWeb3Modal() {
   return dispatch => {
     const web3Modal = new Web3Modal({
       network: "mainnet",
       cacheProvider: true,
-      providerOptions
+      providerOptions: {
+        injected: {
+          display: {
+            name: "Injected",
+            description: i18next.t('Home-BrowserWallet')
+          },
+          package: null
+        },
+        walletconnect: {
+          package: WalletConnectProvider,
+          options: {
+            infuraId: INFURA_ID
+          }
+        }
+      }
     })
     dispatch({ type: HOME_CREATE_WEB3MODAL, data: web3Modal })
   };

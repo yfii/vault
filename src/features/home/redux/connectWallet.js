@@ -62,7 +62,6 @@ export function reducer(state, action) {
       };
 
     case HOME_CONNECT_WALLET_SUCCESS:
-      console.log(action)
       return {
         ...state,
         web3: action.data.web3,

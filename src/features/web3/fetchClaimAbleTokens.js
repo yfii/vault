@@ -29,13 +29,13 @@ export const fetchClaimPendingBalance = async ({contract, address, amount}) => {
   //   amount:${amount}\n
   //   contractAddress:${contractAddress}\n
   // `)
-  console.log("claimPendingBalance: begin")
+  // console.log("claimPendingBalance: begin")
   const data = await contract.methods.cal_out_pending(new BigNumber(amount).dividedToIntegerBy(
     new BigNumber(1)
   ).toString(), address).call({ from: address });
-  console.log("data: "+data)
+  // console.log("data: "+data)
   const claimPendingBalance = new BigNumber(data).toNumber();
-  console.log("claimPendingBalance: " + claimPendingBalance)
+  // console.log("claimPendingBalance: " + claimPendingBalance)
   // console.log(`
   //   claimPendingBalance:${claimPendingBalance}\n
   // `)
