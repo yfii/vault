@@ -1,8 +1,8 @@
-import { container, whiteColor } from "assets/jss/material-kit-pro-react.js";
+import { container } from "assets/jss/material-kit-pro-react.js";
 
 const appStyle = theme => ({
   page: {
-    backgroundColor: whiteColor,
+    backgroundColor: "#232733",
     minHeight: "100vh"
   },
   container: {

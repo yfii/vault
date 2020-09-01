@@ -20,9 +20,9 @@ const headerStyle = theme => ({
   appBar: {
     display: "flex",
     border: "0",
-    // borderRadius: "3px",
+    borderRadius: "3px",
     padding: "0.625rem 0",
-    // marginBottom: "20px",
+    marginBottom: "20px",
     color: grayColor[15],
     width: "100%",
     backgroundColor: whiteColor,
@@ -59,7 +59,8 @@ const headerStyle = theme => ({
       ...defaultFont,
       minWidth: "unset",
       lineHeight: "30px",
-      fontSize: "18px",
+      fontSize: "24px",
+      fontWeight: "700",
       borderRadius: "3px",
       textTransform: "none",
       whiteSpace: "nowrap",
@@ -68,6 +69,9 @@ const headerStyle = theme => ({
         color: "inherit",
         background: "transparent"
       }
+    },
+    "& a": {
+      marginLeft: "8px",
     }
   },
   appResponsive: {
@@ -142,13 +146,14 @@ const headerStyle = theme => ({
   },
   dark: {
     color: whiteColor,
-    backgroundColor: grayColor[9] + " !important",
-    boxShadow:
-      "0 4px 20px 0px rgba(" +
-      hexToRgb(blackColor) +
-      ", 0.14), 0 7px 12px -5px rgba(" +
-      hexToRgb(grayColor[9]) +
-      ", 0.46)"
+    backgroundColor: "#2C3040",
+    // boxShadow:
+    //   "0 4px 20px 0px rgba(" +
+    //   hexToRgb(blackColor) +
+    //   ", 0.14), 0 7px 12px -5px rgba(" +
+    //   hexToRgb(grayColor[9]) +
+    //   ", 0.46)"
+    boxShadow: "0px 8px 12px 0px rgba(0, 0, 0, 0.06)"
   },
   white: {
     border: "0",
