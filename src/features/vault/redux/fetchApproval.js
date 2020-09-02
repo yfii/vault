@@ -6,9 +6,8 @@ import {
   VAULT_FETCH_APPROVAL_FAILURE,
 } from './constants';
 import { approval } from "../../web3";
-import Web3 from 'web3';
 
-export function fetchApproval({ account, provider, tokenAddress, contractAddress, index }) {
+export function fetchApproval({ address, web3, tokenAddress, contractAddress, index }) {
   return dispatch => {
     // optionally you can have getState as the second argument
     dispatch({
@@ -24,11 +23,9 @@ export function fetchApproval({ account, provider, tokenAddress, contractAddress
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/vault/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
-      const web3 = new Web3(provider);
-
       approval({
         web3,
-        account,
+        address,
         tokenAddress,
         contractAddress
       }).then(

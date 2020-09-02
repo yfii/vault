@@ -6,9 +6,8 @@ import {
   VAULT_FETCH_DEPOSIT_FAILURE,
 } from './constants';
 import { deposit } from "../../web3";
-import Web3 from 'web3';
 
-export function fetchDeposit({ account, provider, amount, contractAddress, index }) {
+export function fetchDeposit({ address, web3, amount, contractAddress, index }) {
   return dispatch => {
     // optionally you can have getState as the second argument
     dispatch({
@@ -24,8 +23,7 @@ export function fetchDeposit({ account, provider, amount, contractAddress, index
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/home/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
-      const web3 = new Web3(provider);
-      deposit({ web3, account, amount, contractAddress }).then(
+      deposit({ web3, address, amount, contractAddress }).then(
         data => {
           dispatch({
             type: VAULT_FETCH_DEPOSIT_SUCCESS,

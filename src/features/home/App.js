@@ -38,7 +38,7 @@ export default function App({ children }) {
           brand="YFII"
           links={
             <HeaderLinks
-              dropdownHoverColor="primary"
+              dropdownHoverColor="dark"
               address={address}
               action={{
                 connectWallet: () => connectWallet(web3Modal),
@@ -46,12 +46,12 @@ export default function App({ children }) {
               }}
             />
           }
-          color="primary"
+          color="dark"
         />
         <div className={classes.container}>
           { connectWalletPending ? children : children }
         </div>
-        <FooterLinks/>
+        <FooterLinks />
       </div>
     </SnackbarProvider>
   );

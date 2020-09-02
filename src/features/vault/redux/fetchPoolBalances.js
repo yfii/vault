@@ -8,7 +8,6 @@ import {
   VAULT_FETCH_POOL_BALANCES_FAILURE,
 } from './constants';
 import { fetchDepositedBalance, fetchEarnedBalance, fetchAllowance, fetchEarningsPerShare, fetchIdle, fetchClaimAbleTokens, fetchDepositedTime, fetchClaimPendingBalance, fetchUniswapPrice } from "../../web3";
-import Web3 from 'web3';
 import async from 'async';
 
 export function fetchPoolBalances(data) {
@@ -25,8 +24,7 @@ export function fetchPoolBalances(data) {
     const promise = new Promise((resolve, reject) => {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // args.error here is only for test coverage purpose.
-      const { account, provider, pools } = data;
-      const web3 = new Web3(provider);
+      const { address, web3, pools } = data;
       async.map(pools, (pool, callback) => {
         const earnContract = new web3.eth.Contract(earnContractABI, pool.earnContractAddress)
         const erc20Contract = new web3.eth.Contract(erc20ABI, pool.tokenAddress)
@@ -36,7 +34,7 @@ export function fetchPoolBalances(data) {
           (callbackInner) => { 
             fetchDepositedBalance({
               contract: earnContract,
-              account,
+              address,
             }).then(
               data => {
                 // console.log(data)
@@ -52,7 +50,7 @@ export function fetchPoolBalances(data) {
           (callbackInner) => {
             fetchEarnedBalance({
               contract: earnContract,
-              account,
+              address,
             }).then(
               data => callbackInner(null, data)
             ).catch(
@@ -64,7 +62,7 @@ export function fetchPoolBalances(data) {
               web3,
               contractAddress: pool.earnContractAddress,
               contract: erc20Contract,
-              account,
+              address,
             }).then(
               data => {
                 // console.log('data:' + data);
@@ -81,7 +79,7 @@ export function fetchPoolBalances(data) {
             if (pool.isCrv) {
               fetchEarningsPerShare({
                 contract: earnContract,
-                account,
+                address,
               }).then(
                 data => {
                   // console.log(data)
@@ -98,7 +96,7 @@ export function fetchPoolBalances(data) {
             fetchIdle({
               contract: erc20Contract,
               contractAddress:pool.earnContractAddress,
-              account,
+              address,
             }).then(
               data => callbackInner(null, data)
             ).catch(
@@ -108,7 +106,7 @@ export function fetchPoolBalances(data) {
           (callbackInner) => {
             fetchDepositedTime({
               contract: earnContract,
-              account,
+              address,
             }).then(
               data => callbackInner(null, data)
             ).catch(
@@ -119,7 +117,7 @@ export function fetchPoolBalances(data) {
             fetchClaimAbleTokens({
               web3,
               contractAddress:pool.strategyContractAddress,
-              account,
+              address,
               isCrv: Boolean(pool.isCrv),
               crvGauge: pool.crvGauge,
             }).then(
@@ -156,7 +154,7 @@ export function fetchPoolBalances(data) {
           } catch(err) {
             console.log(err)
           }
-          if (pool.isCrv) {
+          if (pool.isCrv || pool.isYFII) {
             pool.earningsPerShare = new BigNumber(pool.earningsPerShare).plus(
               new BigNumber(pool.yield).multipliedBy(
                 new BigNumber(pool.magnitude)
@@ -178,7 +176,7 @@ export function fetchPoolBalances(data) {
             fetchClaimPendingBalance({
               amount: pool.yield,
               contract: earnContract,
-              account
+              address
             }).then(
               data => {
                 pool.claimPendingBalance = data

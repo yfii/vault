@@ -7,14 +7,9 @@
 // https://medium.com/@nate_wang/a-new-approach-for-managing-redux-actions-91c26ce8b5da.
 
 import initialState from './initialState';
-import { reducer as openModalReducer } from './openModal';
-import { reducer as closeModalReducer } from './closeModal';
-import { reducer as setAccountReducer } from './setAccount';
 
 const reducers = [
-  openModalReducer,
-  closeModalReducer,
-  setAccountReducer
+
 ];
 
 export default function reducer(state = initialState, action) {

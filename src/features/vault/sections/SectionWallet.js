@@ -12,14 +12,14 @@ import CardBody from "components/Card/CardBody.js";
 // sections for this page
 import sectionWalletStyle from "../jss/sections/sectionWalletStyle";
 //  hooks
-import { useAccount } from '../../common/redux/hooks';
+import { useConnectWallet } from '../../home/redux/hooks';
 
 const useStyles = makeStyles(sectionWalletStyle);
 
 export default function SectionWallet() {
   const classes = useStyles();
-  const { account } = useAccount();
-  const address = account.substring(0,6)+'...'+account.substring(account.length-4,account.length)
+  const { address } = useConnectWallet();
+  const newAddress = address.substring(0,6)+'...'+address.substring(address.length-4,address.length)
   return (
     <Grid container className={classes.root} justify="center">
       <Grid item xs={12} sm={3}>
@@ -36,7 +36,7 @@ export default function SectionWallet() {
               className={classNames(classes.walletAddress, classes.mlAuto)}
               noWrap
             >
-              { address }
+              { newAddress }
             </Typography>
           </CardBody>
         </Card>

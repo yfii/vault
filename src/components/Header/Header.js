@@ -68,7 +68,7 @@ export default function Header(props) {
     <AppBar className={appBarClasses}>
       <Toolbar className={classes.container}>
         <Button className={classes.title}>
-          <Avatar alt="YFII" src={require(`../../images/YFII-logo.png`)} style={{width: "30px", height: "30px", marginRight: "5px"}}/>
+          <Avatar alt="YFII" src={require(`../../images/YFII-logo.png`)} />
           <Link to="/">
             {brand}
           </Link>
