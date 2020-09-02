@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 // import Close from "@material-ui/icons/Close";
 // core components
 // sections for this page
+import { StakePools } from './sections'
 // hooks
 
 export default function StakePage() {
@@ -13,7 +14,7 @@ export default function StakePage() {
   }, []);
   return (
     <>
-      
+      <StakePools />
     </>
   );
 }
