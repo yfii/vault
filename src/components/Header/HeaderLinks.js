@@ -25,7 +25,6 @@ import styles from "assets/jss/material-kit-pro-react/components/headerLinksStyl
 const useStyles = makeStyles(styles);
 
 export default function HeaderLinks(props) {
-  console.log(props);
   const { dropdownHoverColor, address, action } = props;
   const { connectWallet, disconnectWallet } = action;
   const classes = useStyles();
