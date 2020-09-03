@@ -5,7 +5,6 @@ import React, { useEffect } from 'react';
 // core components
 // sections for this page
 import SectionTitle from './sections/SectionTitle';
-import SectionWallet from './sections/SectionWallet';
 import SectionPools from './sections/SectionPools';
 // hooks
 
@@ -17,7 +16,6 @@ export default function VaultPage() {
   return (
     <>
       <SectionTitle />
-      <SectionWallet />
       <SectionPools />
     </>
   );

@@ -3,22 +3,14 @@ import { reducer as fetchBalancesReducer } from './fetchBalances';
 import { reducer as fetchPoolBalancesReducer } from './fetchPoolBalances';
 import { reducer as fetchApprovalReducer } from './fetchApproval';
 import { reducer as fetchDepositReducer } from './fetchDeposit';
-import { reducer as fetchClaimReducer } from './fetchClaim';
 import { reducer as fetchWithdrawReducer } from './fetchWithdraw';
-import { reducer as fetchFarmReducer } from './fetchFarm';
-import { reducer as fetchHarvestReducer } from './fetchHarvest';
-import { reducer as fetchUniswapPricesReducer } from './fetchUniswapPrices';
 
 const reducers = [
   fetchBalancesReducer,
   fetchPoolBalancesReducer,
   fetchApprovalReducer,
   fetchDepositReducer,
-  fetchClaimReducer,
   fetchWithdrawReducer,
-  fetchFarmReducer,
-  fetchHarvestReducer,
-  fetchUniswapPricesReducer
 ];
 
 

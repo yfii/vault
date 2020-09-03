@@ -1,13 +1,12 @@
 import { useCallback } from 'react';
-import { earnContractABI, erc20ABI, IUniswapV2Router02 } from "../../configure";
-import BigNumber from "bignumber.js";
+import { earnContractABI, erc20ABI } from "../../configure";
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import {
   VAULT_FETCH_POOL_BALANCES_BEGIN,
   VAULT_FETCH_POOL_BALANCES_SUCCESS,
   VAULT_FETCH_POOL_BALANCES_FAILURE,
 } from './constants';
-import { fetchDepositedBalance, fetchEarnedBalance, fetchAllowance, fetchEarningsPerShare, fetchIdle, fetchClaimAbleTokens, fetchDepositedTime, fetchClaimPendingBalance, fetchUniswapPrice } from "../../web3";
+import { fetchDepositedBalance, fetchPricePerFullShare, fetchAllowance } from "../../web3";
 import async from 'async';
 
 export function fetchPoolBalances(data) {
@@ -26,10 +25,8 @@ export function fetchPoolBalances(data) {
       // args.error here is only for test coverage purpose.
       const { address, web3, pools } = data;
       async.map(pools, (pool, callback) => {
-        const earnContract = new web3.eth.Contract(earnContractABI, pool.earnContractAddress)
-        const erc20Contract = new web3.eth.Contract(erc20ABI, pool.tokenAddress)
-        const uniSwapContract = new web3.eth.Contract(IUniswapV2Router02, "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D");
-
+        const earnContract = new web3.eth.Contract(earnContractABI, pool.earnContractAddress);
+        const erc20Contract = new web3.eth.Contract(erc20ABI, pool.tokenAddress);
         async.parallel([
           (callbackInner) => { 
             fetchDepositedBalance({
@@ -43,26 +40,16 @@ export function fetchPoolBalances(data) {
             ).catch(
               error => {
                 // console.log(error)
-                return callbackInner(error, {depositedBalance: 0, payout: 0})
+                return callbackInner(error, 0)
               }
             ) 
-          },
-          (callbackInner) => {
-            fetchEarnedBalance({
-              contract: earnContract,
-              address,
-            }).then(
-              data => callbackInner(null, data)
-            ).catch(
-              error => callbackInner(error, 0)
-            )
           },
           (callbackInner) => {
             fetchAllowance({
               web3,
               contractAddress: pool.earnContractAddress,
               contract: erc20Contract,
-              address,
+              address
             }).then(
               data => {
                 // console.log('data:' + data);
@@ -71,124 +58,34 @@ export function fetchPoolBalances(data) {
             ).catch(
               error => {
                 // console.log(error)
-                callbackInner(error, 0)
+                return callbackInner(error, 0)
               }
             )
           },
-          (callbackInner) => {
-            if (pool.isCrv) {
-              fetchEarningsPerShare({
-                contract: earnContract,
-                address,
-              }).then(
-                data => {
-                  // console.log(data)
-                  return callbackInner(null, data)
-                }
-              ).catch(
-                error => callbackInner(error, {earningsPerShare: 0, totalStake: 0})
-              )
-            } else {
-              return callbackInner(null, {earningsPerShare: 0, totalStake: 0})
-            }
-          },
-          (callbackInner) => {
-            fetchIdle({
-              contract: erc20Contract,
-              contractAddress:pool.earnContractAddress,
-              address,
-            }).then(
-              data => callbackInner(null, data)
-            ).catch(
-              error => callbackInner(error, 0)
-            ) 
-          },
-          (callbackInner) => {
-            fetchDepositedTime({
-              contract: earnContract,
-              address,
-            }).then(
-              data => callbackInner(null, data)
-            ).catch(
-              error => callbackInner(error, 0)
-            ) 
-          },
-          (callbackInner) => {
-            fetchClaimAbleTokens({
-              web3,
-              contractAddress:pool.strategyContractAddress,
-              address,
-              isCrv: Boolean(pool.isCrv),
-              crvGauge: pool.crvGauge,
-            }).then(
-              data => callbackInner(null, data)
-            ).catch(
-              error => callbackInner(error, 0)
-            ) 
-          }, 
-        ], async (error, data) => {
-          if (error) {
-            return callback(null, pool)
-          }
-          pool.depositedBalance = data[0].depositedBalance || 0;
-          pool.payout = data[0].payout || 0;
-          pool.claimAbleBalance = data[1] || 0
-          pool.allowance = data[2] || 0
-          pool.earningsPerShare = data[3].earningsPerShare || 0;
-          pool.totalStake = data[3].totalStake || 0;
-          pool.idle = data[4] || 0;
-          pool.magnitude = new BigNumber(10).exponentiatedBy(40).toNumber();
-          pool.depositedTime = data[5] || 0;
-          pool.claimAbleTokens = data[6] || 0;
-          try {
-            if (pool.isYFII){
-              pool.yield = pool.claimAbleTokens;
-            }else{
-              pool.yield = await fetchUniswapPrice({
-                amount: pool.claimAbleTokens,
-                pathprice: pool.pathprice,
-                contract: uniSwapContract,
-              })
-            }
-            
-          } catch(err) {
-            console.log(err)
-          }
-          if (pool.isCrv || pool.isYFII) {
-            pool.earningsPerShare = new BigNumber(pool.earningsPerShare).plus(
-              new BigNumber(pool.yield).multipliedBy(
-                new BigNumber(pool.magnitude)
-              ).dividedBy(
-                new BigNumber(pool.totalStake || 1)
-              )
-            ).toNumber();
-            pool.claimPendingBalance = new BigNumber(pool.earningsPerShare).multipliedBy(
-              new BigNumber(pool.depositedBalance)
-            ).dividedBy(
-              new BigNumber(pool.magnitude)
-            ).minus(
-              new BigNumber(pool.payout)
-            ).minus(
-              new BigNumber(pool.claimAbleBalance)
-            ).toNumber();
-            callback(null, pool)
-          } else {
-            fetchClaimPendingBalance({
-              amount: pool.yield,
+          (callbackInner) => { 
+            fetchPricePerFullShare({
               contract: earnContract,
               address
             }).then(
               data => {
-                pool.claimPendingBalance = data
-                return callback(null, pool)
+                // console.log(data)
+                return callbackInner(null, data)
               }
             ).catch(
               error => {
-                console.log(error)
-                return callback(null, pool)
+                // console.log(error)
+                return callbackInner(error, 0)
               }
             ) 
           }
+        ], (error, data) => {
+            if (error) {
+              console.log(error)
+            }
+            pool.depositedBalance = data[0] || 0;
+            pool.allowance = data[1] || 0;
+            pool.pricePerFullShare = data[2] || 0;
+            callback(null, pool);
         })
       }, (error, pools) => {
         if(error) {
@@ -206,8 +103,9 @@ export function fetchPoolBalances(data) {
     });
 
     return promise;
-  };
+  }
 }
+
 
 export function useFetchPoolBalances() {
   // args: false value or array

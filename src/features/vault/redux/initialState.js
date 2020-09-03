@@ -1,4 +1,4 @@
-import { pools, price } from "../../configure";
+import { pools } from "../../configure";
 
 const tokens = {};
 
@@ -18,18 +18,12 @@ pools.map(({token, tokenAddress, earnedToken, earnedTokenAddress})=> {
 
 const initialState = {
   pools,
-  price,
   tokens,
   fetchPoolBalancesPending: false,
   fetchBalancesPending: false,
   fetchApprovalPending: {},
   fetchDepositPending: {},
-  fetchClaimPending: {},
   fetchWithdrawPending: {},
-  fetchFarmPending: {},
-  fetchHarvestPending: {},
-  fetchCoingekoPricePending: false,
-  fetchUniswapPricesPending: false
 };
 
 export default initialState;

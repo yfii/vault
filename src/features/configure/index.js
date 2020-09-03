@@ -1,4 +1,2 @@
-export { earnContractABI, strategyContractABI, erc20ABI, crvDepositContractABI, IUniswapV2Router02 } from './abi';
-export { injected, network, walletconnect, walletlink, ledger, trezor, frame, authereum, fortmatic,portis,squarelink,torus } from './connectors';
+export { earnContractABI, USDTABI, erc20ABI } from './abi';
 export { pools } from './pools';
-export { price, coingeckoApi } from './price';

@@ -26,17 +26,11 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import { useSnackbar } from 'notistack';
 //  hooks
 import { useConnectWallet } from '../../home/redux/hooks';
-import { useFetchBalances, useFetchPoolBalances, useFetchApproval, useFetchDeposit, useFetchClaim, useFetchWithdraw, useFetchFarm, useFetchHarvest } from '../redux/hooks';
-
-import SectionModal from "./SectionModal";
-import SectionConfirmModal from "./SectionConfirmModal";
+import { useFetchBalances, useFetchPoolBalances, useFetchApproval, useFetchDeposit, useFetchWithdraw } from '../redux/hooks';
 
 import sectionPoolsStyle from "../jss/sections/sectionPoolsStyle";
 
 const useStyles = makeStyles(sectionPoolsStyle);
-
-const modalContext = createContext('modal');
-const confirmModalContext = createContext('confirmModal');
 
 export default function SectionPools() {
   const { t, i18n } = useTranslation();
@@ -48,14 +42,7 @@ export default function SectionPools() {
 
   const { fetchApproval, fetchApprovalPending } = useFetchApproval();
   const { fetchDeposit, fetchDepositPending } = useFetchDeposit();
-  const { fetchClaim, fetchClaimPending } = useFetchClaim();
   const { fetchWithdraw, fetchWithdrawPending } = useFetchWithdraw();
-  const { fetchFarm, fetchFarmPending } = useFetchFarm();
-  const { fetchHarvest, fetchHarvestPending } = useFetchHarvest();
-
-  const [ modal, setModal ] = useState({});
-
-  const [ confirmModal, setConfirmModal ] = useState({});
 
   const [ depositedBalance, setDepositedBalance ] = useState({});
   const [ withdrawAmount, setWithdrawAmount ] = useState({});
@@ -70,11 +57,11 @@ export default function SectionPools() {
   }
   
   const handleDepositedBalance = (index,total,event,sliderNum) => {
-      setDepositedBalance({
-        ...depositedBalance,
-        [index]: sliderNum == 0 ? 0: calculateReallyNum(total,sliderNum),
-        [`slider-${index}`]: sliderNum == 0 ? 0: sliderNum,
-      });
+    setDepositedBalance({
+      ...depositedBalance,
+      [index]: sliderNum == 0 ? 0: calculateReallyNum(total,sliderNum),
+      [`slider-${index}`]: sliderNum == 0 ? 0: sliderNum,
+    });
   }
 
   const handleWithdrawAmount = (index,total,event,sliderNum) => {
@@ -105,11 +92,19 @@ export default function SectionPools() {
     )
   }
 
-  const onDeposit = (pool, index, event) => {
+  const onDeposit = (pool, index, isAll, balanceSingle, event) => {
     event.stopPropagation();
+    if (isAll) {
+      setDepositedBalance({
+        ...depositedBalance,
+        [index]: forMat(balanceSingle),
+        [`slider-${index}`]: 100,
+      })
+    }
     fetchDeposit({
       address,
       web3,
+      isAll,
       amount: new BigNumber(depositedBalance[index]).multipliedBy(new BigNumber(10).exponentiatedBy(pool.tokenDecimals)).toString(10),
       contractAddress: pool.earnContractAddress,
       index
@@ -120,135 +115,27 @@ export default function SectionPools() {
     )
   }
 
-  const onClaim = (pool, index, event) => {
+  const onWithdraw = (pool, index, isAll, singleDepositedBalance, event) => {
     event.stopPropagation();
-    const time = new BigNumber(pool.depositedTime).multipliedBy(1000).toNumber();
-    const nowTime = new Date().getTime();
-    const depositedTime = new BigNumber(nowTime).minus(time).toNumber();
-    const func = () => {
-      fetchClaim({
-        address,
-        web3,
-        contractAddress: pool.earnContractAddress,
-        index
-      }).then(
-        () => enqueueSnackbar(`Claim success`, {variant: 'success'})
-      ).catch(
-        error => enqueueSnackbar(`Claim error: ${error}`, {variant: 'error'})
-      )
-    }
-    if (depositedTime < 1000*60*60*24) {
-      console.log('setModal')
-      setModal({
-        ...modal,
-        [index]: {
-          open: true,
-          depositedTime,
-          func
-        }
+    if (isAll) {
+      setWithdrawAmount({
+        ...depositedBalance,
+        [index]: forMat(singleDepositedBalance),
+        [`slider-${index}`]: 100,
       })
-    } else {
-      fetchClaim({
-        address,
-        web3,
-        contractAddress: pool.earnContractAddress,
-        index
-      }).then(
-        () => enqueueSnackbar(`Claim success`, {variant: 'success'})
-      ).catch(
-        error => enqueueSnackbar(`Claim error: ${error}`, {variant: 'error'})
-      )
-    }    
-  }
-
-  const onWithdraw = (pool, index, event) => {
-    event.stopPropagation();
-    const time = new BigNumber(pool.depositedTime).multipliedBy(1000).toNumber();
-    const nowTime = new Date().getTime();
-    const depositedTime = new BigNumber(nowTime).minus(time).toNumber();
-    const func = () => {
-      fetchWithdraw({
-        address,
-        web3,
-        amount: new BigNumber(withdrawAmount[index]).multipliedBy(new BigNumber(10).exponentiatedBy(pool.tokenDecimals)).toString(10),
-        contractAddress: pool.earnContractAddress,
-        index
-      }).then(
-        () => enqueueSnackbar(`Withdraw success`, {variant: 'success'})
-      ).catch(
-        error => enqueueSnackbar(`Withdraw error: ${error}`, {variant: 'error'})
-      )
     }
-    if (depositedTime < 1000*60*60*24) {
-      setModal({
-        ...modal,
-        [index]: {
-          open: true,
-          depositedTime,
-          func
-        }
-      })
-    } else {
-      fetchWithdraw({
-        address,
-        web3,
-        amount: new BigNumber(withdrawAmount[index]).multipliedBy(new BigNumber(10).exponentiatedBy(pool.tokenDecimals)).toString(10),
-        contractAddress: pool.earnContractAddress,
-        index
-      }).then(
-        () => enqueueSnackbar(`Withdraw success`, {variant: 'success'})
-      ).catch(
-        error => enqueueSnackbar(`Withdraw error: ${error}`, {variant: 'error'})
-      )
-    }   
-  }
-
-  const onFarm = (pool, index, event) => {
-    event.stopPropagation();
-    const func = () => {
-      fetchFarm({
-        address,
-        web3,
-        contractAddress: pool.earnContractAddress,
-        index
-      }).then(
-        () => enqueueSnackbar(`Farm success`, {variant: 'success'})
-      ).catch(
-        error => enqueueSnackbar(`Farm error: ${error}`, {variant: 'error'})
-      )
-    }
-    setConfirmModal({
-      ...confirmModal,
-      [index]: {
-        open: true,
-        description: t('Vault-FarmButtonDescription'),
-        func
-      }
-    })
-  }
-
-  const onHarvest = (pool, index, event) => {
-    event.stopPropagation();
-    const func = () => {
-      fetchHarvest({
-        address,
-        web3,
-        contractAddress: pool.strategyContractAddress,
-        index
-      }).then(
-        () => enqueueSnackbar(`Harvest success`, {variant: 'success'})
-      ).catch(
-        error => enqueueSnackbar(`Harvest error: ${error}`, {variant: 'error'})
-      )
-    }
-    setConfirmModal({
-      ...confirmModal,
-      [index]: {
-        open: true,
-        description: t('Vault-HarvestButtonDescription'),
-        func
-      }
-    })
+    fetchWithdraw({
+      address,
+      web3,
+      isAll,
+      amount: new BigNumber(withdrawAmount[index]).multipliedBy(new BigNumber(10).exponentiatedBy(pool.tokenDecimals)).toString(10),
+      contractAddress: pool.earnContractAddress,
+      index
+    }).then(
+      () => enqueueSnackbar(`Withdraw success`, {variant: 'success'})
+    ).catch(
+      error => enqueueSnackbar(`Withdraw error: ${error}`, {variant: 'error'})
+    )
   }
 
   const openCard = id => {
@@ -267,11 +154,11 @@ export default function SectionPools() {
     if (address && web3) {
       fetchBalances({address, web3, tokens});
       fetchPoolBalances({address, web3, pools});
-      const id = setInterval(() => {
-        fetchBalances({address, web3, tokens});
-        fetchPoolBalances({address, web3, pools});
-      }, 10000);
-      return () => clearInterval(id);
+      // const id = setInterval(() => {
+      //   fetchBalances({address, web3, tokens});
+      //   fetchPoolBalances({address, web3, pools});
+      // }, 10000);
+      // return () => clearInterval(id);
     }
   }, [address, web3, fetchBalances, fetchPoolBalances]);
 
@@ -320,9 +207,7 @@ export default function SectionPools() {
   const valuetext = (value) => {
     return `${value}°C`;
   }
-  console.warn('pools',pools);
-  console.warn('depositedBalance',depositedBalance);
-  console.warn('withdrawAmount',withdrawAmount);
+
   return (
     <GridContainer justify="center">
       <GridItem xs={12} sm={10}>
@@ -330,7 +215,6 @@ export default function SectionPools() {
             /**
              * balance总数写死了 1000
              */
-          let balanceTotal = byDecimals(10000,0);
           let balanceSingle = byDecimals(tokens[pool.token].tokenBalance, pool.tokenDecimals);
           let singleDepositedBalance = byDecimals(pool.depositedBalance, pool.tokenDecimals);
         //   let singleDepositedBalance = byDecimals(3000, 0);
@@ -346,12 +230,6 @@ export default function SectionPools() {
               >
                 <GridItem xs={12}>
                   <GridContainer>
-                    <modalContext.Provider value={{setModal, modal, index, pool}}>
-                      <SectionModal context={modalContext} />
-                    </modalContext.Provider>
-                    <confirmModalContext.Provider value={{confirmModal, setConfirmModal, index}}>
-                      <SectionConfirmModal context={confirmModalContext}/>
-                    </confirmModalContext.Provider>
                     <GridItem xs={12} style={Object.assign({},{},gridItemStyle,{justifyContent:'space-between'})}>
                         <GridItem xs={12} sm={2} style={Object.assign({},{},gridItemStyle,{justifyContent:'flex-start'})}>
                             <GridItem xs={6}>
@@ -417,11 +295,11 @@ export default function SectionPools() {
                         <div className={classes.showDetail}>
                             <div className={classes.showDetailLeft}>
                                 {
-                                    depositedBalance['slider-'+index] ? calculateReallyNum(balanceTotal.toNumber(),depositedBalance['slider-'+index]) : '0.0000'
+                                    depositedBalance['slider-'+index] ? calculateReallyNum(balanceSingle.toNumber(),depositedBalance['slider-'+index]) : '0.0000'
                                 }
                             </div>
                             <div className={classes.showDetailRight}>
-                                {t('Vault-Balance')}:{balanceTotal.toFormat(4)} { pool.token }
+                                {t('Vault-Balance')}:{balanceSingle.toFormat(4)} { pool.token }
                             </div>
                         </div>
                         <Slider 
@@ -433,11 +311,11 @@ export default function SectionPools() {
                             }}
                             aria-labelledby="continuous-slider" 
                             defaultValue={0}
-                            // value={depositedBalance['slider-'+index]?depositedBalance['slider-'+index]:0}
+                            value={depositedBalance['slider-'+index]?depositedBalance['slider-'+index]:0}
                             getAriaValueText={valuetext}
                             valueLabelDisplay="auto"
                             marks={marks}
-                            onChangeCommitted={handleDepositedBalance.bind(this,index,balanceTotal.toNumber())}
+                            onChange={handleDepositedBalance.bind(this,index,balanceSingle.toNumber())}
                             />
                         <div>
                             {
@@ -469,12 +347,7 @@ export default function SectionPools() {
                                             disabled={
                                                 !Boolean(depositedBalance[index]) || fetchDepositPending[index] || (new BigNumber(depositedBalance[index]).toNumber() > balanceSingle.toNumber())
                                             }
-                                            onClick={()=>{
-                                                setDepositedBalance({
-                                                ...depositedBalance,
-                                                [index]: forMat(balanceSingle)
-                                                })
-                                            }}
+                                            onClick={onDeposit.bind(this, pool, false, balanceSingle, index)}
                                             >{t('Vault-DepositButton')}
                                         </Button>
                                         <Button 
@@ -488,13 +361,7 @@ export default function SectionPools() {
                                             disabled={
                                                 fetchDepositPending[index] || (new BigNumber(depositedBalance[index]).toNumber() > balanceSingle.toNumber())
                                             }
-                                            onClick={()=>{
-                                                setDepositedBalance({
-                                                ...depositedBalance,
-                                                [index]: forMat(balanceTotal),
-                                                [`slider-${index}`]: 100,
-                                                })
-                                            }}
+                                            onClick={onDeposit.bind(this, pool, true, balanceSingle, index)}
                                             >{t('Vault-DepositButtonAll')}
                                         </Button>
                                     </div>
@@ -523,11 +390,11 @@ export default function SectionPools() {
                             }}
                             aria-labelledby="continuous-slider" 
                             defaultValue={0}
-                            // value={withdrawAmount['slider-'+index]?withdrawAmount['slider-'+index]:0}
+                            value={withdrawAmount['slider-'+index]?withdrawAmount['slider-'+index]:0}
                             getAriaValueText={valuetext}
                             valueLabelDisplay="auto"
                             marks={marks}
-                            onChangeCommitted={handleWithdrawAmount.bind(this,index,singleDepositedBalance.toNumber())}
+                            onChange={handleWithdrawAmount.bind(this,index,singleDepositedBalance.toNumber())}
                             />
                         <div className={classes.showDetailButtonCon}>
                             <Button 
@@ -540,12 +407,7 @@ export default function SectionPools() {
                                 type="button"
                                 color="primary"
                                 disabled={fetchWithdrawPending[index] || !Boolean(withdrawAmount[index])}
-                                onClick={()=>{
-                                    setWithdrawAmount({
-                                    ...depositedBalance,
-                                    [index]: withdrawAmount['slider-'+index] ? calculateReallyNum(singleDepositedBalance.toNumber(),withdrawAmount['slider-'+index]) : '0.0000'
-                                    })
-                                }}
+                                onClick={onWithdraw.bind(this, pool, false, singleDepositedBalance, index)}
                                 >
                                 {fetchWithdrawPending[index] ? `${t('Vault-WithdrawING')}`: `${t('Vault-WithdrawButton')}`}
                             </Button>
@@ -558,13 +420,7 @@ export default function SectionPools() {
                                 round
                                 type="button"
                                 color="primary"
-                                onClick={()=>{
-                                    setWithdrawAmount({
-                                    ...depositedBalance,
-                                    [index]: forMat(singleDepositedBalance),
-                                    [`slider-${index}`]: 100,
-                                    })
-                                }}
+                                onClick={onWithdraw.bind(this, pool, true, singleDepositedBalance, index)}
                                 >
                                 {fetchWithdrawPending[index] ? `${t('Vault-WithdrawING')}`: `${t('Vault-WithdrawButtonAll')}`}
                             </Button>

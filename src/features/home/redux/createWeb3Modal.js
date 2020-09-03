@@ -12,7 +12,7 @@ const INFURA_ID = process.env["INFURA_ID_" + random] ? process.env["INFURA_ID_" 
 export function createWeb3Modal() {
   return dispatch => {
     const web3Modal = new Web3Modal({
-      network: "mainnet",
+      network: process.env.NETWORK,
       cacheProvider: true,
       providerOptions: {
         injected: {

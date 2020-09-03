@@ -7,7 +7,7 @@ import {
 } from './constants';
 import { withdraw } from "../../web3";
 
-export function fetchWithdraw({ address, web3, amount, contractAddress, index }) {
+export function fetchWithdraw({ address, web3, isAll, amount, contractAddress, index }) {
   return dispatch => {
     // optionally you can have getState as the second argument
     dispatch({
@@ -23,7 +23,7 @@ export function fetchWithdraw({ address, web3, amount, contractAddress, index })
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/home/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
-      withdraw({ web3, address, amount, contractAddress }).then(
+      withdraw({ web3, address, isAll, amount, contractAddress }).then(
         data => {
           dispatch({
             type: VAULT_FETCH_WITHDRAW_SUCCESS,
