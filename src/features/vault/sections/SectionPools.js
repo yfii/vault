@@ -402,6 +402,10 @@ export default function SectionPools() {
                               onClick={onDeposit.bind(this, pool, index)}
                               onFocus={(event) => event.stopPropagation()}
                               disabled={
+                                pool.id == 'yfii' || 
+                                pool.id == 'dai' || 
+                                pool.id == 'weth' || 
+                                pool.id == 'link' || 
                                 !Boolean(depositedBalance[index]) || fetchDepositPending[index] || (new BigNumber(depositedBalance[index]).toNumber() > byDecimals(tokens[pool.token].tokenBalance, pool.tokenDecimals).toNumber())
                               }
                             >
